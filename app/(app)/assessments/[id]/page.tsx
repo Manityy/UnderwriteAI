@@ -8,6 +8,8 @@ import { PrintReportButton } from "@/components/PrintReportButton";
 import { AttackAgentPanel } from "@/components/AttackAgentPanel";
 import { JudgeAgentPanel } from "@/components/JudgeAgentPanel";
 import { DecisionPanel } from "@/components/DecisionPanel";
+import { ConditionsPicker } from "@/components/ConditionsPicker";
+import { normalizeStoredConditions } from "@/lib/conditionsLibrary";
 import { decisionShortLabel, parseDecision } from "@/lib/underwritingDecision";
 import {
   buildScoreDrivers,
@@ -17,6 +19,7 @@ import {
   recommendConditionIds,
   type Answers,
   type Finding,
+  type ScoreDriver,
   type Tier,
 } from "@/lib/mockRiskEngine";
 import type { AttackPrompt, TestResult, TestRunSummary } from "@/lib/agents/types";
@@ -55,6 +58,7 @@ export default async function ReportPage({
   const storedConditions: string[] = safeParse(assessment.conditions, []);
   const selectedConditionIds = normalizeStoredConditions(storedConditions);
   const answers: Answers = safeParse(assessment.answers, {});
+  const storedDrivers: ScoreDriver[] = safeParse(assessment.scoreDrivers, []);
   const recommendedConditionIds = recommendConditionIds(
     answers,
     assessment.tier as Tier
