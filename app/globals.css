@@ -173,3 +173,34 @@ body {
     animation: none;
   }
 }
+
+/* Underwriting report — browser print / Save as PDF */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #1a1f36 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report-print {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .report-print .report-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  .report-print a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+}

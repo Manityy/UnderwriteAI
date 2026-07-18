@@ -51,97 +51,349 @@ export function formatPremiumFactor(factor: number): string {
 
 // The underwriting questionnaire. Kept short and plain-language on purpose.
 export const QUESTIONS: Question[] = [
+  // ——— Step 1: System & exposure ———
+  {
+    id: "systemStatus",
+    step: 1,
+    section: "System & exposure",
+    title: "What is the status of this AI system?",
+    help: "Live systems create immediate underwriting exposure.",
+    weight: 0.9,
+    options: [
+      { value: "planned", label: "Planned — not built yet", risk: 15 },
+      { value: "pilot", label: "Pilot / limited rollout", risk: 35 },
+      { value: "staging", label: "Staging — ready for production", risk: 45 },
+      { value: "production", label: "In production", risk: 70 },
+    ],
+  },
   {
     id: "useCase",
     step: 1,
-    section: "The AI system",
-    title: "What does the AI system mainly do?",
+    section: "System & exposure",
+    title: "What is the primary use case?",
     help: "Higher-stakes decisions carry more potential liability.",
+    weight: 1.4,
+    options: [
+      { value: "support", label: "Customer support / chatbot", risk: 40 },
+      { value: "content", label: "Content generation", risk: 30 },
+      { value: "copilot", label: "Employee copilot", risk: 35 },
+      { value: "decisions", label: "Decision support (credit, HR, claims, etc.)", risk: 85 },
+      { value: "agent", label: "Autonomous agent / workflow automation", risk: 95 },
+      { value: "other", label: "Other", risk: 50 },
+    ],
+  },
+  {
+    id: "actionableAdvice",
+    step: 1,
+    section: "System & exposure",
+    title: "Can the AI give advice that users may act on?",
+    help: "Actionable guidance creates advice and errors & omissions exposure.",
     weight: 1.3,
     options: [
-      { value: "internal", label: "Internal productivity tool", risk: 10 },
-      { value: "support", label: "Customer support / chatbot", risk: 45 },
-      { value: "advice", label: "Financial or legal advice", risk: 85 },
-      { value: "decisions", label: "Automated decisions (credit, claims, hiring)", risk: 95 },
+      { value: "no", label: "No", risk: 15 },
+      { value: "partial", label: "Partially — soft suggestions only", risk: 50 },
+      { value: "yes", label: "Yes — users may rely on it", risk: 90 },
+    ],
+  },
+  {
+    id: "autonomousActions",
+    step: 1,
+    section: "System & exposure",
+    title: "Can it trigger actions without a human?",
+    help: "Payments, approvals, account changes, or access blocking raise severity.",
+    weight: 1.5,
+    options: [
+      { value: "no", label: "No — humans always execute", risk: 10 },
+      { value: "yes", label: "Yes — it can act on its own", risk: 95 },
+    ],
+  },
+  {
+    id: "financialImpact",
+    step: 1,
+    section: "System & exposure",
+    title: "Worst-case financial impact if it fails?",
+    help: "Sets the order of magnitude for potential claims.",
+    weight: 1.2,
+    options: [
+      { value: "lt10k", label: "Under $10k", risk: 15 },
+      { value: "10k100k", label: "$10k – $100k", risk: 40 },
+      { value: "100k1m", label: "$100k – $1M", risk: 70 },
+      { value: "gt1m", label: "Over $1M", risk: 95 },
+      { value: "unknown", label: "Unknown", risk: 75 },
+    ],
+  },
+
+  // ——— Step 2: Exposure & data ———
+  {
+    id: "nonFinancialImpact",
+    step: 2,
+    section: "Exposure & data",
+    title: "What is the main non-financial risk if it fails?",
+    help: "Regulatory, privacy, and safety failures drive liability and reputation loss.",
+    weight: 1.1,
+    options: [
+      { value: "none", label: "Limited / operational only", risk: 15 },
+      { value: "reputation", label: "Reputational harm", risk: 45 },
+      { value: "discrimination", label: "Discrimination or unfair outcomes", risk: 75 },
+      { value: "breach", label: "Data breach / privacy incident", risk: 85 },
+      { value: "regulatory", label: "Regulatory fine or enforcement", risk: 90 },
+      { value: "safety", label: "Safety incident", risk: 95 },
+    ],
+  },
+  {
+    id: "modelSource",
+    step: 2,
+    section: "Exposure & data",
+    title: "Where does the model come from?",
+    help: "Provider and hosting affect control surface and vendor risk.",
+    weight: 0.8,
+    options: [
+      { value: "major", label: "Major provider API (OpenAI, Anthropic, Google, Azure)", risk: 25 },
+      { value: "oss", label: "Open-source, self-hosted", risk: 50 },
+      { value: "custom", label: "Custom / in-house model", risk: 65 },
+      { value: "hybrid", label: "Hybrid (multiple providers)", risk: 55 },
+    ],
+  },
+  {
+    id: "vendorContract",
+    step: 2,
+    section: "Exposure & data",
+    title: "Is there a vendor contract covering AI liability and data use?",
+    help: "Contractual allocation of risk matters at claim time.",
+    weight: 0.9,
+    options: [
+      { value: "yes", label: "Yes — liability, data use, and incident notice covered", risk: 15 },
+      { value: "partial", label: "Partial — standard SaaS terms only", risk: 50 },
+      { value: "no", label: "No formal AI terms", risk: 85 },
+      { value: "na", label: "N/A — fully in-house", risk: 40 },
     ],
   },
   {
     id: "dataSensitivity",
-    step: 1,
-    section: "The AI system",
-    title: "What kind of data does it touch?",
+    step: 2,
+    section: "Exposure & data",
+    title: "What is the most sensitive data it processes?",
     help: "Sensitive data raises the cost of a leak or misuse.",
+    weight: 1.3,
+    options: [
+      { value: "public", label: "Public / non-personal only", risk: 10 },
+      { value: "internal", label: "Internal business data", risk: 35 },
+      { value: "pii", label: "Customer or employee personal data (PII)", risk: 70 },
+      { value: "financial", label: "Financial account or transaction data", risk: 85 },
+      { value: "sensitive", label: "Health, biometric, or children's data", risk: 95 },
+    ],
+  },
+  {
+    id: "dataHandling",
+    step: 2,
+    section: "Exposure & data",
+    title: "How are prompts and outputs handled?",
+    help: "Storage, training use, and third-party sharing affect privacy exposure.",
+    weight: 1.1,
+    options: [
+      { value: "minimal", label: "Not stored; not used for training; not shared", risk: 15 },
+      { value: "stored", label: "Stored for operations; not used for training", risk: 40 },
+      { value: "shared", label: "Shared with third-party model providers", risk: 70 },
+      { value: "training", label: "Used for training or fine-tuning", risk: 85 },
+      { value: "unknown", label: "Unknown / not documented", risk: 80 },
+    ],
+  },
+
+  // ——— Step 3: Controls ———
+  {
+    id: "piiFiltering",
+    step: 3,
+    section: "Controls",
+    title: "Is PII filtered on input and scanned on output?",
+    help: "Reduces leakage of personal data through the model.",
     weight: 1.2,
     options: [
-      { value: "public", label: "Only public / non-personal data", risk: 10 },
-      { value: "internal", label: "Internal business data", risk: 35 },
-      { value: "pii", label: "Customer personal data (PII)", risk: 75 },
-      { value: "sensitive", label: "Financial / health / biometric data", risk: 95 },
+      { value: "yes", label: "Yes — both input filtering and output scanning", risk: 15 },
+      { value: "partial", label: "Partial — one side only", risk: 55 },
+      { value: "no", label: "No", risk: 90 },
     ],
   },
   {
     id: "humanOversight",
-    step: 2,
+    step: 3,
     section: "Controls",
-    title: "Is a human reviewing the AI's output?",
-    help: "Human review is the single strongest control against AI mistakes.",
-    weight: 1.4,
+    title: "Is a human reviewing high-impact AI output?",
+    help: "Human review is the strongest control against AI mistakes.",
+    weight: 1.5,
     options: [
-      { value: "in_loop", label: "Yes — a human approves every important action", risk: 10 },
-      { value: "on_loop", label: "Partly — humans spot-check some outputs", risk: 45 },
-      { value: "autonomy", label: "No — the AI acts fully on its own", risk: 95 },
+      { value: "always", label: "Always — before high-impact actions or regulated advice", risk: 10 },
+      { value: "sometimes", label: "Sometimes — spot-checks only", risk: 50 },
+      { value: "never", label: "Never — the AI acts without human review", risk: 95 },
+    ],
+  },
+  {
+    id: "guardrails",
+    step: 3,
+    section: "Controls",
+    title: "Which technical protections are in place?",
+    help: "Injection defenses, content filters, and access controls reduce technical risk.",
+    weight: 1.2,
+    options: [
+      { value: "full", label: "Injection defenses, content filters, and auth/rate limits", risk: 15 },
+      { value: "partial", label: "Some of these controls", risk: 50 },
+      { value: "none", label: "None of these", risk: 90 },
     ],
   },
   {
     id: "logging",
-    step: 2,
+    step: 3,
     section: "Controls",
-    title: "Are AI inputs and outputs logged?",
+    title: "Are prompts, outputs, and tool calls logged?",
     help: "Logs make claims defensible and incidents traceable.",
-    weight: 1.0,
+    weight: 1.1,
     options: [
-      { value: "full", label: "Yes — full logging and retention", risk: 10 },
+      { value: "full", label: "Yes — enough to reconstruct a claim, with retention", risk: 10 },
       { value: "partial", label: "Partial logging", risk: 50 },
       { value: "none", label: "No logging", risk: 90 },
     ],
   },
   {
-    id: "vendor",
+    id: "incidentResponse",
     step: 3,
-    section: "Setup & testing",
-    title: "Where does the model come from?",
-    help: "Major providers ship more safety tooling out of the box.",
-    weight: 0.8,
+    section: "Controls",
+    title: "Is there a documented incident response for AI failures?",
+    help: "Insurers need a clear path when something goes wrong.",
+    weight: 1.0,
     options: [
-      { value: "major", label: "Major provider (OpenAI, Anthropic, Google)", risk: 20 },
-      { value: "oss", label: "Open-source, self-hosted", risk: 50 },
-      { value: "custom", label: "Custom in-house model", risk: 65 },
+      { value: "yes", label: "Yes — process and notification SLA defined", risk: 15 },
+      { value: "no", label: "No", risk: 80 },
+    ],
+  },
+
+  // ——— Step 4: Testing & compliance ———
+  {
+    id: "sandboxAccess",
+    step: 4,
+    section: "Testing & compliance",
+    title: "Is a sandbox / staging API available for insurer testing?",
+    help: "Required for automated red-teaming without source code access.",
+    weight: 1.0,
+    options: [
+      { value: "yes", label: "Yes — authorized testing allowed", risk: 15 },
+      { value: "no", label: "No", risk: 70 },
     ],
   },
   {
-    id: "testing",
-    step: 3,
-    section: "Setup & testing",
-    title: "How is the AI tested for safety?",
-    help: "Red-teaming catches injection, leaks and unsafe answers before customers do.",
-    weight: 1.2,
+    id: "frameworks",
+    step: 4,
+    section: "Testing & compliance",
+    title: "Which governance frameworks do you map to?",
+    help: "Shows alignment with emerging AI and data protection expectations.",
+    weight: 1.0,
     options: [
-      { value: "continuous", label: "Continuous red-teaming", risk: 10 },
-      { value: "occasional", label: "Occasional manual checks", risk: 55 },
-      { value: "none", label: "No structured testing", risk: 90 },
+      { value: "multiple", label: "EU AI Act / GDPR / sector rules (or equivalent) documented", risk: 15 },
+      { value: "internal", label: "Internal AI policy only", risk: 45 },
+      { value: "none", label: "None", risk: 85 },
     ],
   },
   {
-    id: "compliance",
-    step: 3,
-    section: "Setup & testing",
-    title: "Is the AI use documented for compliance?",
-    help: "Think DPIA, EU AI Act classification, internal AI policy.",
+    id: "aiPolicy",
+    step: 4,
+    section: "Testing & compliance",
+    title: "Is there a written AI governance policy approved by management?",
+    help: "Board-level accountability strengthens underwriting confidence.",
+    weight: 0.9,
+    options: [
+      { value: "yes", label: "Yes", risk: 15 },
+      { value: "no", label: "No", risk: 75 },
+    ],
+  },
+  {
+    id: "qualityMeasurement",
+    step: 4,
+    section: "Testing & compliance",
+    title: "Do you measure output quality and track known failure modes?",
+    help: "Accuracy monitoring reduces hallucination and advice liability.",
     weight: 1.1,
     options: [
-      { value: "documented", label: "Yes — documented and reviewed", risk: 15 },
-      { value: "progress", label: "In progress", risk: 55 },
-      { value: "none", label: "Not documented", risk: 90 },
+      { value: "yes", label: "Yes — metrics and known failure modes documented", risk: 20 },
+      { value: "partial", label: "Informal / ad hoc checks", risk: 55 },
+      { value: "no", label: "No structured measurement", risk: 85 },
+    ],
+  },
+  {
+    id: "retestOnChange",
+    step: 4,
+    section: "Testing & compliance",
+    title: "Do you re-test after model, prompt, or tool changes?",
+    help: "Change control prevents silent risk increases between renewals.",
+    weight: 1.1,
+    options: [
+      { value: "yes", label: "Yes — always after material changes", risk: 15 },
+      { value: "sometimes", label: "Sometimes", risk: 50 },
+      { value: "no", label: "No", risk: 85 },
+    ],
+  },
+
+  // ——— Step 5: History & attestation ———
+  {
+    id: "priorIncidents",
+    step: 5,
+    section: "History & attestation",
+    title: "Any prior AI-related loss, complaint, or regulatory action?",
+    help: "Prior losses are a direct underwriting signal.",
+    weight: 1.3,
+    options: [
+      { value: "no", label: "No", risk: 10 },
+      { value: "minor", label: "Yes — minor / remediated, no material loss", risk: 55 },
+      { value: "yes", label: "Yes — material loss, open dispute, or regulatory action", risk: 95 },
+    ],
+  },
+  {
+    id: "existingCover",
+    step: 5,
+    section: "History & attestation",
+    title: "Is there existing cyber / tech E&O / PI cover that may overlap?",
+    help: "Helps underwriters avoid double-counting and spot AI exclusions.",
+    weight: 0.7,
+    options: [
+      { value: "yes_ai", label: "Yes — and AI is not excluded", risk: 25 },
+      { value: "yes_excluded", label: "Yes — but AI risk is excluded or unclear", risk: 55 },
+      { value: "none", label: "No overlapping cover", risk: 40 },
+      { value: "unknown", label: "Unknown", risk: 50 },
+    ],
+  },
+  {
+    id: "redTeamed",
+    step: 5,
+    section: "History & attestation",
+    title: "Has the system been independently red-teamed for AI risks?",
+    help: "External testing evidence strengthens the technical risk score.",
+    weight: 1.2,
+    options: [
+      { value: "yes", label: "Yes — within the last 12 months", risk: 15 },
+      { value: "older", label: "Yes — but more than 12 months ago", risk: 45 },
+      { value: "no", label: "No", risk: 80 },
+    ],
+  },
+  {
+    id: "userDisclosure",
+    step: 5,
+    section: "History & attestation",
+    title: "Are users told they are interacting with AI?",
+    help: "Transparency reduces surprise and complaint risk.",
+    weight: 0.7,
+    options: [
+      { value: "always", label: "Always", risk: 15 },
+      { value: "sometimes", label: "Sometimes", risk: 45 },
+      { value: "never", label: "Never", risk: 75 },
+    ],
+  },
+  {
+    id: "attestation",
+    step: 5,
+    section: "History & attestation",
+    title: "Do you attest that these answers are complete and accurate?",
+    help: "Material misrepresentation may affect coverage at claim or renewal. You authorize agreed sandbox testing.",
+    weight: 0.5,
+    options: [
+      { value: "yes", label: "Yes — I confirm and authorize agreed testing", risk: 0 },
+      { value: "no", label: "No — I cannot attest at this time", risk: 100 },
     ],
   },
 ];
@@ -180,15 +432,24 @@ export function scoreAssessment(answers: Answers): RiskResult {
 function buildFindings(answers: Answers, tier: Tier): Finding[] {
   const findings: Finding[] = [];
 
-  if (answers.humanOversight === "autonomy") {
+  if (answers.attestation === "no") {
     findings.push({
       category: "Governance",
       severity: "HIGH",
-      title: "No human in the loop",
-      detail:
-        "The AI can take consequential actions with no human approval. A single bad output can reach a customer directly.",
+      title: "Disclosure not attested",
+      detail: "The applicant did not attest to accuracy. Coverage should not be bound without a signed attestation.",
     });
-  } else if (answers.humanOversight === "on_loop") {
+  }
+
+  if (answers.humanOversight === "never" || answers.autonomousActions === "yes") {
+    findings.push({
+      category: "Governance",
+      severity: "HIGH",
+      title: "No human in the loop on consequential actions",
+      detail:
+        "The AI can take or influence consequential actions with weak or no human approval. A single bad output can reach a customer directly.",
+    });
+  } else if (answers.humanOversight === "sometimes") {
     findings.push({
       category: "Governance",
       severity: "MEDIUM",
@@ -197,33 +458,43 @@ function buildFindings(answers: Answers, tier: Tier): Finding[] {
     });
   }
 
-  if (answers.dataSensitivity === "pii" || answers.dataSensitivity === "sensitive") {
+  if (
+    answers.dataSensitivity === "pii" ||
+    answers.dataSensitivity === "financial" ||
+    answers.dataSensitivity === "sensitive"
+  ) {
     findings.push({
       category: "Privacy",
-      severity: answers.dataSensitivity === "sensitive" ? "HIGH" : "MEDIUM",
+      severity: answers.dataSensitivity === "sensitive" || answers.dataSensitivity === "financial" ? "HIGH" : "MEDIUM",
       title: "Sensitive data exposure risk",
       detail:
-        "Simulated probes leaked sample personal data in 2 of 50 test prompts. Output filtering appears incomplete.",
+        answers.piiFiltering === "no" || answers.piiFiltering === "partial"
+          ? "Sensitive data is processed and PII filtering appears incomplete. Output leakage risk is elevated."
+          : "Sensitive data is in scope. Controls are present but residual privacy exposure remains.",
     });
   }
 
-  if (answers.testing === "none" || answers.testing === "occasional") {
+  if (answers.guardrails === "none" || answers.redTeamed === "no") {
     findings.push({
       category: "Security",
-      severity: answers.testing === "none" ? "HIGH" : "MEDIUM",
-      title: "Prompt injection not mitigated",
+      severity: answers.guardrails === "none" ? "HIGH" : "MEDIUM",
+      title: "Prompt injection and AI-specific testing gaps",
       detail:
-        "A crafted instruction bypassed the system guardrails and revealed hidden context. No continuous red-teaming is in place.",
+        "Guardrails and/or independent red-teaming are insufficient. Injection, jailbreaks, and unsafe answers may reach users.",
     });
   }
 
-  if (answers.useCase === "advice" || answers.useCase === "decisions") {
+  if (
+    answers.useCase === "decisions" ||
+    answers.useCase === "agent" ||
+    answers.actionableAdvice === "yes"
+  ) {
     findings.push({
       category: "Accuracy",
       severity: tier === "HIGH" ? "HIGH" : "MEDIUM",
-      title: "Confident but wrong answers",
+      title: "High advice / decision liability",
       detail:
-        "On regulated topics the model gave confident, incorrect guidance in 4 of 20 test cases — a hallucination liability.",
+        "Users may rely on AI output for decisions or advice. Hallucinations and confident errors create material E&O exposure.",
     });
   }
 
@@ -236,12 +507,21 @@ function buildFindings(answers: Answers, tier: Tier): Finding[] {
     });
   }
 
-  if (answers.compliance === "none") {
+  if (answers.frameworks === "none" || answers.aiPolicy === "no") {
     findings.push({
       category: "Compliance",
       severity: "MEDIUM",
-      title: "Undocumented AI use",
-      detail: "No DPIA or AI Act classification found. Regulatory exposure is unquantified.",
+      title: "Weak AI governance documentation",
+      detail: "No clear mapping to AI Act / GDPR / sector rules or approved AI policy. Regulatory exposure is under-documented.",
+    });
+  }
+
+  if (answers.priorIncidents === "yes") {
+    findings.push({
+      category: "Governance",
+      severity: "HIGH",
+      title: "Prior AI-related loss or regulatory action",
+      detail: "Material prior incidents indicate elevated frequency risk until remediation is evidenced.",
     });
   }
 
@@ -251,7 +531,7 @@ function buildFindings(answers: Answers, tier: Tier): Finding[] {
       severity: "LOW",
       title: "Strong controls observed",
       detail:
-        "Human oversight, logging and testing are all in place. Residual risk is limited to normal model uncertainty.",
+        "Oversight, logging, testing and governance are in place. Residual risk is limited to normal model uncertainty.",
     });
   }
 
@@ -261,20 +541,41 @@ function buildFindings(answers: Answers, tier: Tier): Finding[] {
 function buildConditions(answers: Answers, tier: Tier): string[] {
   const conditions: string[] = [];
 
-  if (answers.humanOversight !== "in_loop") {
-    conditions.push("Require human approval for all high-impact AI actions.");
+  if (answers.attestation !== "yes") {
+    conditions.push("Obtain signed attestation before quoting or binding cover.");
   }
-  if (answers.testing !== "continuous") {
+  if (answers.humanOversight !== "always") {
+    conditions.push("Require human approval for all high-impact AI actions and regulated advice.");
+  }
+  if (answers.autonomousActions === "yes") {
+    conditions.push("Disable unsupervised autonomous actions until control improvements are verified.");
+  }
+  if (answers.guardrails !== "full" || answers.redTeamed === "no") {
     conditions.push("Introduce quarterly red-team testing and re-assessment at renewal.");
   }
   if (answers.logging !== "full") {
     conditions.push("Enable full input/output logging with 12-month retention.");
   }
-  if (answers.dataSensitivity === "pii" || answers.dataSensitivity === "sensitive") {
-    conditions.push("Add PII output filtering and data-minimisation controls.");
+  if (
+    answers.dataSensitivity === "pii" ||
+    answers.dataSensitivity === "financial" ||
+    answers.dataSensitivity === "sensitive"
+  ) {
+    if (answers.piiFiltering !== "yes") {
+      conditions.push("Add PII input filtering and output scanning before binding.");
+    }
   }
-  if (answers.compliance !== "documented") {
-    conditions.push("Complete a DPIA and EU AI Act classification before binding cover.");
+  if (answers.frameworks === "none" || answers.aiPolicy === "no") {
+    conditions.push("Complete AI governance documentation (policy + framework mapping) before binding cover.");
+  }
+  if (answers.sandboxAccess !== "yes") {
+    conditions.push("Provide a staging endpoint for insurer-authorized testing within 30 days.");
+  }
+  if (answers.retestOnChange !== "yes") {
+    conditions.push("Require re-test after any material model, prompt, or tool change.");
+  }
+  if (answers.priorIncidents === "yes") {
+    conditions.push("Provide incident remediation evidence before coverage is bound.");
   }
 
   if (conditions.length === 0) {

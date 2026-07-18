@@ -71,15 +71,20 @@ export default async function DashboardPage() {
           {assessments.slice(0, 5).map((a) => (
             <Link
               key={a.id}
-              href={`/assessments/${a.id}`}
+              href={a.status === "DRAFT" ? `/assessments/${a.id}/edit` : `/assessments/${a.id}`}
               className="flex items-center justify-between gap-4 py-4 transition hover:opacity-70"
             >
               <div className="min-w-0">
                 <p className="truncate font-semibold text-ink">{a.clientName}</p>
-                <p className="truncate text-sm text-muted">{a.industry}</p>
+                <p className="truncate text-sm text-muted">
+                  {a.status === "DRAFT" ? "Draft · " : ""}
+                  {a.industry}
+                </p>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-lg font-extrabold text-ink">{a.score}</span>
+                <span className="text-lg font-extrabold text-ink">
+                  {a.status === "DRAFT" ? "—" : a.score}
+                </span>
                 <RiskBadge tier={a.tier} />
               </div>
             </Link>

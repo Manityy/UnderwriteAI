@@ -16,6 +16,12 @@ const sevColor: Record<string, string> = {
   LOW: "text-risk-low",
 };
 
+const tierLabel: Record<string, string> = {
+  LOW: "Low risk",
+  MEDIUM: "Medium risk",
+  HIGH: "High risk",
+};
+
 export default async function ReportPage({
   params,
 }: {
@@ -29,6 +35,10 @@ export default async function ReportPage({
     where: { id, userId: session.userId },
   });
   if (!assessment) notFound();
+
+  if (assessment.status === "DRAFT") {
+    redirect(`/assessments/${id}/edit`);
+  }
 
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
@@ -45,18 +55,33 @@ export default async function ReportPage({
       : "Standard coverage is appropriate. Maintain controls and re-assess at renewal.";
 
   return (
-    <div className="mx-auto max-w-5xl px-8 py-10">
-      <Link href="/assessments" className="text-sm font-semibold text-brand hover:text-brand-dark">
-        &larr; Back to assessments
-      </Link>
+    <div className="report-print mx-auto max-w-5xl px-8 py-10">
+      <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
+        <Link href="/assessments" className="text-sm font-semibold text-brand hover:text-brand-dark">
+          &larr; Back to assessments
+        </Link>
+        <PrintReportButton documentTitle={pdfTitle} />
+      </div>
 
-      <header className="mt-4 flex flex-wrap items-start justify-between gap-4">
+      {/* Print letterhead */}
+      <div className="mb-6 hidden border-b border-black/15 pb-4 print:block">
+        <p className="text-xs font-bold uppercase tracking-wider text-brand">UnderwriteAI</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-ink">AI Risk Underwriting Report</h1>
+        <p className="mt-1 text-sm text-muted">
+          Prepared for underwriting review · {reportDate}
+        </p>
+      </div>
+
+      <header className="mt-4 flex flex-wrap items-start justify-between gap-4 print:mt-0">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-ink">{assessment.clientName}</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-ink print:text-2xl">
+            {assessment.clientName}
+          </h1>
           <p className="mt-1 text-sm text-muted">
             {assessment.industry}
             {assessment.useCase ? ` · ${assessment.useCase}` : ""}
           </p>
+          <p className="mt-1 hidden text-xs text-muted print:block">Report date: {reportDate}</p>
         </div>
         <RiskBadge tier={assessment.tier} className="mt-2" />
       </header>
@@ -77,7 +102,25 @@ export default async function ReportPage({
             </p>
           </div>
         </div>
-        <div className="rounded-3xl bg-white p-8 ring-1 ring-black/5">
+
+        {/* Print-only key metrics (cleaner than animated gauge) */}
+        <div className="report-card hidden rounded-3xl border border-black/10 bg-white p-6 print:block">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted">Key metrics</h2>
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <PrintMetric label="Risk score" value={String(assessment.score)} />
+            <PrintMetric
+              label="Risk tier"
+              value={tierLabel[assessment.tier] ?? assessment.tier}
+            />
+            <PrintMetric label="Premium factor" value={formatPremiumFactor(premiumFactor)} />
+            <PrintMetric label="Findings" value={String(findings.length)} />
+          </div>
+          <p className="mt-3 text-[11px] text-muted">
+            Premium factor: indicative — not actuarial (1.00x + score/100 × 1.50).
+          </p>
+        </div>
+
+        <div className="report-card rounded-3xl bg-white p-8 ring-1 ring-black/5 print:p-6 print:ring-0 print:border print:border-black/10">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted">
             Underwriting recommendation
           </h2>
@@ -99,8 +142,8 @@ export default async function ReportPage({
         </div>
       </div>
 
-      {/* How we tested */}
-      <div className="mt-6 rounded-3xl bg-ink p-8 text-white">
+      {/* How we tested — screen only */}
+      <div className="mt-6 rounded-3xl bg-ink p-8 text-white print:hidden">
         <h2 className="text-sm font-bold uppercase tracking-wider text-brand-light">
           How we assessed this
         </h2>
@@ -112,16 +155,19 @@ export default async function ReportPage({
       </div>
 
       {/* Findings */}
-      <div className="mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
+      <div className="report-card mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:ring-0">
         <h2 className="text-lg font-extrabold text-ink">Findings</h2>
         <div className="mt-5 space-y-4">
           {findings.map((f, i) => (
-            <div key={i} className="flex gap-4 rounded-2xl bg-cream/60 p-5">
+            <div
+              key={i}
+              className="flex gap-4 rounded-2xl bg-cream/60 p-5 print:break-inside-avoid print:rounded-none print:border-b print:border-black/10 print:bg-transparent print:px-0 print:pb-4"
+            >
               <span className={`mt-1 text-lg ${sevColor[f.severity] ?? "text-muted"}`}>&#9679;</span>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-extrabold text-ink">{f.title}</h3>
-                  <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted ring-1 ring-black/5">
+                  <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted ring-1 ring-black/5 print:bg-transparent">
                     {f.category}
                   </span>
                   <span className={`text-[11px] font-bold uppercase ${sevColor[f.severity]}`}>
@@ -136,11 +182,14 @@ export default async function ReportPage({
       </div>
 
       {/* Recommended conditions */}
-      <div className="mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
+      <div className="report-card mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:ring-0">
         <h2 className="text-lg font-extrabold text-ink">Recommended policy conditions</h2>
         <ul className="mt-5 space-y-3">
           {conditions.map((c, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-ink/80">
+            <li
+              key={i}
+              className="flex items-start gap-3 text-sm text-ink/80 print:break-inside-avoid"
+            >
               <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-bold text-brand">
                 {i + 1}
               </span>
@@ -153,6 +202,10 @@ export default async function ReportPage({
           judgement; they do not replace it.
         </p>
       </div>
+
+      <p className="mt-8 hidden text-[10px] text-muted print:block">
+        Generated by UnderwriteAI · Confidential — for underwriting use only
+      </p>
     </div>
   );
 }
@@ -174,6 +227,15 @@ function MiniStat({
   );
 }
 
+function PrintMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xl font-extrabold text-ink">{value}</p>
+      <p className="text-[11px] font-medium uppercase tracking-wide text-muted">{label}</p>
+    </div>
+  );
+}
+
 function TestStep({ n, title, body }: { n: string; title: string; body: string }) {
   return (
     <div className="rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
@@ -182,6 +244,14 @@ function TestStep({ n, title, body }: { n: string; title: string; body: string }
       <p className="mt-1 text-sm text-white/70">{body}</p>
     </div>
   );
+}
+
+function slugify(value: string): string {
+  return value
+    .trim()
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60) || "AI-risk-report";
 }
 
 function safeParse<T>(value: string, fallback: T): T {
