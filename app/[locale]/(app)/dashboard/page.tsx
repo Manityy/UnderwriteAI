@@ -1,10 +1,11 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link, redirect } from "@/i18n/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { tierFromScore, type Tier, type Finding } from "@/lib/mockRiskEngine";
 import { AnimatedScoreRing } from "@/components/AnimatedScoreRing";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
+import { localizeCategory } from "@/lib/localizeRisk";
 
 /** Blue intensity: darkest = highest risk. No green / yellow / red. */
 const TIER_BLUE: Record<
@@ -43,9 +44,23 @@ const TIER_BLUE: Record<
 
 const RANK_BLUE = ["bg-brand-dark", "bg-brand", "bg-brand/65", "bg-brand-light"];
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "dashboard" });
+  const tAssessment = await getTranslations({ locale, namespace: "assessment" });
+  const tButtons = await getTranslations({ locale, namespace: "buttons" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tRisk = await getTranslations({ locale, namespace: "risk" });
   const session = await getSession();
-  if (!session) redirect("/login");
+  if (!session) {
+    redirect({ href: "/login", locale });
+    return null;
+  }
 
   const assessments = await prisma.assessment.findMany({
     where: { userId: session.userId },
@@ -72,7 +87,8 @@ export default async function DashboardPage() {
   const categoryCounts = new Map<string, number>();
   for (const a of scored) {
     for (const f of safeParseFindings(a.findings)) {
-      categoryCounts.set(f.category, (categoryCounts.get(f.category) ?? 0) + 1);
+      const category = localizeCategory(f.category, tRisk);
+      categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
     }
   }
   const totalFindings = Array.from(categoryCounts.values()).reduce((s, n) => s + n, 0);
@@ -89,13 +105,13 @@ export default async function DashboardPage() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm font-semibold text-brand">
-            Welcome back, {session.name.split(" ")[0]}
+            {t("welcome", { name: session.name.split(" ")[0] })}
           </p>
           <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-ink">
-            Underwriting dashboard
+            {t("title")}
           </h1>
           <p className="mt-1.5 max-w-md text-sm leading-relaxed text-muted">
-            AI risk exposure across your underwriting book.
+            {t("subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -103,7 +119,7 @@ export default async function DashboardPage() {
             href="/assessments"
             className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
           >
-            View portfolio
+            {tButtons("viewPortfolio")}
           </Link>
           <Link
             href="/assessments/new"
@@ -112,7 +128,7 @@ export default async function DashboardPage() {
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            New assessment
+            {tButtons("newAssessment")}
           </Link>
         </div>
       </header>
@@ -140,36 +156,35 @@ export default async function DashboardPage() {
                 <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
                 </svg>
-                AI risk intelligence
+                {t("intelligence")}
               </div>
-              <p className="mt-3 text-sm font-semibold text-muted">Portfolio risk score</p>
+              <p className="mt-3 text-sm font-semibold text-muted">{t("portfolioRiskScore")}</p>
               <div className="mt-1 flex flex-wrap items-baseline gap-2.5 sm:gap-3">
                 <AnimatedNumber
                   value={avg}
                   className="text-6xl font-extrabold tracking-tight text-ink sm:text-7xl"
                 />
-                <span className="text-lg font-semibold text-muted">/ 100</span>
-                <TierPill tier={avgTier} />
+                <span className="text-lg font-semibold text-muted">{t("outOf100")}</span>
+                <TierPill tier={avgTier} labels={t} />
               </div>
             </div>
           </div>
 
           <div className="grid w-full grid-cols-2 gap-2.5 sm:max-w-sm lg:max-w-[260px]">
-            <HeroMetric label="Total" value={assessments.length} />
-            <HeroMetric label="High risk" value={counts.HIGH} emphasis="dark" />
-            <HeroMetric label="Medium" value={counts.MEDIUM} emphasis="mid" />
-            <HeroMetric label="Low risk" value={counts.LOW} emphasis="light" />
+            <HeroMetric label={t("total")} value={assessments.length} />
+            <HeroMetric label={t("highRisk")} value={counts.HIGH} emphasis="dark" />
+            <HeroMetric label={t("medium")} value={counts.MEDIUM} emphasis="mid" />
+            <HeroMetric label={t("lowRisk")} value={counts.LOW} emphasis="light" />
           </div>
         </div>
 
         <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-brand/10 pt-5">
           <p className="text-sm text-muted">
-            <span className="font-semibold text-ink">{coveragePct}%</span> scoring coverage
+            {t("scoringCoverage", { coveragePct })}
             {draftCount > 0 ? (
               <>
                 {" "}
-                · <span className="font-semibold text-ink">{draftCount}</span> draft
-                {draftCount === 1 ? "" : "s"} open
+                · {draftCount === 1 ? t("draftOpen", { draftCount }) : t("draftsOpen", { draftCount })}
               </>
             ) : null}
           </p>
@@ -177,7 +192,7 @@ export default async function DashboardPage() {
             href="/assessments"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-all duration-200 hover:gap-2.5 hover:text-brand-dark"
           >
-            View full portfolio
+            {tButtons("viewFullPortfolio")}
             <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 18l6-6-6-6" />
             </svg>
@@ -188,20 +203,20 @@ export default async function DashboardPage() {
       {/* Compact support metrics — no repeated tier counts */}
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <MiniCard
-          label="New this month"
+          label={t("newThisMonth")}
           value={newThisMonth}
-          hint="Last 30 days"
+          hint={t("last30Days")}
           icon="M3 17l6-6 4 4 8-8M21 7v6h-6"
         />
         <MiniCard
-          label="Drafts in progress"
+          label={t("draftsInProgress")}
           value={draftCount}
-          hint="Awaiting completion"
+          hint={t("awaitingCompletion")}
           icon="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"
         />
         <div className="group rounded-3xl bg-white p-5 shadow-sm shadow-black/[0.03] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-muted">Coverage</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-muted">{t("coverage")}</p>
             <span className="text-base font-extrabold tabular-nums text-brand">
               <AnimatedNumber value={coveragePct} />%
             </span>
@@ -213,7 +228,7 @@ export default async function DashboardPage() {
             />
           </div>
           <p className="mt-3 text-xs leading-relaxed text-muted">
-            {scored.length} of {assessments.length} scored
+            {t("scoredOf", { scored: scored.length, assessments: assessments.length })}
           </p>
         </div>
       </div>
@@ -224,16 +239,16 @@ export default async function DashboardPage() {
         <div className="flex flex-col rounded-3xl bg-white p-5 shadow-sm shadow-black/[0.03] ring-1 ring-black/5 sm:p-6 lg:col-span-7">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-muted">Portfolio</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted">{t("portfolio")}</p>
               <h2 className="mt-1 text-lg font-extrabold tracking-tight text-ink">
-                Recent assessments
+                {t("recentAssessments")}
               </h2>
             </div>
             <Link
               href="/assessments"
               className="text-sm font-semibold text-brand transition-colors duration-200 hover:text-brand-dark"
             >
-              View all →
+              {tButtons("viewAll")}
             </Link>
           </div>
 
@@ -261,12 +276,14 @@ export default async function DashboardPage() {
                         {a.clientName}
                       </p>
                       <span className="shrink-0 text-xs text-muted">
-                        {new Date(a.createdAt).toLocaleDateString()}
+                        {new Date(a.createdAt).toLocaleDateString(locale)}
                       </span>
                     </div>
                     <p className="truncate text-xs text-muted">
-                      {a.status === "DRAFT" ? "Draft · " : ""}
-                      {a.industry}
+                      {a.status === "DRAFT" ? t("draftPrefix") : ""}
+                      {tAssessment.has(`industries.${a.industry}`)
+                        ? tAssessment(`industries.${a.industry}`)
+                        : a.industry}
                     </p>
                     <div className="mt-2 h-1 max-w-[180px] overflow-hidden rounded-full bg-panel">
                       <div
@@ -281,16 +298,16 @@ export default async function DashboardPage() {
                     <span className="text-base font-extrabold tabular-nums text-ink">
                       {a.status === "DRAFT" ? "—" : a.score}
                     </span>
-                    <TierPill tier={tier} />
+                    <TierPill tier={tier} labels={t} />
                   </div>
                 </Link>
               );
             })}
-            {assessments.length === 0 && <EmptyState />}
+            {assessments.length === 0 && <EmptyState title={t("emptyTitle")} cta={t("emptyCta")} />}
           </div>
           {recentScrollable && (
             <p className="mt-3 text-center text-[11px] text-muted">
-              Showing {recent.length} most recent · scroll for more
+              {t("showingRecent", { count: recent.length })}
             </p>
           )}
         </div>
@@ -298,23 +315,23 @@ export default async function DashboardPage() {
         {/* Right column */}
         <div className="flex flex-col gap-5 lg:col-span-5">
           <div className="rounded-3xl bg-white p-5 shadow-sm shadow-black/[0.03] ring-1 ring-black/5 sm:p-6">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-muted">Analytics</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-muted">{t("analytics")}</p>
             <h2 className="mt-1 text-lg font-extrabold tracking-tight text-ink">
-              Risk distribution
+              {t("riskDistribution")}
             </h2>
             <div className="mt-5 flex items-center gap-7 sm:gap-8">
-              <RiskDonut counts={counts} total={scored.length} />
+              <RiskDonut counts={counts} total={scored.length} scoredLabel={tCommon("scored")} />
               <div className="flex-1 space-y-3.5">
-                <DistributionRow tier="LOW" count={counts.LOW} total={scored.length} />
-                <DistributionRow tier="MEDIUM" count={counts.MEDIUM} total={scored.length} />
-                <DistributionRow tier="HIGH" count={counts.HIGH} total={scored.length} />
+                <DistributionRow tier="LOW" count={counts.LOW} total={scored.length} label={t("distLow")} />
+                <DistributionRow tier="MEDIUM" count={counts.MEDIUM} total={scored.length} label={t("distMedium")} />
+                <DistributionRow tier="HIGH" count={counts.HIGH} total={scored.length} label={t("distHigh")} />
               </div>
             </div>
           </div>
 
           <div className="rounded-3xl bg-white p-5 shadow-sm shadow-black/[0.03] ring-1 ring-black/5 sm:p-6">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-muted">Timeline</p>
-            <h2 className="mt-1 text-lg font-extrabold tracking-tight text-ink">Recent activity</h2>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-muted">{t("timeline")}</p>
+            <h2 className="mt-1 text-lg font-extrabold tracking-tight text-ink">{t("recentActivity")}</h2>
             <div className="relative mt-4 space-y-3.5 before:absolute before:bottom-1 before:left-[7px] before:top-1 before:w-px before:bg-black/5">
               {assessments.slice(0, 4).map((a) => {
                 const tier = normalizeTier(a.tier);
@@ -327,16 +344,16 @@ export default async function DashboardPage() {
                       <p className="truncate text-sm text-ink">
                         <span className="font-semibold">{a.clientName}</span>{" "}
                         <span className="text-muted">
-                          {a.status === "SCORED" ? "was scored" : "saved as draft"}
+                          {a.status === "SCORED" ? t("wasScored") : t("savedAsDraft")}
                         </span>
                       </p>
-                      <p className="mt-0.5 text-xs text-muted">{timeAgo(a.createdAt)}</p>
+                      <p className="mt-0.5 text-xs text-muted">{timeAgo(a.createdAt, tCommon, locale)}</p>
                     </div>
                   </div>
                 );
               })}
               {assessments.length === 0 && (
-                <p className="text-sm text-muted">No activity yet.</p>
+                <p className="text-sm text-muted">{t("noActivity")}</p>
               )}
             </div>
           </div>
@@ -348,14 +365,14 @@ export default async function DashboardPage() {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-muted">
-                Risk intelligence
+                {t("riskIntelligence")}
               </p>
               <h2 className="mt-0.5 text-base font-extrabold tracking-tight text-ink sm:text-lg">
-                Findings by category
+                {t("findingsByCategory")}
               </h2>
             </div>
             <span className="rounded-full bg-brand/8 px-2.5 py-0.5 text-[11px] font-bold text-brand">
-              {totalFindings} total
+              {t("totalFindings", { total: totalFindings })}
             </span>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -399,16 +416,15 @@ function safeParseFindings(json: string): Finding[] {
   }
 }
 
-function TierPill({ tier }: { tier: Tier | "PENDING" }) {
+function TierPill({
+  tier,
+  labels,
+}: {
+  tier: Tier | "PENDING";
+  labels: (key: string) => string;
+}) {
   const s = TIER_BLUE[tier];
-  const label =
-    tier === "HIGH"
-      ? "High risk"
-      : tier === "MEDIUM"
-        ? "Medium risk"
-        : tier === "LOW"
-          ? "Low risk"
-          : "Not scored";
+  const label = labels(`tiers.${tier}`);
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ring-1 transition-colors duration-200 ${s.bg} ${s.text} ${s.ring}`}
@@ -474,9 +490,11 @@ function MiniCard({
 function RiskDonut({
   counts,
   total,
+  scoredLabel,
 }: {
   counts: { LOW: number; MEDIUM: number; HIGH: number };
   total: number;
+  scoredLabel: string;
 }) {
   const size = 118;
   const lowPct = total ? (counts.LOW / total) * 100 : 0;
@@ -493,7 +511,7 @@ function RiskDonut({
       <div className="h-full w-full rounded-full transition-transform duration-300 hover:scale-[1.03]" style={{ background }} />
       <div className="absolute inset-[15px] flex flex-col items-center justify-center rounded-full bg-white text-center">
         <span className="text-xl font-extrabold tabular-nums text-ink">{total}</span>
-        <span className="text-[9px] font-semibold uppercase tracking-wide text-muted">scored</span>
+        <span className="text-[9px] font-semibold uppercase tracking-wide text-muted">{scoredLabel}</span>
       </div>
     </div>
   );
@@ -503,13 +521,14 @@ function DistributionRow({
   tier,
   count,
   total,
+  label,
 }: {
   tier: Tier;
   count: number;
   total: number;
+  label: string;
 }) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-  const label = tier === "LOW" ? "Low" : tier === "MEDIUM" ? "Medium" : "High";
   return (
     <div className="flex items-center gap-3">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: TIER_BLUE[tier].css }} />
@@ -520,7 +539,7 @@ function DistributionRow({
   );
 }
 
-function EmptyState() {
+function EmptyState({ title, cta }: { title: string; cta: string }) {
   return (
     <div className="flex flex-col items-center gap-3 py-10 text-center">
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand/8 text-brand">
@@ -529,24 +548,28 @@ function EmptyState() {
         </svg>
       </div>
       <p className="text-sm text-muted">
-        No assessments yet.{" "}
+        {title}{" "}
         <Link href="/assessments/new" className="font-semibold text-brand">
-          Create your first one.
+          {cta}
         </Link>
       </p>
     </div>
   );
 }
 
-function timeAgo(date: Date | string): string {
+function timeAgo(
+  date: Date | string,
+  t: (key: string, values?: Record<string, number>) => string,
+  locale: string
+): string {
   const d = new Date(date).getTime();
   const diffMs = Date.now() - d;
   const minutes = Math.floor(diffMs / 60000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 1) return t("justNow");
+  if (minutes < 60) return t("minutesAgo", { minutes });
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return t("hoursAgo", { hours });
   const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  return new Date(date).toLocaleDateString();
+  if (days < 30) return t("daysAgo", { days });
+  return new Date(date).toLocaleDateString(locale);
 }

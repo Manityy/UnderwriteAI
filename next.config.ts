@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   turbopack: {
-    // Pin to this app directory (not C:\Users\lenovo from orphan lockfile)
     root: process.cwd(),
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

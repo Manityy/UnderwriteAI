@@ -1,11 +1,21 @@
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
+import { setRequestLocale } from "next-intl/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { AssessmentsList } from "@/components/AssessmentsList";
 
-export default async function AssessmentsPage() {
+export default async function AssessmentsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const session = await getSession();
-  if (!session) redirect("/login");
+  if (!session) {
+    redirect({ href: "/login", locale });
+    return null;
+  }
 
   const rows = await prisma.assessment.findMany({
     where: { userId: session.userId },

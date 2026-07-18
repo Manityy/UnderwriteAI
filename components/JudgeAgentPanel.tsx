@@ -1,13 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ATTACK_PROMPTS_READY_EVENT } from "@/components/AttackAgentPanel";
-import {
-  ATTACK_CATEGORY_META,
-  type AttackCategory,
-  type TestResult,
-  type TestRunSummary,
-} from "@/lib/agents/types";
+import { type AttackCategory, type TestResult, type TestRunSummary } from "@/lib/agents/types";
 
 const severityStyle: Record<string, string> = {
   high: "text-risk-high",
@@ -32,6 +28,10 @@ export function JudgeAgentPanel({
   initialResults: TestResult[];
   initialSummary: TestRunSummary | EmptySummary;
 }) {
+  const t = useTranslations("agents");
+  const tRisk = useTranslations("risk.attackCategories");
+  const tCommon = useTranslations("common");
+  const tValidation = useTranslations("validation");
   const [results, setResults] = useState<TestResult[]>(initialResults);
   const [summary, setSummary] = useState<TestRunSummary | EmptySummary>(initialSummary);
   const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ export function JudgeAgentPanel({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Test run failed.");
+        setError(data.error ?? tValidation("testRunFailed"));
         return;
       }
       setResults(data.results ?? []);
@@ -77,7 +77,7 @@ export function JudgeAgentPanel({
       setFilter("all");
       setOpenId(null);
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(tValidation("somethingWrong"));
     } finally {
       setLoading(false);
     }
@@ -98,20 +98,20 @@ export function JudgeAgentPanel({
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand shadow-[0_4px_14px_rgba(43,89,195,0.18)] ring-1 ring-brand/15">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                Agent 2
+                {t("agent2")}
               </span>
               <h2 className="text-xl font-extrabold tracking-tight text-ink">
-                Judge agent — test results
+                {t("judgeTitle")}
               </h2>
               {hasResults && summaryData && (
                 <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold text-muted">
-                  {summaryData.failed} failed / {summaryData.total}
+                  {t("failedOf", { failed: summaryData.failed, total: summaryData.total })}
                 </span>
               )}
               <Chevron open={open} />
             </div>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-              Sends attack prompts to a simulated client AI, then grades each reply pass or fail.
+              {t("judgeDesc")}
             </p>
           </button>
           <button
@@ -119,7 +119,7 @@ export function JudgeAgentPanel({
             disabled={loading || !hasAttackPrompts}
             className="shrink-0 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-brand-light disabled:opacity-70"
           >
-            {loading ? "Running tests..." : hasResults ? "Re-run tests" : "Run tests"}
+            {loading ? t("runningTests") : hasResults ? t("rerunTests") : t("runTests")}
           </button>
         </div>
 
@@ -129,28 +129,26 @@ export function JudgeAgentPanel({
 
             {!hasAttackPrompts && (
               <EmptyState>
-                Generate <span className="font-semibold text-ink">Agent 1</span> attack prompts first,
-                then run the Judge agent.
+                {t("generateFirst")}
               </EmptyState>
             )}
 
             {hasAttackPrompts && !hasResults && !loading && !error && (
               <EmptyState>
-                No test results yet. Click <span className="font-semibold text-ink">Run tests</span>{" "}
-                to score the client AI&apos;s replies.
+                {t("noResults")}
               </EmptyState>
             )}
 
             {loading && (
-              <EmptyState>Simulating replies and grading each response...</EmptyState>
+              <EmptyState>{t("simulating")}</EmptyState>
             )}
 
             {hasResults && !loading && summaryData && (
               <>
                 <div className="mt-7 grid grid-cols-3 gap-3">
-                  <SummaryStat label="Tests" value={summaryData.total} tone="neutral" />
-                  <SummaryStat label="Passed" value={summaryData.passed} tone="pass" />
-                  <SummaryStat label="Failed" value={summaryData.failed} tone="fail" />
+                  <SummaryStat label={t("tests")} value={summaryData.total} tone="neutral" />
+                  <SummaryStat label={t("passed")} value={summaryData.passed} tone="pass" />
+                  <SummaryStat label={t("failed")} value={summaryData.failed} tone="fail" />
                 </div>
 
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -172,8 +170,11 @@ export function JudgeAgentPanel({
                               failed > 0 ? "bg-risk-high" : "bg-risk-low"
                             }`}
                           />
-                          {ATTACK_CATEGORY_META[c].label}: {failed}/
-                          {summaryData.totalByCategory[c]} failed
+                          {t("categoryFailed", {
+                            category: tRisk(c),
+                            failed,
+                            total: summaryData.totalByCategory[c],
+                          })}
                         </span>
                       );
                     })}
@@ -181,12 +182,12 @@ export function JudgeAgentPanel({
 
                 <div className="mt-6 flex items-center gap-2">
                   <FilterChip
-                    label={`All (${results.length})`}
+                    label={tCommon("all", { count: results.length })}
                     active={filter === "all"}
                     onClick={() => setFilter("all")}
                   />
                   <FilterChip
-                    label={`Failures (${summaryData.failed})`}
+                    label={t("failures", { count: summaryData.failed })}
                     active={filter === "failed"}
                     onClick={() => setFilter("failed")}
                   />
@@ -208,10 +209,10 @@ export function JudgeAgentPanel({
                                 : "bg-risk-high/10 text-risk-high"
                             }`}
                           >
-                            {r.passed ? "Pass" : "Fail"}
+                            {r.passed ? tCommon("pass") : tCommon("fail")}
                           </span>
                           <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted">
-                            {ATTACK_CATEGORY_META[r.category].label}
+                            {tRisk(r.category)}
                           </span>
                           {!r.passed && (
                             <span
@@ -226,19 +227,19 @@ export function JudgeAgentPanel({
                                     : "bg-risk-low"
                                 }`}
                               />
-                              {r.severity}
+                              {tCommon(`severity.${r.severity.toUpperCase()}`)}
                             </span>
                           )}
                           {!r.judgedByLlm && (
                             <span className="text-[11px] font-semibold uppercase tracking-wide text-muted/80">
-                              Heuristic
+                              {t("heuristic")}
                             </span>
                           )}
                         </div>
 
                         <p className="mt-2.5 text-sm leading-relaxed text-ink">{r.prompt}</p>
                         <p className="mt-2 text-sm text-muted">
-                          <span className="font-semibold text-ink">Verdict:</span> {r.reason}
+                          <span className="font-semibold text-ink">{t("verdict")}</span> {r.reason}
                         </p>
 
                         {r.labels.length > 0 && (
@@ -258,7 +259,7 @@ export function JudgeAgentPanel({
                           onClick={() => setOpenId(rowOpen ? null : r.promptId)}
                           className="mt-3 text-xs font-semibold text-brand transition hover:text-brand-dark"
                         >
-                          {rowOpen ? "Hide AI response" : "Show AI response →"}
+                          {rowOpen ? t("hideAiResponse") : t("showAiResponse")}
                         </button>
                         {rowOpen && (
                           <p className="mt-2 rounded-2xl border border-black/5 bg-cream/80 p-3.5 text-sm leading-relaxed text-ink/80">
@@ -271,12 +272,11 @@ export function JudgeAgentPanel({
                 </div>
 
                 <p className="mt-6 border-t border-black/5 pt-4 text-xs leading-relaxed text-muted">
-                  {`Ran ${new Date(summaryData.ranAt).toLocaleString()}. `}
+                  {t("ranAt", { date: new Date(summaryData.ranAt).toLocaleString() })}{" "}
                   {summaryData.usedLlm === false
-                    ? "Simulated fallback used (no Groq key or model unavailable). "
+                    ? `${t("simulatedFallback")} `
                     : ""}
-                  Questionnaire score unchanged — these are technical test findings from the
-                  two-agent probe.
+                  {t("questionnaireUnchanged")}
                 </p>
               </>
             )}

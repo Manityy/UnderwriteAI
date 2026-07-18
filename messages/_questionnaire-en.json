@@ -1,0 +1,272 @@
+{
+  "sections": [
+    "System & exposure",
+    "Exposure & data",
+    "Controls",
+    "Testing & compliance",
+    "History & attestation"
+  ],
+  "questions": {
+    "systemStatus": {
+      "title": "What is the status of this AI system?",
+      "help": "Live systems create immediate underwriting exposure.",
+      "section": "System & exposure",
+      "options": {
+        "planned": "Planned — not built yet",
+        "pilot": "Pilot / limited rollout",
+        "staging": "Staging — ready for production",
+        "production": "In production"
+      }
+    },
+    "useCase": {
+      "title": "What is the primary use case?",
+      "help": "Higher-stakes decisions carry more potential liability.",
+      "section": "System & exposure",
+      "options": {
+        "support": "Customer support / chatbot",
+        "content": "Content generation",
+        "copilot": "Employee copilot",
+        "decisions": "Decision support (credit, HR, claims, etc.)",
+        "agent": "Autonomous agent / workflow automation",
+        "other": "Other"
+      }
+    },
+    "actionableAdvice": {
+      "title": "Can the AI give advice that users may act on?",
+      "help": "Actionable guidance creates advice and errors & omissions exposure.",
+      "section": "System & exposure",
+      "options": {
+        "no": "No",
+        "partial": "Partially — soft suggestions only",
+        "yes": "Yes — users may rely on it"
+      }
+    },
+    "autonomousActions": {
+      "title": "Can it trigger actions without a human?",
+      "help": "Payments, approvals, account changes, or access blocking raise severity.",
+      "section": "System & exposure",
+      "options": {
+        "no": "No — humans always execute",
+        "yes": "Yes — it can act on its own"
+      }
+    },
+    "financialImpact": {
+      "title": "Worst-case financial impact if it fails?",
+      "help": "Sets the order of magnitude for potential claims.",
+      "section": "System & exposure",
+      "options": {
+        "lt10k": "Under $10k",
+        "10k100k": "$10k – $100k",
+        "100k1m": "$100k – $1M",
+        "gt1m": "Over $1M",
+        "unknown": "Unknown"
+      }
+    },
+    "nonFinancialImpact": {
+      "title": "What is the main non-financial risk if it fails?",
+      "help": "Regulatory, privacy, and safety failures drive liability and reputation loss.",
+      "section": "Exposure & data",
+      "options": {
+        "none": "Limited / operational only",
+        "reputation": "Reputational harm",
+        "discrimination": "Discrimination or unfair outcomes",
+        "breach": "Data breach / privacy incident",
+        "regulatory": "Regulatory fine or enforcement",
+        "safety": "Safety incident"
+      }
+    },
+    "modelSource": {
+      "title": "Where does the model come from?",
+      "help": "Provider and hosting affect control surface and vendor risk.",
+      "section": "Exposure & data",
+      "options": {
+        "major": "Major provider API (OpenAI, Anthropic, Google, Azure)",
+        "oss": "Open-source, self-hosted",
+        "custom": "Custom / in-house model",
+        "hybrid": "Hybrid (multiple providers)"
+      }
+    },
+    "vendorContract": {
+      "title": "Is there a vendor contract covering AI liability and data use?",
+      "help": "Contractual allocation of risk matters at claim time.",
+      "section": "Exposure & data",
+      "options": {
+        "yes": "Yes — liability, data use, and incident notice covered",
+        "partial": "Partial — standard SaaS terms only",
+        "no": "No formal AI terms",
+        "na": "N/A — fully in-house"
+      }
+    },
+    "dataSensitivity": {
+      "title": "What is the most sensitive data it processes?",
+      "help": "Sensitive data raises the cost of a leak or misuse.",
+      "section": "Exposure & data",
+      "options": {
+        "public": "Public / non-personal only",
+        "internal": "Internal business data",
+        "pii": "Customer or employee personal data (PII)",
+        "financial": "Financial account or transaction data",
+        "sensitive": "Health, biometric, or children's data"
+      }
+    },
+    "dataHandling": {
+      "title": "How are prompts and outputs handled?",
+      "help": "Storage, training use, and third-party sharing affect privacy exposure.",
+      "section": "Exposure & data",
+      "options": {
+        "minimal": "Not stored; not used for training; not shared",
+        "stored": "Stored for operations; not used for training",
+        "shared": "Shared with third-party model providers",
+        "training": "Used for training or fine-tuning",
+        "unknown": "Unknown / not documented"
+      }
+    },
+    "piiFiltering": {
+      "title": "Is PII filtered on input and scanned on output?",
+      "help": "Reduces leakage of personal data through the model.",
+      "section": "Controls",
+      "options": {
+        "yes": "Yes — both input filtering and output scanning",
+        "partial": "Partial — one side only",
+        "no": "No"
+      }
+    },
+    "humanOversight": {
+      "title": "Is a human reviewing high-impact AI output?",
+      "help": "Human review is the strongest control against AI mistakes.",
+      "section": "Controls",
+      "options": {
+        "always": "Always — before high-impact actions or regulated advice",
+        "sometimes": "Sometimes — spot-checks only",
+        "never": "Never — the AI acts without human review"
+      }
+    },
+    "guardrails": {
+      "title": "Which technical protections are in place?",
+      "help": "Injection defenses, content filters, and access controls reduce technical risk.",
+      "section": "Controls",
+      "options": {
+        "full": "Injection defenses, content filters, and auth/rate limits",
+        "partial": "Some of these controls",
+        "none": "None of these"
+      }
+    },
+    "logging": {
+      "title": "Are prompts, outputs, and tool calls logged?",
+      "help": "Logs make claims defensible and incidents traceable.",
+      "section": "Controls",
+      "options": {
+        "full": "Yes — enough to reconstruct a claim, with retention",
+        "partial": "Partial logging",
+        "none": "No logging"
+      }
+    },
+    "incidentResponse": {
+      "title": "Is there a documented incident response for AI failures?",
+      "help": "Insurers need a clear path when something goes wrong.",
+      "section": "Controls",
+      "options": {
+        "yes": "Yes — process and notification SLA defined",
+        "no": "No"
+      }
+    },
+    "sandboxAccess": {
+      "title": "Is a sandbox / staging API available for insurer testing?",
+      "help": "Required for automated red-teaming without source code access.",
+      "section": "Testing & compliance",
+      "options": {
+        "yes": "Yes — authorized testing allowed",
+        "no": "No"
+      }
+    },
+    "frameworks": {
+      "title": "Which governance frameworks do you map to?",
+      "help": "Shows alignment with emerging AI and data protection expectations.",
+      "section": "Testing & compliance",
+      "options": {
+        "multiple": "EU AI Act / GDPR / sector rules (or equivalent) documented",
+        "internal": "Internal AI policy only",
+        "none": "None"
+      }
+    },
+    "aiPolicy": {
+      "title": "Is there a written AI governance policy approved by management?",
+      "help": "Board-level accountability strengthens underwriting confidence.",
+      "section": "Testing & compliance",
+      "options": {
+        "yes": "Yes",
+        "no": "No"
+      }
+    },
+    "qualityMeasurement": {
+      "title": "Do you measure output quality and track known failure modes?",
+      "help": "Accuracy monitoring reduces hallucination and advice liability.",
+      "section": "Testing & compliance",
+      "options": {
+        "yes": "Yes — metrics and known failure modes documented",
+        "partial": "Informal / ad hoc checks",
+        "no": "No structured measurement"
+      }
+    },
+    "retestOnChange": {
+      "title": "Do you re-test after model, prompt, or tool changes?",
+      "help": "Change control prevents silent risk increases between renewals.",
+      "section": "Testing & compliance",
+      "options": {
+        "yes": "Yes — always after material changes",
+        "sometimes": "Sometimes",
+        "no": "No"
+      }
+    },
+    "priorIncidents": {
+      "title": "Any prior AI-related loss, complaint, or regulatory action?",
+      "help": "Prior losses are a direct underwriting signal.",
+      "section": "History & attestation",
+      "options": {
+        "no": "No",
+        "minor": "Yes — minor / remediated, no material loss",
+        "yes": "Yes — material loss, open dispute, or regulatory action"
+      }
+    },
+    "existingCover": {
+      "title": "Is there existing cyber / tech E&O / PI cover that may overlap?",
+      "help": "Helps underwriters avoid double-counting and spot AI exclusions.",
+      "section": "History & attestation",
+      "options": {
+        "yes_ai": "Yes — and AI is not excluded",
+        "yes_excluded": "Yes — but AI risk is excluded or unclear",
+        "none": "No overlapping cover",
+        "unknown": "Unknown"
+      }
+    },
+    "redTeamed": {
+      "title": "Has the system been independently red-teamed for AI risks?",
+      "help": "External testing evidence strengthens the technical risk score.",
+      "section": "History & attestation",
+      "options": {
+        "yes": "Yes — within the last 12 months",
+        "older": "Yes — but more than 12 months ago",
+        "no": "No"
+      }
+    },
+    "userDisclosure": {
+      "title": "Are users told they are interacting with AI?",
+      "help": "Transparency reduces surprise and complaint risk.",
+      "section": "History & attestation",
+      "options": {
+        "always": "Always",
+        "sometimes": "Sometimes",
+        "never": "Never"
+      }
+    },
+    "attestation": {
+      "title": "Do you attest that these answers are complete and accurate?",
+      "help": "Material misrepresentation may affect coverage at claim or renewal. You authorize agreed sandbox testing.",
+      "section": "History & attestation",
+      "options": {
+        "yes": "Yes — I confirm and authorize agreed testing",
+        "no": "No — I cannot attest at this time"
+      }
+    }
+  }
+}

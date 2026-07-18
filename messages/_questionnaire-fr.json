@@ -1,0 +1,161 @@
+{
+  "sections": [
+    "Système et exposition",
+    "Exposition et données",
+    "Contrôles",
+    "Tests et conformité",
+    "Antécédents et attestation"
+  ],
+  "questions": {
+    "systemStatus": {
+      "title": "Quel est le statut de ce système d’IA ?",
+      "help": "Les systèmes en production créent une exposition immédiate pour la souscription.",
+      "section": "Système et exposition",
+      "options": { "planned": "Prévu — pas encore développé", "pilot": "Pilote / déploiement limité", "staging": "Préproduction — prêt pour la production", "production": "En production" }
+    },
+    "useCase": {
+      "title": "Quel est le principal cas d’utilisation ?",
+      "help": "Les décisions à forts enjeux impliquent une responsabilité potentielle plus élevée.",
+      "section": "Système et exposition",
+      "options": { "support": "Assistance clientèle / agent conversationnel", "content": "Génération de contenu", "copilot": "Assistant pour employés", "decisions": "Aide à la décision (crédit, RH, sinistres, etc.)", "agent": "Agent autonome / automatisation des flux de travail", "other": "Autre" }
+    },
+    "actionableAdvice": {
+      "title": "L’IA peut-elle fournir des conseils sur lesquels les utilisateurs pourraient agir ?",
+      "help": "Les recommandations exploitables créent une exposition en matière de conseil et de responsabilité civile professionnelle.",
+      "section": "Système et exposition",
+      "options": { "no": "Non", "partial": "Partiellement — suggestions non contraignantes uniquement", "yes": "Oui — les utilisateurs peuvent s’y fier" }
+    },
+    "autonomousActions": {
+      "title": "Peut-elle déclencher des actions sans intervention humaine ?",
+      "help": "Les paiements, approbations, modifications de compte ou blocages d’accès augmentent la gravité du risque.",
+      "section": "Système et exposition",
+      "options": { "no": "Non — les humains exécutent toujours les actions", "yes": "Oui — elle peut agir de manière autonome" }
+    },
+    "financialImpact": {
+      "title": "Quel serait le pire impact financier en cas de défaillance ?",
+      "help": "Détermine l’ordre de grandeur des sinistres potentiels.",
+      "section": "Système et exposition",
+      "options": { "lt10k": "Moins de 10 k $", "10k100k": "10 k $ – 100 k $", "100k1m": "100 k $ – 1 M $", "gt1m": "Plus de 1 M $", "unknown": "Inconnu" }
+    },
+    "nonFinancialImpact": {
+      "title": "Quel est le principal risque non financier en cas de défaillance ?",
+      "help": "Les défaillances réglementaires, de confidentialité et de sécurité entraînent responsabilité et atteinte à la réputation.",
+      "section": "Exposition et données",
+      "options": { "none": "Limité / opérationnel uniquement", "reputation": "Atteinte à la réputation", "discrimination": "Discrimination ou résultats injustes", "breach": "Violation de données / incident de confidentialité", "regulatory": "Amende ou mesure réglementaire", "safety": "Incident de sécurité" }
+    },
+    "modelSource": {
+      "title": "Quelle est la provenance du modèle ?",
+      "help": "Le fournisseur et l’hébergement influencent le périmètre de contrôle et le risque fournisseur.",
+      "section": "Exposition et données",
+      "options": { "major": "API d’un fournisseur majeur (OpenAI, Anthropic, Google, Azure)", "oss": "Open source, auto-hébergé", "custom": "Modèle personnalisé / interne", "hybrid": "Hybride (plusieurs fournisseurs)" }
+    },
+    "vendorContract": {
+      "title": "Un contrat fournisseur couvre-t-il la responsabilité liée à l’IA et l’utilisation des données ?",
+      "help": "La répartition contractuelle des risques est déterminante lors d’un sinistre.",
+      "section": "Exposition et données",
+      "options": { "yes": "Oui — responsabilité, utilisation des données et notification d’incident couvertes", "partial": "Partiel — conditions SaaS standard uniquement", "no": "Aucune condition formelle relative à l’IA", "na": "Sans objet — entièrement interne" }
+    },
+    "dataSensitivity": {
+      "title": "Quelles sont les données les plus sensibles qu’il traite ?",
+      "help": "Les données sensibles augmentent le coût d’une fuite ou d’une utilisation abusive.",
+      "section": "Exposition et données",
+      "options": { "public": "Données publiques / non personnelles uniquement", "internal": "Données internes de l’entreprise", "pii": "Données personnelles de clients ou d’employés (PII)", "financial": "Données de compte ou de transaction financière", "sensitive": "Données de santé, biométriques ou concernant des enfants" }
+    },
+    "dataHandling": {
+      "title": "Comment les requêtes et les réponses sont-elles traitées ?",
+      "help": "Le stockage, l’utilisation pour l’entraînement et le partage avec des tiers influencent l’exposition en matière de confidentialité.",
+      "section": "Exposition et données",
+      "options": { "minimal": "Non stockées ; non utilisées pour l’entraînement ; non partagées", "stored": "Stockées à des fins opérationnelles ; non utilisées pour l’entraînement", "shared": "Partagées avec des fournisseurs tiers de modèles", "training": "Utilisées pour l’entraînement ou l’ajustement fin", "unknown": "Inconnu / non documenté" }
+    },
+    "piiFiltering": {
+      "title": "Les PII sont-elles filtrées en entrée et analysées en sortie ?",
+      "help": "Réduit la fuite de données personnelles via le modèle.",
+      "section": "Contrôles",
+      "options": { "yes": "Oui — filtrage des entrées et analyse des sorties", "partial": "Partiel — un seul côté couvert", "no": "Non" }
+    },
+    "humanOversight": {
+      "title": "Un humain examine-t-il les sorties de l’IA à fort impact ?",
+      "help": "L’examen humain constitue le contrôle le plus solide contre les erreurs de l’IA.",
+      "section": "Contrôles",
+      "options": { "always": "Toujours — avant les actions à fort impact ou les conseils réglementés", "sometimes": "Parfois — contrôles ponctuels uniquement", "never": "Jamais — l’IA agit sans examen humain" }
+    },
+    "guardrails": {
+      "title": "Quelles protections techniques sont en place ?",
+      "help": "Les défenses contre les injections, les filtres de contenu et les contrôles d’accès réduisent le risque technique.",
+      "section": "Contrôles",
+      "options": { "full": "Défenses contre les injections, filtres de contenu et authentification / limites de débit", "partial": "Certains de ces contrôles", "none": "Aucun de ces contrôles" }
+    },
+    "logging": {
+      "title": "Les requêtes, sorties et appels d’outils sont-ils journalisés ?",
+      "help": "Les journaux permettent d’étayer les sinistres et de retracer les incidents.",
+      "section": "Contrôles",
+      "options": { "full": "Oui — suffisamment pour reconstituer un sinistre, avec conservation", "partial": "Journalisation partielle", "none": "Aucune journalisation" }
+    },
+    "incidentResponse": {
+      "title": "Existe-t-il une réponse aux incidents documentée pour les défaillances de l’IA ?",
+      "help": "Les assureurs ont besoin d’un processus clair lorsqu’un incident survient.",
+      "section": "Contrôles",
+      "options": { "yes": "Oui — processus et délai de notification définis", "no": "Non" }
+    },
+    "sandboxAccess": {
+      "title": "Une API de bac à sable / préproduction est-elle disponible pour les tests de l’assureur ?",
+      "help": "Nécessaire pour les tests automatisés de type red teaming sans accès au code source.",
+      "section": "Tests et conformité",
+      "options": { "yes": "Oui — tests autorisés", "no": "Non" }
+    },
+    "frameworks": {
+      "title": "À quels cadres de gouvernance vous alignez-vous ?",
+      "help": "Démontre l’alignement avec les attentes émergentes en matière d’IA et de protection des données.",
+      "section": "Tests et conformité",
+      "options": { "multiple": "EU AI Act / GDPR / réglementations sectorielles (ou équivalent) documentés", "internal": "Politique interne relative à l’IA uniquement", "none": "Aucun" }
+    },
+    "aiPolicy": {
+      "title": "Existe-t-il une politique écrite de gouvernance de l’IA approuvée par la direction ?",
+      "help": "La responsabilité au niveau du conseil d’administration renforce la confiance de la souscription.",
+      "section": "Tests et conformité",
+      "options": { "yes": "Oui", "no": "Non" }
+    },
+    "qualityMeasurement": {
+      "title": "Mesurez-vous la qualité des sorties et suivez-vous les modes de défaillance connus ?",
+      "help": "Le suivi de l’exactitude réduit les hallucinations et la responsabilité liée aux conseils.",
+      "section": "Tests et conformité",
+      "options": { "yes": "Oui — indicateurs et modes de défaillance connus documentés", "partial": "Vérifications informelles / ponctuelles", "no": "Aucune mesure structurée" }
+    },
+    "retestOnChange": {
+      "title": "Effectuez-vous de nouveaux tests après des modifications du modèle, des requêtes ou des outils ?",
+      "help": "La gestion des changements évite les augmentations silencieuses de risque entre les renouvellements.",
+      "section": "Tests et conformité",
+      "options": { "yes": "Oui — toujours après des changements importants", "sometimes": "Parfois", "no": "Non" }
+    },
+    "priorIncidents": {
+      "title": "Y a-t-il eu des pertes, réclamations ou mesures réglementaires antérieures liées à l’IA ?",
+      "help": "Les sinistres antérieurs constituent un indicateur direct pour la souscription.",
+      "section": "Antécédents et attestation",
+      "options": { "no": "Non", "minor": "Oui — mineurs / corrigés, sans perte importante", "yes": "Oui — perte importante, litige en cours ou mesure réglementaire" }
+    },
+    "existingCover": {
+      "title": "Existe-t-il une couverture cyber / RC technologique / RC professionnelle susceptible de se chevaucher ?",
+      "help": "Aide les souscripteurs à éviter le double comptage et à repérer les exclusions liées à l’IA.",
+      "section": "Antécédents et attestation",
+      "options": { "yes_ai": "Oui — et l’IA n’est pas exclue", "yes_excluded": "Oui — mais le risque lié à l’IA est exclu ou incertain", "none": "Aucune couverture se chevauchant", "unknown": "Inconnu" }
+    },
+    "redTeamed": {
+      "title": "Le système a-t-il fait l’objet d’un red teaming indépendant pour les risques liés à l’IA ?",
+      "help": "Les éléments probants de tests externes renforcent l’évaluation du risque technique.",
+      "section": "Antécédents et attestation",
+      "options": { "yes": "Oui — au cours des 12 derniers mois", "older": "Oui — mais il y a plus de 12 mois", "no": "Non" }
+    },
+    "userDisclosure": {
+      "title": "Les utilisateurs sont-ils informés qu’ils interagissent avec une IA ?",
+      "help": "La transparence réduit le risque de surprise et de réclamation.",
+      "section": "Antécédents et attestation",
+      "options": { "always": "Toujours", "sometimes": "Parfois", "never": "Jamais" }
+    },
+    "attestation": {
+      "title": "Attestez-vous que ces réponses sont complètes et exactes ?",
+      "help": "Toute fausse déclaration importante peut affecter la couverture lors d’un sinistre ou d’un renouvellement. Vous autorisez les tests convenus en bac à sable.",
+      "section": "Antécédents et attestation",
+      "options": { "yes": "Oui — je confirme et autorise les tests convenus", "no": "Non — je ne peux pas attester pour le moment" }
+    }
+  }
+}

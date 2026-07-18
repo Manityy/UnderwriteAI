@@ -1,39 +1,38 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Parallax } from "@/components/landing/Motion";
 
 /** Small floating UI cards around the hero illustration. */
 export function FloatingCards() {
+  const t = useTranslations("landing.floating");
+
   return (
     <div className="pointer-events-none absolute inset-0 hidden sm:block" aria-hidden="true">
-      {/* risk badge */}
-      <Parallax depth={20} className="absolute -left-4 top-[12%] z-20 md:-left-8">
+      <Parallax depth={20} className="absolute -start-4 top-[12%] z-20 md:-start-8">
         <div className="animate-float-soft rounded-2xl bg-white px-3.5 py-2.5 shadow-lg ring-1 ring-black/5">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted">Risk tier</p>
-          <p className="mt-0.5 text-sm font-extrabold text-risk-high">High</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted">{t("riskTier")}</p>
+          <p className="mt-0.5 text-sm font-extrabold text-risk-high">{t("high")}</p>
         </div>
       </Parallax>
 
-      {/* score chip */}
-      <Parallax depth={-16} className="absolute -right-3 top-[22%] z-20 md:-right-7">
+      <Parallax depth={-16} className="absolute -end-3 top-[22%] z-20 md:-end-7">
         <div className="animate-float-x-soft rounded-2xl bg-white px-3.5 py-2.5 shadow-lg ring-1 ring-black/5">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted">Score</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted">{t("score")}</p>
           <p className="mt-0.5 text-sm font-extrabold text-brand">88 / 100</p>
         </div>
       </Parallax>
 
-      {/* finding chip */}
-      <Parallax depth={14} className="absolute bottom-[14%] left-[2%] z-20">
+      <Parallax depth={14} className="absolute bottom-[14%] start-[2%] z-20">
         <div className="animate-drift-soft rounded-2xl bg-white px-3.5 py-2.5 shadow-lg ring-1 ring-black/5">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-risk-medium" />
-            <p className="text-xs font-semibold text-ink">PII leak detected</p>
+            <p className="text-xs font-semibold text-ink">{t("piiLeak")}</p>
           </div>
         </div>
       </Parallax>
 
-      {/* shield chip */}
-      <Parallax depth={-22} className="absolute bottom-[8%] right-[4%] z-20">
+      <Parallax depth={-22} className="absolute bottom-[8%] end-[4%] z-20">
         <div className="animate-float-soft rounded-full bg-white p-3 shadow-lg ring-1 ring-black/5">
           <svg
             viewBox="0 0 24 24"

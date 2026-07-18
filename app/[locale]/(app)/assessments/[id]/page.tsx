@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link, redirect } from "@/i18n/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ScoreGauge } from "@/components/ScoreGauge";
@@ -17,6 +18,7 @@ import {
   type ScoreDriver,
 } from "@/lib/mockRiskEngine";
 import type { AttackPrompt, TestResult, TestRunSummary } from "@/lib/agents/types";
+import { localizeCondition, localizeDriver, localizeFinding } from "@/lib/localizeRisk";
 
 const sevColor: Record<string, string> = {
   HIGH: "text-risk-high",
@@ -24,20 +26,21 @@ const sevColor: Record<string, string> = {
   LOW: "text-risk-low",
 };
 
-const tierLabel: Record<string, string> = {
-  LOW: "Low risk",
-  MEDIUM: "Medium risk",
-  HIGH: "High risk",
-};
-
 export default async function ReportPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ locale: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { locale, id } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "assessment" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tRisk = await getTranslations({ locale, namespace: "risk" });
   const session = await getSession();
-  if (!session) redirect("/login");
+  if (!session) {
+    redirect({ href: "/login", locale });
+    return null;
+  }
 
   const assessment = await prisma.assessment.findFirst({
     where: { id, userId: session.userId },
@@ -45,11 +48,15 @@ export default async function ReportPage({
   if (!assessment) notFound();
 
   if (assessment.status === "DRAFT") {
-    redirect(`/assessments/${id}/edit`);
+    redirect({ href: `/assessments/${id}/edit`, locale });
   }
 
-  const findings: Finding[] = safeParse(assessment.findings, []);
-  const conditions: string[] = safeParse(assessment.conditions, []);
+  const findings: Finding[] = safeParse<Finding[]>(assessment.findings, []).map((finding) =>
+    localizeFinding(finding, tRisk)
+  );
+  const conditions: string[] = safeParse<string[]>(assessment.conditions, []).map((condition) =>
+    localizeCondition(condition, tRisk)
+  );
   const answers: Answers = safeParse(assessment.answers, {});
   const storedDrivers: ScoreDriver[] = safeParse(assessment.scoreDrivers, []);
   const premiumFactor =
@@ -68,37 +75,40 @@ export default async function ReportPage({
   const scoreDrivers = mergeTestSignalDrivers(
     baseDrivers,
     "failuresByCategory" in testSummary ? testSummary.failuresByCategory : null
-  );
+  ).map((driver) => localizeDriver(driver, tRisk));
 
-  const reportDate = new Date(assessment.updatedAt).toLocaleDateString("en-GB", {
+  const reportDate = new Date(assessment.updatedAt).toLocaleDateString(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
   const pdfTitle = `${slugify(assessment.clientName)}-AI-risk-report`;
+  const industryLabel = t.has(`industries.${assessment.industry}`)
+    ? t(`industries.${assessment.industry}`)
+    : assessment.industry;
 
   const tierMessage =
     assessment.tier === "HIGH"
-      ? "Coverage should be declined or repriced until the high-severity findings are remediated."
+      ? t("tierMessageHigh")
       : assessment.tier === "MEDIUM"
-      ? "Coverage is feasible with the conditions below attached to the policy."
-      : "Standard coverage is appropriate. Maintain controls and re-assess at renewal.";
+      ? t("tierMessageMedium")
+      : t("tierMessageLow");
 
   return (
     <div className="report-print mx-auto max-w-5xl px-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link href="/assessments" className="text-sm font-semibold text-brand hover:text-brand-dark">
-          &larr; Back to assessments
+          {t("backToAssessments")}
         </Link>
         <PrintReportButton documentTitle={pdfTitle} />
       </div>
 
       {/* Print letterhead */}
       <div className="mb-6 hidden border-b border-black/15 pb-4 print:block">
-        <p className="text-xs font-bold uppercase tracking-wider text-brand">UnderwriteAI</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-ink">AI Risk Underwriting Report</h1>
+        <p className="text-xs font-bold uppercase tracking-wider text-brand">{tCommon("brand")}</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-ink">{t("reportTitle")}</h1>
         <p className="mt-1 text-sm text-muted">
-          Prepared for underwriting review · {reportDate}
+          {t("preparedFor", { date: reportDate })}
         </p>
       </div>
 
@@ -108,10 +118,10 @@ export default async function ReportPage({
             {assessment.clientName}
           </h1>
           <p className="mt-1 text-sm text-muted">
-            {assessment.industry}
+            {industryLabel}
             {assessment.useCase ? ` · ${assessment.useCase}` : ""}
           </p>
-          <p className="mt-1 hidden text-xs text-muted print:block">Report date: {reportDate}</p>
+          <p className="mt-1 hidden text-xs text-muted print:block">{t("reportDate", { date: reportDate })}</p>
         </div>
         <RiskBadge tier={assessment.tier} className="mt-2" />
       </header>
@@ -122,52 +132,50 @@ export default async function ReportPage({
           <ScoreGauge score={assessment.score} tier={assessment.tier} />
           <div className="w-full border-t border-black/5 pt-6 text-center">
             <p className="text-xs font-bold uppercase tracking-wider text-muted">
-              Indicative premium factor
+              {t("indicativePremium")}
             </p>
             <p className="mt-1 text-4xl font-extrabold tracking-tight text-brand">
               {formatPremiumFactor(premiumFactor)}
             </p>
             <p className="mt-2 text-[11px] font-medium text-muted">
-              Indicative — not actuarial
+              {t("indicativeNotActuarial")}
             </p>
           </div>
         </div>
 
         {/* Print-only key metrics (cleaner than animated gauge) */}
         <div className="report-card hidden rounded-3xl border border-black/10 bg-white p-6 print:block">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-muted">Key metrics</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted">{t("keyMetrics")}</h2>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <PrintMetric label="Risk score" value={String(assessment.score)} />
+            <PrintMetric label={t("riskScore")} value={String(assessment.score)} />
             <PrintMetric
-              label="Risk tier"
-              value={tierLabel[assessment.tier] ?? assessment.tier}
+              label={t("riskTier")}
+              value={t.has(`tiers.${assessment.tier}`) ? t(`tiers.${assessment.tier}`) : assessment.tier}
             />
-            <PrintMetric label="Premium factor" value={formatPremiumFactor(premiumFactor)} />
-            <PrintMetric label="Findings" value={String(findings.length)} />
+            <PrintMetric label={t("premiumFactor")} value={formatPremiumFactor(premiumFactor)} />
+            <PrintMetric label={t("findings")} value={String(findings.length)} />
           </div>
           <p className="mt-3 text-[11px] text-muted">
-            Premium factor: indicative — not actuarial (1.00x + score/100 × 1.50).
+            {t("premiumFactorNote")}
           </p>
         </div>
 
         <div className="report-card rounded-3xl bg-white p-8 ring-1 ring-black/5 print:p-6 print:ring-0 print:border print:border-black/10">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted">
-            Underwriting recommendation
+            {t("underwritingRecommendation")}
           </h2>
           <p className="mt-3 text-xl font-extrabold leading-snug text-ink">{tierMessage}</p>
           <div className="mt-6 grid grid-cols-2 gap-4 border-t border-black/5 pt-6 text-center sm:grid-cols-4">
-            <MiniStat label="Risk score" value={String(assessment.score)} />
-            <MiniStat label="Premium factor" value={formatPremiumFactor(premiumFactor)} accent />
-            <MiniStat label="Findings" value={String(findings.length)} />
+            <MiniStat label={t("riskScore")} value={String(assessment.score)} />
+            <MiniStat label={t("premiumFactor")} value={formatPremiumFactor(premiumFactor)} accent />
+            <MiniStat label={t("findings")} value={String(findings.length)} />
             <MiniStat
-              label="High severity"
+              label={t("highSeverity")}
               value={String(findings.filter((f) => f.severity === "HIGH").length)}
             />
           </div>
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            Premium factor uses a simple rule:{" "}
-            <span className="font-semibold text-ink/70">1.00x + (score ÷ 100) × 1.50</span>
-            {" "}(range 1.00x–2.50x). For underwriting judgement only — not an actuarial rate.
+            {t("premiumFactorExplain")}
           </p>
         </div>
       </div>
@@ -177,14 +185,17 @@ export default async function ReportPage({
         <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
           <div className="h-1.5 bg-brand print:hidden" />
           <div className="p-8 print:p-0">
-            <h2 className="text-xl font-extrabold tracking-tight text-ink">Why this score</h2>
+            <h2 className="text-xl font-extrabold tracking-tight text-ink">{t("whyThisScore")}</h2>
             <p className="mt-2 text-sm text-muted">
-              Top drivers of the {tierLabel[assessment.tier]?.toLowerCase() ?? assessment.tier}{" "}
-              rating — from disclosures
+              {t("topDrivers", {
+                tier: t.has(`tiers.${assessment.tier}`)
+                  ? t(`tiers.${assessment.tier}`).toLowerCase()
+                  : assessment.tier,
+              })}
               {"failuresByCategory" in testSummary &&
               testSummary.failed &&
               testSummary.failed > 0
-                ? " and red-team tests"
+                ? t("andRedTeam")
                 : ""}
               .
             </p>
@@ -217,11 +228,11 @@ export default async function ReportPage({
       <div className="mt-6 overflow-hidden rounded-[2rem] bg-white shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:hidden">
         <div className="h-1.5 bg-brand" />
         <div className="p-8">
-          <h2 className="text-xl font-extrabold tracking-tight text-ink">How we assessed this</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-ink">{t("howWeAssessed")}</h2>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <TestStep n="01" title="Ask" body="Client disclosures on use, data and controls." />
-            <TestStep n="02" title="Test" body="Attack agent probed the system; judge agent graded every response." />
-            <TestStep n="03" title="Score" body="Disclosures and test results combined into one risk score." />
+            <TestStep n="01" title={t("howAskTitle")} body={t("howAskBody")} />
+            <TestStep n="02" title={t("howTestTitle")} body={t("howTestBody")} />
+            <TestStep n="03" title={t("howScoreTitle")} body={t("howScoreBody")} />
           </div>
         </div>
       </div>
@@ -251,7 +262,7 @@ export default async function ReportPage({
       <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
         <div className="h-1.5 bg-brand print:hidden" />
         <div className="p-8 print:p-0">
-          <h2 className="text-xl font-extrabold tracking-tight text-ink">Findings</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-ink">{t("findings")}</h2>
           <div className="mt-5 space-y-3">
             {findings.map((f, i) => (
               <div
@@ -272,7 +283,7 @@ export default async function ReportPage({
                       {f.category}
                     </span>
                     <span className={`text-[11px] font-bold uppercase tracking-wide ${sevColor[f.severity]}`}>
-                      {f.severity}
+                      {tCommon(`severity.${f.severity}`)}
                     </span>
                   </div>
                   <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.detail}</p>
@@ -287,7 +298,7 @@ export default async function ReportPage({
       <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
         <div className="h-1.5 bg-brand print:hidden" />
         <div className="p-8 print:p-0">
-          <h2 className="text-xl font-extrabold tracking-tight text-ink">Recommended policy conditions</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-ink">{t("recommendedConditions")}</h2>
           <ul className="mt-5 space-y-3">
             {conditions.map((c, i) => (
               <li
@@ -302,14 +313,13 @@ export default async function ReportPage({
             ))}
           </ul>
           <p className="mt-6 border-t border-black/5 pt-4 text-xs leading-relaxed text-muted">
-            Risk score and premium factor are indicative — not actuarial. They support underwriting
-            judgement; they do not replace it.
+            {t("disclaimer")}
           </p>
         </div>
       </div>
 
       <p className="mt-8 hidden text-[10px] text-muted print:block">
-        Generated by UnderwriteAI · Confidential — for underwriting use only
+        {t("confidential")}
       </p>
     </div>
   );

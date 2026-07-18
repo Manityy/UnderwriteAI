@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   ATTACK_CATEGORIES,
-  ATTACK_CATEGORY_META,
   type AttackCategory,
   type AttackPrompt,
 } from "@/lib/agents/types";
@@ -25,6 +25,10 @@ export function AttackAgentPanel({
   initialPrompts: AttackPrompt[];
   initialGeneratedAt: string | null;
 }) {
+  const t = useTranslations("agents");
+  const tRisk = useTranslations("risk.attackCategories");
+  const tCommon = useTranslations("common");
+  const tValidation = useTranslations("validation");
   const [prompts, setPrompts] = useState<AttackPrompt[]>(initialPrompts);
   const [generatedAt, setGeneratedAt] = useState<string | null>(initialGeneratedAt);
   const [loading, setLoading] = useState(false);
@@ -64,7 +68,7 @@ export function AttackAgentPanel({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Generation failed.");
+        setError(data.error ?? tValidation("generationFailed"));
         return;
       }
       setPrompts(data.prompts ?? []);
@@ -72,7 +76,7 @@ export function AttackAgentPanel({
       setGeneratedAt(new Date().toISOString());
       setActive("all");
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(tValidation("somethingWrong"));
     } finally {
       setLoading(false);
     }
@@ -95,10 +99,10 @@ export function AttackAgentPanel({
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand shadow-[0_4px_14px_rgba(43,89,195,0.18)] ring-1 ring-brand/15">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                Agent 1
+                {t("agent1")}
               </span>
               <h2 className="text-xl font-extrabold tracking-tight text-ink">
-                Attack agent — generated tests
+                {t("attackTitle")}
               </h2>
               {hasPrompts && (
                 <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold text-muted">
@@ -108,7 +112,7 @@ export function AttackAgentPanel({
               <Chevron open={open} />
             </div>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-              Adversarial prompts that probe the client&apos;s AI across eight risk categories.
+              {t("attackDesc")}
             </p>
           </button>
           <button
@@ -116,7 +120,7 @@ export function AttackAgentPanel({
             disabled={loading}
             className="shrink-0 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Generating..." : hasPrompts ? "Regenerate" : "Generate attack prompts"}
+            {loading ? t("generating") : hasPrompts ? t("regenerate") : t("generateAttackPrompts")}
           </button>
         </div>
 
@@ -126,27 +130,26 @@ export function AttackAgentPanel({
 
             {!hasPrompts && !loading && !error && (
               <EmptyState>
-                No attack prompts yet. Click{" "}
-                <span className="font-semibold text-ink">Generate attack prompts</span> to run Agent 1.
+                {t("noPrompts")}
               </EmptyState>
             )}
 
             {loading && (
-              <EmptyState>Running the attack agent across 8 categories...</EmptyState>
+              <EmptyState>{t("runningAttack")}</EmptyState>
             )}
 
             {hasPrompts && !loading && (
               <>
                 <div className="mt-7 flex flex-wrap items-center gap-2">
                   <FilterChip
-                    label={`All (${prompts.length})`}
+                    label={tCommon("all", { count: prompts.length })}
                     active={active === "all"}
                     onClick={() => setActive("all")}
                   />
                   {ATTACK_CATEGORIES.filter((c) => counts[c]).map((c) => (
                     <FilterChip
                       key={c}
-                      label={`${ATTACK_CATEGORY_META[c].label} (${counts[c]})`}
+                      label={`${tRisk(c)} (${counts[c]})`}
                       active={active === c}
                       onClick={() => setActive(c)}
                     />
@@ -161,7 +164,7 @@ export function AttackAgentPanel({
                     >
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted">
-                          {ATTACK_CATEGORY_META[p.category].label}
+                          {tRisk(p.category)}
                         </span>
                         <span
                           className={`inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide ${severityStyle[p.severityHint]}`}
@@ -175,10 +178,10 @@ export function AttackAgentPanel({
                                 : "bg-risk-low"
                             }`}
                           />
-                          {p.severityHint}
+                          {tCommon(`severity.${p.severityHint.toUpperCase()}`)}
                         </span>
                         <span className="text-[11px] font-semibold uppercase tracking-wide text-muted/80">
-                          {p.source === "llm" ? "AI-generated" : "Seed"}
+                          {p.source === "llm" ? t("aiGenerated") : t("seed")}
                         </span>
                       </div>
                       <p className="mt-2.5 text-sm leading-relaxed text-ink">{p.prompt}</p>
@@ -187,12 +190,11 @@ export function AttackAgentPanel({
                 </div>
 
                 <p className="mt-6 border-t border-black/5 pt-4 text-xs leading-relaxed text-muted">
-                  {generatedAt ? `Generated ${new Date(generatedAt).toLocaleString()}. ` : ""}
+                  {generatedAt ? `${t("generatedAt", { date: new Date(generatedAt).toLocaleString() })} ` : ""}
                   {usedLlm === false
-                    ? "Seed fallback used (no Groq key or model unavailable). "
+                    ? `${t("seedFallback")} `
                     : ""}
-                  Next step: Agent 2 (Judge) will send these to the client&apos;s AI and score the
-                  replies.
+                  {t("nextStep")}
                 </p>
               </>
             )}

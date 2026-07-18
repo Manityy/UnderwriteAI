@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Tier = "LOW" | "MEDIUM" | "HIGH" | "PENDING";
 
@@ -20,7 +21,8 @@ export function AnimatedScoreRing({
   tier: string;
   size?: number;
 }) {
-  const t = (["LOW", "MEDIUM", "HIGH"].includes(tier) ? tier : "PENDING") as Tier;
+  const t = useTranslations("dashboard");
+  const scoreTier = (["LOW", "MEDIUM", "HIGH"].includes(tier) ? tier : "PENDING") as Tier;
   const stroke = 12;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -65,7 +67,7 @@ export function AnimatedScoreRing({
     <div
       className="relative shrink-0 rounded-full bg-white/80 p-1 shadow-inner ring-1 ring-brand/10 backdrop-blur-sm"
       style={{ width: size + 8, height: size + 8 }}
-      aria-label={`Portfolio risk score ${score}`}
+      aria-label={t("scoreAria", { score })}
     >
       <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
@@ -82,7 +84,7 @@ export function AnimatedScoreRing({
             cy={size / 2}
             r={r}
             fill="none"
-            stroke={TIER_COLOR[t]}
+            stroke={TIER_COLOR[scoreTier]}
             strokeWidth={stroke}
             strokeLinecap="round"
             strokeDasharray={c}
@@ -98,7 +100,7 @@ export function AnimatedScoreRing({
           >
             {display}
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-muted">score</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted">{t("scoreLabel")}</span>
         </div>
       </div>
     </div>
