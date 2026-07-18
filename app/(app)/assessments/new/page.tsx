@@ -74,7 +74,7 @@ export default function NewAssessmentPage() {
     <div className="mx-auto max-w-2xl px-8 py-10">
       <h1 className="text-3xl font-extrabold tracking-tight text-ink">New AI risk assessment</h1>
       <p className="mt-1 text-sm text-muted">
-        Answer a few plain-language questions. We&apos;ll score the risk instantly.
+        Complete the 25-question underwriting disclosure. We&apos;ll score the risk instantly.
       </p>
 
       {/* progress */}
