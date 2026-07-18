@@ -28,6 +28,11 @@ model Assessment {
   tier       String   @default("PENDING") // LOW | MEDIUM | HIGH | PENDING
   findings   String   @default("[]") // JSON string
   conditions String   @default("[]") // JSON string
+  attackPrompts     String    @default("[]") // JSON array of AttackPrompt
+  attackGeneratedAt DateTime?
+  testResults       String    @default("[]") // JSON array of TestResult (Judge Agent 2)
+  testSummary       String    @default("{}") // JSON TestRunSummary
+  testRanAt         DateTime?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

@@ -4,7 +4,10 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { RiskBadge } from "@/components/RiskBadge";
+import { AttackAgentPanel } from "@/components/AttackAgentPanel";
+import { JudgeAgentPanel } from "@/components/JudgeAgentPanel";
 import type { Finding } from "@/lib/mockRiskEngine";
+import type { AttackPrompt, TestResult, TestRunSummary } from "@/lib/agents/types";
 
 const sevColor: Record<string, string> = {
   HIGH: "text-risk-high",
@@ -28,6 +31,12 @@ export default async function ReportPage({
 
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
+  const attackPrompts: AttackPrompt[] = safeParse(assessment.attackPrompts, []);
+  const testResults: TestResult[] = safeParse(assessment.testResults, []);
+  const testSummary: TestRunSummary | Record<string, never> = safeParse(
+    assessment.testSummary,
+    {}
+  );
 
   const tierMessage =
     assessment.tier === "HIGH"
@@ -85,6 +94,23 @@ export default async function ReportPage({
           <TestStep n="03" title="Score" body="Disclosures and test results combined into one risk score." />
         </div>
       </div>
+
+      {/* Attack agent (Agent 1) */}
+      <AttackAgentPanel
+        assessmentId={assessment.id}
+        initialPrompts={attackPrompts}
+        initialGeneratedAt={
+          assessment.attackGeneratedAt ? assessment.attackGeneratedAt.toISOString() : null
+        }
+      />
+
+      {/* Judge agent (Agent 2) */}
+      <JudgeAgentPanel
+        assessmentId={assessment.id}
+        hasAttackPrompts={attackPrompts.length > 0}
+        initialResults={testResults}
+        initialSummary={testSummary}
+      />
 
       {/* Findings */}
       <div className="mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
