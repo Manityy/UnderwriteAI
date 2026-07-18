@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
   turbopack: {
-    // Avoid picking up C:\Users\lenovo\package-lock.json as the workspace root
-    root: path.resolve(__dirname),
+    // Pin to this app directory (not C:\Users\lenovo from orphan lockfile)
+    root: process.cwd(),
   },
 };
 
