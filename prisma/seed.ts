@@ -126,8 +126,28 @@ async function main() {
 
   await prisma.assessment.deleteMany({ where: { userId: user.id } });
 
-  for (const s of samples) {
+  const sampleDecisions: Array<{
+    decision: string;
+    decisionNote: string;
+  } | null> = [
+    {
+      decision: "DECLINE",
+      decisionNote: "High-severity control gaps; remediate before quoting.",
+    },
+    {
+      decision: "ACCEPT_WITH_CONDITIONS",
+      decisionNote: "Accept subject to PII filtering and logging conditions.",
+    },
+    {
+      decision: "ACCEPT",
+      decisionNote: "Strong controls; standard terms appropriate.",
+    },
+  ];
+
+  for (let i = 0; i < samples.length; i++) {
+    const s = samples[i];
     const result = scoreAssessment(s.answers);
+    const d = sampleDecisions[i];
     await prisma.assessment.create({
       data: {
         clientName: s.clientName,
@@ -141,6 +161,9 @@ async function main() {
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
         scoreDrivers: JSON.stringify(result.scoreDrivers),
+        decision: d?.decision ?? "",
+        decisionNote: d?.decisionNote ?? "",
+        decisionAt: d ? new Date() : null,
         userId: user.id,
       },
     });
