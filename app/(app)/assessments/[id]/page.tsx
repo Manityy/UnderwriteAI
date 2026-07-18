@@ -4,7 +4,6 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { RiskBadge } from "@/components/RiskBadge";
-import { PrintReportButton } from "@/components/PrintReportButton";
 import {
   formatPremiumFactor,
   premiumFactorFromScore,
@@ -43,13 +42,10 @@ export default async function ReportPage({
 
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
-  const premiumFactor = premiumFactorFromScore(assessment.score);
-  const reportDate = new Date(assessment.updatedAt).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-  const pdfTitle = `${slugify(assessment.clientName)}-AI-risk-report`;
+  const premiumFactor =
+    assessment.premiumFactor > 0
+      ? assessment.premiumFactor
+      : premiumFactorFromScore(assessment.score);
 
   const tierMessage =
     assessment.tier === "HIGH"
@@ -91,9 +87,20 @@ export default async function ReportPage({
       </header>
 
       {/* Score + summary */}
-      <div className="report-card mt-8 grid gap-6 md:grid-cols-[auto_1fr] print:mt-6 print:grid-cols-1">
-        <div className="flex flex-col items-center justify-center gap-4 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:hidden">
+      <div className="mt-8 grid gap-6 md:grid-cols-[auto_1fr]">
+        <div className="flex flex-col items-center justify-center gap-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
           <ScoreGauge score={assessment.score} tier={assessment.tier} />
+          <div className="w-full border-t border-black/5 pt-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted">
+              Indicative premium factor
+            </p>
+            <p className="mt-1 text-4xl font-extrabold tracking-tight text-brand">
+              {formatPremiumFactor(premiumFactor)}
+            </p>
+            <p className="mt-2 text-[11px] font-medium text-muted">
+              Indicative — not actuarial
+            </p>
+          </div>
         </div>
 
         {/* Print-only key metrics (cleaner than animated gauge) */}
@@ -117,24 +124,20 @@ export default async function ReportPage({
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted">
             Underwriting recommendation
           </h2>
-          <p className="mt-3 text-xl font-extrabold leading-snug text-ink print:text-base">
-            {tierMessage}
-          </p>
-          <div className="mt-6 grid grid-cols-2 gap-4 border-t border-black/5 pt-6 text-center sm:grid-cols-4 print:hidden">
+          <p className="mt-3 text-xl font-extrabold leading-snug text-ink">{tierMessage}</p>
+          <div className="mt-6 grid grid-cols-2 gap-4 border-t border-black/5 pt-6 text-center sm:grid-cols-4">
             <MiniStat label="Risk score" value={String(assessment.score)} />
-            <MiniStat
-              label="Premium factor"
-              value={formatPremiumFactor(premiumFactor)}
-              accent
-            />
+            <MiniStat label="Premium factor" value={formatPremiumFactor(premiumFactor)} accent />
             <MiniStat label="Findings" value={String(findings.length)} />
             <MiniStat
               label="High severity"
               value={String(findings.filter((f) => f.severity === "HIGH").length)}
             />
           </div>
-          <p className="mt-4 hidden text-xs text-muted print:block print:mt-3">
-            Indicative premium factor {formatPremiumFactor(premiumFactor)} — not actuarial.
+          <p className="mt-4 text-xs leading-relaxed text-muted">
+            Premium factor uses a simple rule:{" "}
+            <span className="font-semibold text-ink/70">1.00x + (score ÷ 100) × 1.50</span>
+            {" "}(range 1.00x–2.50x). For underwriting judgement only — not an actuarial rate.
           </p>
         </div>
       </div>

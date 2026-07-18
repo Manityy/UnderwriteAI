@@ -34,7 +34,12 @@ export type RiskResult = {
   conditions: string[];
 };
 
-/** 1.00x at score 0 → 2.50x at score 100. Indicative only. */
+/**
+ * Indicative premium factor for underwriting support only.
+ * Simple linear formula (transparent for jury demos):
+ *   1.00x at score 0  →  2.50x at score 100
+ *   factor = 1 + (score / 100) * 1.5
+ */
 export function premiumFactorFromScore(score: number): number {
   const clamped = Math.max(0, Math.min(100, score));
   return Math.round((1 + (clamped / 100) * 1.5) * 100) / 100;
