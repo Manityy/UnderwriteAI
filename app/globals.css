@@ -63,6 +63,16 @@
   }
 }
 
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
 @keyframes float-x {
   0%,
   100% {
@@ -70,6 +80,16 @@
   }
   50% {
     transform: translate3d(22px, -16px, 0);
+  }
+}
+
+@keyframes float-x-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(8px, -6px, 0);
   }
 }
 
@@ -83,6 +103,19 @@
   }
   66% {
     transform: translate3d(-6px, 12px, 0) rotate(-6deg);
+  }
+}
+
+@keyframes drift-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(4px, -8px, 0) rotate(2deg);
+  }
+  66% {
+    transform: translate3d(-3px, 5px, 0) rotate(-2deg);
   }
 }
 
@@ -112,11 +145,20 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+.animate-float-soft {
+  animation: float-soft 7.5s ease-in-out infinite;
+}
 .animate-float-x {
   animation: float-x 8s ease-in-out infinite;
 }
+.animate-float-x-soft {
+  animation: float-x-soft 9s ease-in-out infinite;
+}
 .animate-drift {
   animation: drift 10s ease-in-out infinite;
+}
+.animate-drift-soft {
+  animation: drift-soft 12s ease-in-out infinite;
 }
 .animate-spin-slow {
   animation: spin-slow 26s linear infinite;
@@ -166,11 +208,19 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
+  .animate-float-soft,
   .animate-float-x,
+  .animate-float-x-soft,
   .animate-drift,
+  .animate-drift-soft,
   .animate-spin-slow,
   .animate-pulse-ring {
     animation: none;
+  }
+
+  .parallax-layer,
+  .tilt-layer {
+    transform: none !important;
   }
 }
 

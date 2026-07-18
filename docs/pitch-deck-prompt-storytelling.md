@@ -1,4 +1,4 @@
-# UnderwriteAI — Storytelling Pitch Deck Prompt (Gamma / Canva AI)
+﻿# UnderwriteAI — Storytelling Pitch Deck Prompt (Gamma / Canva AI)
 
 A beginner-friendly, low-text, story-driven deck. 10 slides. English. Real, sourced numbers.
 
@@ -17,9 +17,9 @@ Note on numbers: figures are real and sourced (McKinsey, Stanford HAI, market-re
 
 ## PROMPT START
 
-Create a **simple, story-driven, visually rich 10-slide pitch deck** in **English** for a hackathon called **"Automate or die"**.
+Create a **simple, story-driven, visually rich 10-slide pitch deck** in **English** for a pitch competition for **"UnderwriteAI"**.
 
-**Team:** Pivot — Elaa, Imen, Aziz
+**Team:** Pivot — Alaa, Imen, Aziz
 
 **Product:** UnderwriteAI — *underwriting intelligence for AI risk.*
 
@@ -36,7 +36,7 @@ Follow this exact slide-by-slide story:
 ### SLIDE 1 — Hook (Title)
 - Huge title: **UnderwriteAI**
 - One line under it: *We help insurers cover the risks of AI.*
-- Small: Team Pivot — Elaa, Imen, Aziz · "Automate or die" hackathon
+- Small: Team Pivot — Alaa, Imen, Aziz
 - Visual: a simple shield over an AI spark / neural icon
 - Tiny teaser line at the bottom: *"Every company is racing to use AI. Almost no one is insuring what could go wrong."*
 
@@ -148,9 +148,9 @@ One line: *We sit inside the insurer's process — they keep the client, we powe
 ### SLIDE 10 — The ask (close strong)
 Headline: **Help us make AI insurable.**
 
-- Team: **Pivot** — Elaa · Imen · Aziz
+- Team: **Pivot** — Alaa · Imen · Aziz
 - Three tiny asks with icons:
-  1. **Win** Automate or die
+  1. **Validate** the product with the jury
   2. **Pilot** with a real insurer
   3. **Guidance** from insurance experts in the room
 - Big closing line: *"Insurers already price the risk of fires, floods, and cyberattacks. We help them price the risk of AI."*

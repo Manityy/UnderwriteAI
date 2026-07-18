@@ -23,16 +23,15 @@ export function Footer() {
         <div>
           <h4 className="text-sm font-bold uppercase tracking-wider text-white/50">Team Pivot</h4>
           <ul className="mt-4 space-y-2 text-sm text-white/60">
-            <li>Elaa Elmir</li>
+            <li>Alaa Elmir</li>
             <li>Imen Nasr</li>
             <li>Aziz Souiai</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-white/40 sm:flex-row">
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-6 py-5 text-xs text-white/40 sm:justify-start">
           <span>&copy; {new Date().getFullYear()} UnderwriteAI — a Team Pivot project.</span>
-          <span>Built for the &ldquo;Automate or die&rdquo; hackathon.</span>
         </div>
       </div>
     </footer>
