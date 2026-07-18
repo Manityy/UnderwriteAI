@@ -3,7 +3,7 @@
 Underwriting intelligence for AI risk. A mock B2B platform that helps insurers measure and price
 the risk of their clients' AI systems — without needing the model's source code.
 
-Built by **Team Pivot** (Elaa, Imen, Aziz) for the "Automate or die" hackathon.
+Built by **Team Pivot** (Alaa, Imen, Aziz).
 
 > This is a demo build. The risk engine is a deterministic mock (rules over questionnaire answers).
 > Agent 1 (the attack agent) and Agent 2 (the judge) are real: they use Groq to generate

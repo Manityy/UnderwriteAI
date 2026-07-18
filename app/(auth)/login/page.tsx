@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Logo, LogoMark } from "@/components/Logo";
+import { Logo } from "@/components/Logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function LoginPage() {
             Score, monitor and price the AI systems of your corporate clients — all in one place.
           </p>
         </div>
-        <p className="text-sm text-white/50">Team Pivot &middot; &ldquo;Automate or die&rdquo; hackathon</p>
+        <p className="text-sm text-white/50">Team Pivot</p>
       </div>
 
       {/* Form */}
@@ -57,9 +57,6 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
           <div className="mb-8 md:hidden">
             <Logo variant="dark" />
-          </div>
-          <div className="mb-2 inline-flex items-center gap-2 text-brand md:hidden">
-            <LogoMark className="h-5 w-5" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-ink">Insurer login</h1>
           <p className="mt-2 text-sm text-muted">Welcome back. Sign in to your underwriting workspace.</p>

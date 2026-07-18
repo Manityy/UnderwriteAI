@@ -1,4 +1,4 @@
-# UnderwriteAI — Pitch Deck Prompt (Gamma / Canva AI)
+﻿# UnderwriteAI — Pitch Deck Prompt (Gamma / Canva AI)
 
 Product name: **UnderwriteAI** (final). Alternatives if you rebrand: ModelGuard, RiskLens AI, AuraRisk.
 
@@ -15,15 +15,15 @@ Product name: **UnderwriteAI** (final). Alternatives if you rebrand: ModelGuard,
 
 ## PROMPT START
 
-Create a professional, modern **10–12 slide pitch deck** in **English** for a hackathon competition called **"Automate or die"**.
+Create a professional, modern **10–12 slide pitch deck** in **English** for a pitch competition called **UnderwriteAI**.
 
-**Team:** Pivot — Elaa, Imen, Aziz (3 members)
+**Team:** Pivot — Alaa, Imen, Aziz (3 members)
 
 **Product name:** UnderwriteAI
 
 **One-line pitch:** UnderwriteAI is a B2B underwriting intelligence platform that helps **insurance companies** assess and price AI risk for their corporate clients — without needing access to proprietary model code.
 
-**Audience:** Hackathon jury, including **insurance industry professionals**. The deck must convince them this is a **real, sellable product** insurers would buy — not a generic AI slide deck.
+**Audience:** Jury, including **insurance industry professionals**. The deck must convince them this is a **real, sellable product** insurers would buy — not a generic AI slide deck.
 
 **Tone:** Confident, clear, business-first with credible technical depth. Avoid hype words like "revolutionary" or "guaranteed." Use insurance language: underwriting, exposure, controls, premium, claims, renewal, compliance.
 
@@ -34,8 +34,8 @@ Create a professional, modern **10–12 slide pitch deck** in **English** for a 
 ### SLIDE 1 — Title
 - Title: **UnderwriteAI**
 - Subtitle: *Underwriting intelligence for AI risk*
-- Team: **Pivot** — Elaa · Imen · Aziz
-- Event: Automate or die hackathon
+- Team: **Pivot** — Alaa · Imen · Aziz
+- Event: product launch
 - One visual: insurer + corporate client + AI shield
 
 ---
@@ -161,7 +161,7 @@ Layout as a single readable BMC diagram:
 
 - **Customer segments:** P&C insurers, specialty insurers, reinsurers; later brokers and MGAs
 - **Value proposition:** Standardized, evidence-based AI risk assessment for underwriting
-- **Channels:** Direct B2B sales, insurer innovation labs, hackathon/partnership pilots
+- **Channels:** Direct B2B sales, insurer innovation labs, partnership pilots
 - **Customer relationships:** SaaS subscription + onboarding; insurer-branded client portal
 - **Revenue streams:** Per-assessment fee; annual platform license; premium per monitored model at renewal
 - **Key resources:** Questionnaire framework, red-team agent library, judge models, underwriting report engine
@@ -186,9 +186,9 @@ Comparison table:
 ---
 
 ### SLIDE 11 — Go-to-market & traction plan
-Headline: **From hackathon to insurer pilot**
+Headline: **From prototype to insurer pilot**
 
-1. **Now (hackathon):** Working prototype — questionnaire + 2-agent test pipeline + risk report
+1. **Now (prototype):** Working prototype — questionnaire + 2-agent test pipeline + risk report
 2. **Next 90 days:** Design partner with 1 insurer — pilot on 10 corporate AI use cases
 3. **Year 1:** White-label portal for insurers; integrate into existing underwriting workflow
 
@@ -199,13 +199,13 @@ Metrics to track: assessments completed, time-to-quote reduction, findings accur
 ### SLIDE 12 — Closing / Ask
 Headline: **Pivot asks the jury**
 
-1. **Win Automate or die** — validate that AI underwriting intelligence is the right product for insurers today
+1. **Launch UnderwriteAI** — validate that AI underwriting intelligence is the right product for insurers today
 2. **Pilot partner** — connect us with an insurer willing to test UnderwriteAI on real (anonymized) use cases
 3. **Feedback from insurance experts** — refine questionnaire and risk tiers with industry input
 
 Closing line: *"Insurers already price cyber risk from the outside. UnderwriteAI does the same for AI — with disclosure, testing, and evidence insurers can trust."*
 
-Contact: Team Pivot — Elaa, Imen, Aziz
+Contact: Team Pivot — Alaa, Imen, Aziz
 
 ---
 
