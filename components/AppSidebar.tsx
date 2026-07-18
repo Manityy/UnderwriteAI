@@ -21,7 +21,7 @@ export function AppSidebar({ userName }: { userName: string }) {
   }
 
   return (
-    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-black/5 bg-white px-4 py-6">
+    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-black/5 bg-white px-4 py-6 print:hidden">
       <div className="px-2">
         <Logo variant="dark" href="/dashboard" />
       </div>
