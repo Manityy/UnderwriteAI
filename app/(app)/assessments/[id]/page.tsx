@@ -37,6 +37,10 @@ export default async function ReportPage({
   });
   if (!assessment) notFound();
 
+  if (assessment.status === "DRAFT") {
+    redirect(`/assessments/${id}/edit`);
+  }
+
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
   const premiumFactor = premiumFactorFromScore(assessment.score);
