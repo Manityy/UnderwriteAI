@@ -28,9 +28,21 @@ export type Finding = {
 export type RiskResult = {
   score: number; // 0..100 (higher = riskier)
   tier: Tier;
+  /** Indicative premium multiplier, e.g. 1.45 — not actuarial */
+  premiumFactor: number;
   findings: Finding[];
   conditions: string[];
 };
+
+/** 1.00x at score 0 → 2.50x at score 100. Indicative only. */
+export function premiumFactorFromScore(score: number): number {
+  const clamped = Math.max(0, Math.min(100, score));
+  return Math.round((1 + (clamped / 100) * 1.5) * 100) / 100;
+}
+
+export function formatPremiumFactor(factor: number): string {
+  return `${factor.toFixed(2)}x`;
+}
 
 // The underwriting questionnaire. Kept short and plain-language on purpose.
 export const QUESTIONS: Question[] = [
@@ -153,10 +165,11 @@ export function scoreAssessment(answers: Answers): RiskResult {
 
   const score = Math.round(weightTotal ? weightedSum / weightTotal : 0);
   const tier = tierFromScore(score);
+  const premiumFactor = premiumFactorFromScore(score);
   const findings = buildFindings(answers, tier);
   const conditions = buildConditions(answers, tier);
 
-  return { score, tier, findings, conditions };
+  return { score, tier, premiumFactor, findings, conditions };
 }
 
 function buildFindings(answers: Answers, tier: Tier): Finding[] {
