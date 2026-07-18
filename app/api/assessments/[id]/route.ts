@@ -75,6 +75,26 @@ export async function PATCH(
       });
     }
 
+    // Policy conditions picker — update selected clause IDs only
+    if (body.mode === "conditions") {
+      if (existing.status !== "SCORED") {
+        return NextResponse.json(
+          { error: "Score the assessment before attaching conditions." },
+          { status: 400 }
+        );
+      }
+      const conditions = sanitizeConditionIds(body.conditions);
+      const assessment = await prisma.assessment.update({
+        where: { id },
+        data: { conditions: JSON.stringify(conditions) },
+      });
+      return NextResponse.json({
+        id: assessment.id,
+        status: assessment.status,
+        conditions,
+      });
+    }
+
     const clientName = String(body.clientName ?? existing.clientName).trim();
     const industry = String(body.industry ?? existing.industry);
     const useCase = String(body.useCase ?? existing.useCase);
