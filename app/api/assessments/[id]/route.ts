@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { QUESTIONS, scoreAssessment, type Answers } from "@/lib/mockRiskEngine";
+import { isUnderwritingDecision } from "@/lib/underwritingDecision";
 
 export async function GET(
   _req: Request,
@@ -34,6 +35,45 @@ export async function PATCH(
 
   try {
     const body = await req.json();
+
+    // Underwriting decision — decision-support record only
+    if (body.mode === "decision") {
+      if (existing.status !== "SCORED") {
+        return NextResponse.json(
+          { error: "Score the assessment before recording a decision." },
+          { status: 400 }
+        );
+      }
+
+      const raw = body.decision;
+      const clearing = raw === "" || raw === null || raw === undefined;
+
+      if (!clearing && !isUnderwritingDecision(raw)) {
+        return NextResponse.json({ error: "Invalid underwriting decision." }, { status: 400 });
+      }
+
+      const decisionNote = String(body.decisionNote ?? "").trim().slice(0, 1000);
+      const now = new Date();
+
+      const assessment = await prisma.assessment.update({
+        where: { id },
+        data: clearing
+          ? { decision: "", decisionNote: "", decisionAt: null }
+          : {
+              decision: raw,
+              decisionNote,
+              decisionAt: now,
+            },
+      });
+
+      return NextResponse.json({
+        id: assessment.id,
+        decision: assessment.decision,
+        decisionNote: assessment.decisionNote,
+        decisionAt: assessment.decisionAt?.toISOString() ?? null,
+      });
+    }
+
     const clientName = String(body.clientName ?? existing.clientName).trim();
     const industry = String(body.industry ?? existing.industry);
     const useCase = String(body.useCase ?? existing.useCase);
@@ -58,6 +98,9 @@ export async function PATCH(
           findings: "[]",
           conditions: "[]",
           scoreDrivers: "[]",
+          decision: "",
+          decisionNote: "",
+          decisionAt: null,
         },
       });
       return NextResponse.json({ id: assessment.id, status: "DRAFT" });
@@ -86,6 +129,7 @@ export async function PATCH(
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
         scoreDrivers: JSON.stringify(result.scoreDrivers),
+        // Keep existing UW decision on re-score — underwriter judgement is separate
       },
     });
 

@@ -7,6 +7,8 @@ import { RiskBadge } from "@/components/RiskBadge";
 import { PrintReportButton } from "@/components/PrintReportButton";
 import { AttackAgentPanel } from "@/components/AttackAgentPanel";
 import { JudgeAgentPanel } from "@/components/JudgeAgentPanel";
+import { DecisionPanel } from "@/components/DecisionPanel";
+import { decisionShortLabel, parseDecision } from "@/lib/underwritingDecision";
 import {
   buildScoreDrivers,
   formatPremiumFactor,
@@ -113,8 +115,25 @@ export default async function ReportPage({
           </p>
           <p className="mt-1 hidden text-xs text-muted print:block">Report date: {reportDate}</p>
         </div>
-        <RiskBadge tier={assessment.tier} className="mt-2" />
+        <div className="flex flex-wrap items-center gap-2">
+          <RiskBadge tier={assessment.tier} className="mt-2" />
+        </div>
       </header>
+
+      {/* Underwriting decision */}
+      <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
+        <div className="h-1.5 bg-brand print:hidden" />
+        <div className="p-8 print:p-0">
+          <DecisionPanel
+            assessmentId={assessment.id}
+            initialDecision={parseDecision(assessment.decision)}
+            initialNote={assessment.decisionNote ?? ""}
+            initialDecidedAt={
+              assessment.decisionAt ? assessment.decisionAt.toISOString() : null
+            }
+          />
+        </div>
+      </div>
 
       {/* Score + summary */}
       <div className="mt-8 grid gap-6 md:grid-cols-[auto_1fr]">
@@ -143,7 +162,10 @@ export default async function ReportPage({
               value={tierLabel[assessment.tier] ?? assessment.tier}
             />
             <PrintMetric label="Premium factor" value={formatPremiumFactor(premiumFactor)} />
-            <PrintMetric label="Findings" value={String(findings.length)} />
+            <PrintMetric
+              label="Decision"
+              value={decisionShortLabel(assessment.decision)}
+            />
           </div>
           <p className="mt-3 text-[11px] text-muted">
             Premium factor: indicative — not actuarial (1.00x + score/100 × 1.50).

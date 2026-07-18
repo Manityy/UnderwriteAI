@@ -20,6 +20,7 @@ export default async function AssessmentsPage() {
     status: a.status,
     score: a.score,
     tier: a.tier,
+    decision: a.decision ?? "",
     createdAt: a.createdAt.toISOString(),
     updatedAt: a.updatedAt.toISOString(),
   }));
