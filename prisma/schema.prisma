@@ -27,9 +27,8 @@ model Assessment {
   score          Int      @default(0)
   tier           String   @default("PENDING") // LOW | MEDIUM | HIGH | PENDING
   premiumFactor  Float    @default(0) // indicative multiplier, e.g. 1.45
-  findings       String   @default("[]") // JSON string
-  conditions     String   @default("[]") // JSON string
-  scoreDrivers   String   @default("[]") // JSON ScoreDriver[] — why this score
+  findings       String   @default("[]") // JSON Finding[]
+  conditions     String   @default("[]") // JSON condition IDs from conditionsLibrary
   attackPrompts     String    @default("[]") // JSON array of AttackPrompt
   attackGeneratedAt DateTime?
   testResults       String    @default("[]") // JSON array of TestResult (Judge Agent 2)

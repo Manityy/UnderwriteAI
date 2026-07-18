@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { sanitizeConditionIds } from "@/lib/conditionsLibrary";
 import { QUESTIONS, scoreAssessment, type Answers } from "@/lib/mockRiskEngine";
 
 export async function GET(
@@ -34,6 +35,27 @@ export async function PATCH(
 
   try {
     const body = await req.json();
+
+    // Underwriter condition picker — update selected clause IDs only
+    if (body.mode === "conditions") {
+      if (existing.status !== "SCORED") {
+        return NextResponse.json(
+          { error: "Score the assessment before attaching conditions." },
+          { status: 400 }
+        );
+      }
+      const conditions = sanitizeConditionIds(body.conditions);
+      const assessment = await prisma.assessment.update({
+        where: { id },
+        data: { conditions: JSON.stringify(conditions) },
+      });
+      return NextResponse.json({
+        id: assessment.id,
+        status: assessment.status,
+        conditions,
+      });
+    }
+
     const clientName = String(body.clientName ?? existing.clientName).trim();
     const industry = String(body.industry ?? existing.industry);
     const useCase = String(body.useCase ?? existing.useCase);
