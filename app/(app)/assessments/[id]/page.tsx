@@ -160,14 +160,15 @@ export default async function ReportPage({
       </div>
 
       {/* How we tested — screen only */}
-      <div className="mt-6 rounded-3xl bg-ink p-8 text-white print:hidden">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-brand-light">
-          How we assessed this
-        </h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <TestStep n="01" title="Ask" body="Client disclosures on use, data and controls." />
-          <TestStep n="02" title="Test" body="Attack agent probed the system; judge agent graded every response." />
-          <TestStep n="03" title="Score" body="Disclosures and test results combined into one risk score." />
+      <div className="mt-6 overflow-hidden rounded-[2rem] bg-white shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:hidden">
+        <div className="h-1.5 bg-brand" />
+        <div className="p-8">
+          <h2 className="text-xl font-extrabold tracking-tight text-ink">How we assessed this</h2>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <TestStep n="01" title="Ask" body="Client disclosures on use, data and controls." />
+            <TestStep n="02" title="Test" body="Attack agent probed the system; judge agent graded every response." />
+            <TestStep n="03" title="Score" body="Disclosures and test results combined into one risk score." />
+          </div>
         </div>
       </div>
 
@@ -193,52 +194,64 @@ export default async function ReportPage({
       </div>
 
       {/* Findings */}
-      <div className="report-card mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:ring-0">
-        <h2 className="text-lg font-extrabold text-ink">Findings</h2>
-        <div className="mt-5 space-y-4">
-          {findings.map((f, i) => (
-            <div
-              key={i}
-              className="flex gap-4 rounded-2xl bg-cream/60 p-5 print:break-inside-avoid print:rounded-none print:border-b print:border-black/10 print:bg-transparent print:px-0 print:pb-4"
-            >
-              <span className={`mt-1 text-lg ${sevColor[f.severity] ?? "text-muted"}`}>&#9679;</span>
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-extrabold text-ink">{f.title}</h3>
-                  <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted ring-1 ring-black/5 print:bg-transparent">
-                    {f.category}
-                  </span>
-                  <span className={`text-[11px] font-bold uppercase ${sevColor[f.severity]}`}>
-                    {f.severity}
-                  </span>
+      <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
+        <div className="h-1.5 bg-brand print:hidden" />
+        <div className="p-8 print:p-0">
+          <h2 className="text-xl font-extrabold tracking-tight text-ink">Findings</h2>
+          <div className="mt-5 space-y-3">
+            {findings.map((f, i) => (
+              <div
+                key={i}
+                className="flex gap-4 rounded-2xl bg-cream/70 p-5 ring-1 ring-black/5 print:break-inside-avoid print:rounded-none print:border-b print:border-black/10 print:bg-transparent print:px-0 print:pb-4 print:ring-0"
+              >
+                <span className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${
+                  f.severity === "HIGH"
+                    ? "bg-risk-high"
+                    : f.severity === "MEDIUM"
+                    ? "bg-risk-medium"
+                    : "bg-risk-low"
+                }`} />
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-extrabold text-ink">{f.title}</h3>
+                    <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted print:bg-transparent">
+                      {f.category}
+                    </span>
+                    <span className={`text-[11px] font-bold uppercase tracking-wide ${sevColor[f.severity]}`}>
+                      {f.severity}
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.detail}</p>
                 </div>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.detail}</p>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Recommended conditions */}
-      <div className="report-card mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:ring-0">
-        <h2 className="text-lg font-extrabold text-ink">Recommended policy conditions</h2>
-        <ul className="mt-5 space-y-3">
-          {conditions.map((c, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-3 text-sm text-ink/80 print:break-inside-avoid"
-            >
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-bold text-brand">
-                {i + 1}
-              </span>
-              {c}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 border-t border-black/5 pt-4 text-xs text-muted">
-          Risk score and premium factor are indicative — not actuarial. They support underwriting
-          judgement; they do not replace it.
-        </p>
+      <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
+        <div className="h-1.5 bg-brand print:hidden" />
+        <div className="p-8 print:p-0">
+          <h2 className="text-xl font-extrabold tracking-tight text-ink">Recommended policy conditions</h2>
+          <ul className="mt-5 space-y-3">
+            {conditions.map((c, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-3 text-sm text-ink/80 print:break-inside-avoid"
+              >
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-white shadow-sm">
+                  {i + 1}
+                </span>
+                {c}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 border-t border-black/5 pt-4 text-xs leading-relaxed text-muted">
+            Risk score and premium factor are indicative — not actuarial. They support underwriting
+            judgement; they do not replace it.
+          </p>
+        </div>
       </div>
 
       <p className="mt-8 hidden text-[10px] text-muted print:block">
@@ -276,10 +289,10 @@ function PrintMetric({ label, value }: { label: string; value: string }) {
 
 function TestStep({ n, title, body }: { n: string; title: string; body: string }) {
   return (
-    <div className="rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
-      <span className="text-xs font-bold text-brand-light">{n}</span>
-      <h3 className="mt-1 text-lg font-extrabold">{title}</h3>
-      <p className="mt-1 text-sm text-white/70">{body}</p>
+    <div className="rounded-2xl bg-cream/70 p-5 ring-1 ring-black/5">
+      <span className="text-xs font-bold text-brand">{n}</span>
+      <h3 className="mt-1 text-lg font-extrabold tracking-tight text-ink">{title}</h3>
+      <p className="mt-1.5 text-sm leading-relaxed text-muted">{body}</p>
     </div>
   );
 }
