@@ -8,9 +8,13 @@ import { PrintReportButton } from "@/components/PrintReportButton";
 import { AttackAgentPanel } from "@/components/AttackAgentPanel";
 import { JudgeAgentPanel } from "@/components/JudgeAgentPanel";
 import {
+  buildScoreDrivers,
   formatPremiumFactor,
+  mergeTestSignalDrivers,
   premiumFactorFromScore,
+  type Answers,
   type Finding,
+  type ScoreDriver,
 } from "@/lib/mockRiskEngine";
 import type { AttackPrompt, TestResult, TestRunSummary } from "@/lib/agents/types";
 
@@ -46,6 +50,8 @@ export default async function ReportPage({
 
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
+  const answers: Answers = safeParse(assessment.answers, {});
+  const storedDrivers: ScoreDriver[] = safeParse(assessment.scoreDrivers, []);
   const premiumFactor =
     assessment.premiumFactor > 0
       ? assessment.premiumFactor
@@ -55,6 +61,13 @@ export default async function ReportPage({
   const testSummary: TestRunSummary | Record<string, never> = safeParse(
     assessment.testSummary,
     {}
+  );
+
+  const baseDrivers =
+    storedDrivers.length > 0 ? storedDrivers : buildScoreDrivers(answers);
+  const scoreDrivers = mergeTestSignalDrivers(
+    baseDrivers,
+    "failuresByCategory" in testSummary ? testSummary.failuresByCategory : null
   );
 
   const reportDate = new Date(assessment.updatedAt).toLocaleDateString("en-GB", {
@@ -158,6 +171,47 @@ export default async function ReportPage({
           </p>
         </div>
       </div>
+
+      {/* Why this score */}
+      {scoreDrivers.length > 0 && (
+        <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
+          <div className="h-1.5 bg-brand print:hidden" />
+          <div className="p-8 print:p-0">
+            <h2 className="text-xl font-extrabold tracking-tight text-ink">Why this score</h2>
+            <p className="mt-2 text-sm text-muted">
+              Top drivers of the {tierLabel[assessment.tier]?.toLowerCase() ?? assessment.tier}{" "}
+              rating — from disclosures
+              {"failuresByCategory" in testSummary &&
+              testSummary.failed &&
+              testSummary.failed > 0
+                ? " and red-team tests"
+                : ""}
+              .
+            </p>
+            <ol className="mt-5 space-y-4">
+              {scoreDrivers.map((d, i) => (
+                <li
+                  key={`${d.title}-${i}`}
+                  className="flex gap-4 rounded-2xl bg-cream/70 p-5 ring-1 ring-black/5 print:break-inside-avoid print:rounded-none print:border-b print:border-black/10 print:bg-transparent print:px-0 print:pb-4 print:ring-0"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-extrabold text-ink">{d.title}</h3>
+                      <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted print:bg-transparent">
+                        {d.theme}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted">{d.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      )}
 
       {/* How we tested — screen only */}
       <div className="mt-6 overflow-hidden rounded-[2rem] bg-white shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:hidden">
