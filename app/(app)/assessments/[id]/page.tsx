@@ -4,12 +4,23 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { RiskBadge } from "@/components/RiskBadge";
-import type { Finding } from "@/lib/mockRiskEngine";
+import { PrintReportButton } from "@/components/PrintReportButton";
+import {
+  formatPremiumFactor,
+  premiumFactorFromScore,
+  type Finding,
+} from "@/lib/mockRiskEngine";
 
 const sevColor: Record<string, string> = {
   HIGH: "text-risk-high",
   MEDIUM: "text-risk-medium",
   LOW: "text-risk-low",
+};
+
+const tierLabel: Record<string, string> = {
+  LOW: "Low risk",
+  MEDIUM: "Medium risk",
+  HIGH: "High risk",
 };
 
 export default async function ReportPage({
@@ -32,6 +43,13 @@ export default async function ReportPage({
 
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
+  const premiumFactor = premiumFactorFromScore(assessment.score);
+  const reportDate = new Date(assessment.updatedAt).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const pdfTitle = `${slugify(assessment.clientName)}-AI-risk-report`;
 
   const tierMessage =
     assessment.tier === "HIGH"
@@ -41,53 +59,88 @@ export default async function ReportPage({
       : "Standard coverage is appropriate. Maintain controls and re-assess at renewal.";
 
   return (
-    <div className="mx-auto max-w-5xl px-8 py-10">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="report-print mx-auto max-w-5xl px-8 py-10">
+      <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link href="/assessments" className="text-sm font-semibold text-brand hover:text-brand-dark">
           &larr; Back to assessments
         </Link>
-        <Link
-          href={`/assessments/${id}/edit`}
-          className="rounded-full px-5 py-2.5 text-sm font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
-        >
-          Edit &amp; re-score
-        </Link>
+        <PrintReportButton documentTitle={pdfTitle} />
       </div>
 
-      <header className="mt-4 flex flex-wrap items-start justify-between gap-4">
+      {/* Print letterhead */}
+      <div className="mb-6 hidden border-b border-black/15 pb-4 print:block">
+        <p className="text-xs font-bold uppercase tracking-wider text-brand">UnderwriteAI</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-ink">AI Risk Underwriting Report</h1>
+        <p className="mt-1 text-sm text-muted">
+          Prepared for underwriting review · {reportDate}
+        </p>
+      </div>
+
+      <header className="mt-4 flex flex-wrap items-start justify-between gap-4 print:mt-0">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-ink">{assessment.clientName}</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-ink print:text-2xl">
+            {assessment.clientName}
+          </h1>
           <p className="mt-1 text-sm text-muted">
             {assessment.industry}
             {assessment.useCase ? ` · ${assessment.useCase}` : ""}
           </p>
+          <p className="mt-1 hidden text-xs text-muted print:block">Report date: {reportDate}</p>
         </div>
         <RiskBadge tier={assessment.tier} className="mt-2" />
       </header>
 
       {/* Score + summary */}
-      <div className="mt-8 grid gap-6 md:grid-cols-[auto_1fr]">
-        <div className="flex items-center justify-center rounded-3xl bg-white p-8 ring-1 ring-black/5">
+      <div className="report-card mt-8 grid gap-6 md:grid-cols-[auto_1fr] print:mt-6 print:grid-cols-1">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:hidden">
           <ScoreGauge score={assessment.score} tier={assessment.tier} />
         </div>
-        <div className="rounded-3xl bg-white p-8 ring-1 ring-black/5">
+
+        {/* Print-only key metrics (cleaner than animated gauge) */}
+        <div className="report-card hidden rounded-3xl border border-black/10 bg-white p-6 print:block">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted">Key metrics</h2>
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <PrintMetric label="Risk score" value={String(assessment.score)} />
+            <PrintMetric
+              label="Risk tier"
+              value={tierLabel[assessment.tier] ?? assessment.tier}
+            />
+            <PrintMetric label="Premium factor" value={formatPremiumFactor(premiumFactor)} />
+            <PrintMetric label="Findings" value={String(findings.length)} />
+          </div>
+          <p className="mt-3 text-[11px] text-muted">
+            Premium factor: indicative — not actuarial (1.00x + score/100 × 1.50).
+          </p>
+        </div>
+
+        <div className="report-card rounded-3xl bg-white p-8 ring-1 ring-black/5 print:p-6 print:ring-0 print:border print:border-black/10">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted">
             Underwriting recommendation
           </h2>
-          <p className="mt-3 text-xl font-extrabold leading-snug text-ink">{tierMessage}</p>
-          <div className="mt-6 grid grid-cols-3 gap-4 border-t border-black/5 pt-6 text-center">
-            <MiniStat label="Findings" value={findings.length} />
+          <p className="mt-3 text-xl font-extrabold leading-snug text-ink print:text-base">
+            {tierMessage}
+          </p>
+          <div className="mt-6 grid grid-cols-2 gap-4 border-t border-black/5 pt-6 text-center sm:grid-cols-4 print:hidden">
+            <MiniStat label="Risk score" value={String(assessment.score)} />
+            <MiniStat
+              label="Premium factor"
+              value={formatPremiumFactor(premiumFactor)}
+              accent
+            />
+            <MiniStat label="Findings" value={String(findings.length)} />
             <MiniStat
               label="High severity"
-              value={findings.filter((f) => f.severity === "HIGH").length}
+              value={String(findings.filter((f) => f.severity === "HIGH").length)}
             />
-            <MiniStat label="Conditions" value={conditions.length} />
           </div>
+          <p className="mt-4 hidden text-xs text-muted print:block print:mt-3">
+            Indicative premium factor {formatPremiumFactor(premiumFactor)} — not actuarial.
+          </p>
         </div>
       </div>
 
-      {/* How we tested */}
-      <div className="mt-6 rounded-3xl bg-ink p-8 text-white">
+      {/* How we tested — screen only */}
+      <div className="mt-6 rounded-3xl bg-ink p-8 text-white print:hidden">
         <h2 className="text-sm font-bold uppercase tracking-wider text-brand-light">
           How we assessed this
         </h2>
@@ -99,16 +152,19 @@ export default async function ReportPage({
       </div>
 
       {/* Findings */}
-      <div className="mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
+      <div className="report-card mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:ring-0">
         <h2 className="text-lg font-extrabold text-ink">Findings</h2>
         <div className="mt-5 space-y-4">
           {findings.map((f, i) => (
-            <div key={i} className="flex gap-4 rounded-2xl bg-cream/60 p-5">
+            <div
+              key={i}
+              className="flex gap-4 rounded-2xl bg-cream/60 p-5 print:break-inside-avoid print:rounded-none print:border-b print:border-black/10 print:bg-transparent print:px-0 print:pb-4"
+            >
               <span className={`mt-1 text-lg ${sevColor[f.severity] ?? "text-muted"}`}>&#9679;</span>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-extrabold text-ink">{f.title}</h3>
-                  <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted ring-1 ring-black/5">
+                  <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted ring-1 ring-black/5 print:bg-transparent">
                     {f.category}
                   </span>
                   <span className={`text-[11px] font-bold uppercase ${sevColor[f.severity]}`}>
@@ -123,11 +179,14 @@ export default async function ReportPage({
       </div>
 
       {/* Recommended conditions */}
-      <div className="mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
+      <div className="report-card mt-6 rounded-3xl bg-white p-8 ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:ring-0">
         <h2 className="text-lg font-extrabold text-ink">Recommended policy conditions</h2>
         <ul className="mt-5 space-y-3">
           {conditions.map((c, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-ink/80">
+            <li
+              key={i}
+              className="flex items-start gap-3 text-sm text-ink/80 print:break-inside-avoid"
+            >
               <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-bold text-brand">
                 {i + 1}
               </span>
@@ -136,19 +195,40 @@ export default async function ReportPage({
           ))}
         </ul>
         <p className="mt-6 border-t border-black/5 pt-4 text-xs text-muted">
-          Risk score is indicative, not actuarial. It is designed to support underwriting judgement,
-          not replace it.
+          Risk score and premium factor are indicative — not actuarial. They support underwriting
+          judgement; they do not replace it.
         </p>
       </div>
+
+      <p className="mt-8 hidden text-[10px] text-muted print:block">
+        Generated by UnderwriteAI · Confidential — for underwriting use only
+      </p>
     </div>
   );
 }
 
-function MiniStat({ label, value }: { label: string; value: number }) {
+function MiniStat({
+  label,
+  value,
+  accent = false,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
   return (
     <div>
-      <p className="text-2xl font-extrabold text-ink">{value}</p>
+      <p className={`text-2xl font-extrabold ${accent ? "text-brand" : "text-ink"}`}>{value}</p>
       <p className="text-xs font-medium text-muted">{label}</p>
+    </div>
+  );
+}
+
+function PrintMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xl font-extrabold text-ink">{value}</p>
+      <p className="text-[11px] font-medium uppercase tracking-wide text-muted">{label}</p>
     </div>
   );
 }
@@ -161,6 +241,14 @@ function TestStep({ n, title, body }: { n: string; title: string; body: string }
       <p className="mt-1 text-sm text-white/70">{body}</p>
     </div>
   );
+}
+
+function slugify(value: string): string {
+  return value
+    .trim()
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60) || "AI-risk-report";
 }
 
 function safeParse<T>(value: string, fallback: T): T {
