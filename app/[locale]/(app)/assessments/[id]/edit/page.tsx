@@ -1,4 +1,6 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
+import { setRequestLocale } from "next-intl/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { AssessmentForm } from "@/components/AssessmentForm";
@@ -7,11 +9,15 @@ import type { Answers } from "@/lib/mockRiskEngine";
 export default async function EditAssessmentPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ locale: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { locale, id } = await params;
+  setRequestLocale(locale);
   const session = await getSession();
-  if (!session) redirect("/login");
+  if (!session) {
+    redirect({ href: "/login", locale });
+    return null;
+  }
 
   const assessment = await prisma.assessment.findFirst({
     where: { id, userId: session.userId },

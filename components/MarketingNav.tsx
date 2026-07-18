@@ -1,20 +1,22 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Logo } from "./Logo";
-
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function MarketingNav() {
+  const t = useTranslations("navigation");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const links = [
+    { href: "/" as const, label: t("home") },
+    { href: "/about" as const, label: t("about") },
+    { href: "/contact" as const, label: t("contact") },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -46,7 +48,7 @@ export function MarketingNav() {
 
           <div className="hidden items-center gap-1 md:flex">
             <div
-              className={`mr-1 flex items-center gap-0.5 rounded-full p-1 transition-colors duration-300 ${
+              className={`me-1 flex items-center gap-0.5 rounded-full p-1 transition-colors duration-300 ${
                 scrolled ? "bg-white/50 ring-1 ring-black/5" : "bg-white/25 ring-1 ring-white/40"
               }`}
             >
@@ -67,14 +69,15 @@ export function MarketingNav() {
                 );
               })}
             </div>
+            <LanguageSwitcher variant="compact" />
             <Link
               href="/login"
               className="group inline-flex items-center gap-1.5 rounded-full bg-brand px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm shadow-brand/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-md hover:shadow-brand/30"
             >
-              Insurer login
+              {t("insurerLogin")}
               <svg
                 viewBox="0 0 24 24"
-                className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                className="h-3.5 w-3.5 rtl-flip transition-transform duration-200 group-hover:translate-x-0.5"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.5"
@@ -86,35 +89,38 @@ export function MarketingNav() {
             </Link>
           </div>
 
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-brand shadow-sm ring-1 ring-black/5 transition-all duration-200 hover:bg-white hover:shadow-md hover:ring-brand/20 md:hidden"
-            aria-label="Toggle menu"
-            aria-expanded={open}
-          >
-            <span className="relative block h-3.5 w-4">
-              <span
-                className={`absolute left-0 block h-0.5 w-full rounded-full bg-current transition-all duration-200 ${
-                  open ? "top-1.5 rotate-45" : "top-0"
-                }`}
-              />
-              <span
-                className={`absolute left-0 top-1.5 block h-0.5 w-full rounded-full bg-current transition-all duration-200 ${
-                  open ? "opacity-0" : "opacity-100"
-                }`}
-              />
-              <span
-                className={`absolute left-0 block h-0.5 w-full rounded-full bg-current transition-all duration-200 ${
-                  open ? "top-1.5 -rotate-45" : "top-3"
-                }`}
-              />
-            </span>
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <LanguageSwitcher variant="compact" />
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-brand shadow-sm ring-1 ring-black/5 transition-all duration-200 hover:bg-white hover:shadow-md hover:ring-brand/20"
+              aria-label={t("toggleMenu")}
+              aria-expanded={open}
+            >
+              <span className="relative block h-3.5 w-4">
+                <span
+                  className={`absolute start-0 block h-0.5 w-full rounded-full bg-current transition-all duration-200 ${
+                    open ? "top-1.5 rotate-45" : "top-0"
+                  }`}
+                />
+                <span
+                  className={`absolute start-0 top-1.5 block h-0.5 w-full rounded-full bg-current transition-all duration-200 ${
+                    open ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`absolute start-0 block h-0.5 w-full rounded-full bg-current transition-all duration-200 ${
+                    open ? "top-1.5 -rotate-45" : "top-3"
+                  }`}
+                />
+              </span>
+            </button>
+          </div>
         </nav>
 
         <div
           className={`overflow-hidden transition-all duration-300 md:hidden ${
-            open ? "mt-2 max-h-72 opacity-100" : "max-h-0 opacity-0"
+            open ? "mt-2 max-h-80 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           <div
@@ -144,10 +150,10 @@ export function MarketingNav() {
                 onClick={() => setOpen(false)}
                 className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-brand px-3 py-2.5 text-center text-[15px] font-semibold text-white shadow-sm shadow-brand/20 transition hover:bg-brand-dark"
               >
-                Insurer login
+                {t("insurerLogin")}
                 <svg
                   viewBox="0 0 24 24"
-                  className="h-3.5 w-3.5"
+                  className="h-3.5 w-3.5 rtl-flip"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.5"

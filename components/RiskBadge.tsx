@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 type Tier = "LOW" | "MEDIUM" | "HIGH" | "PENDING";
 
 const styles: Record<Tier, string> = {
@@ -7,21 +11,16 @@ const styles: Record<Tier, string> = {
   PENDING: "bg-panel text-muted ring-black/5",
 };
 
-const labels: Record<Tier, string> = {
-  LOW: "Low risk",
-  MEDIUM: "Medium risk",
-  HIGH: "High risk",
-  PENDING: "Not scored",
-};
-
 export function RiskBadge({ tier, className = "" }: { tier: string; className?: string }) {
-  const t = (["LOW", "MEDIUM", "HIGH"].includes(tier) ? tier : "PENDING") as Tier;
+  const t = useTranslations("dashboard.tiers");
+  const key = (["LOW", "MEDIUM", "HIGH"].includes(tier) ? tier : "PENDING") as Tier;
+
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ring-1 ${styles[t]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ring-1 ${styles[key]} ${className}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {labels[t]}
+      {t(key)}
     </span>
   );
 }

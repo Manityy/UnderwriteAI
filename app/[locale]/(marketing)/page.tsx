@@ -8,32 +8,30 @@ import { HeroIllustration } from "@/components/HeroIllustration";
 import { FloatingShapes } from "@/components/FloatingShapes";
 import { FloatingCards } from "@/components/FloatingCards";
 import { AnimatedStat } from "@/components/AnimatedStat";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-const stats = [
-  { value: "88%", label: "of companies now use AI in at least one function", source: "McKinsey, 2025" },
-  { value: "+56%", label: "jump in reported AI incidents in a single year", source: "Stanford AI Index, 2025" },
-  { value: "$22B+", label: "projected AI insurance market by 2034", source: "Specialty insurance reports" },
-];
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("landing");
+  const tb = await getTranslations("buttons");
 
-const steps = [
-  {
-    n: "01",
-    title: "Ask",
-    body: "The client declares how their AI is used: what it does, what data it touches, and who reviews it.",
-  },
-  {
-    n: "02",
-    title: "Test",
-    body: "Two AI agents probe the system — one tries to break it, one grades the answers for leaks, injection and unsafe advice.",
-  },
-  {
-    n: "03",
-    title: "Score",
-    body: "We combine disclosures and test results into one clear risk score — with findings and recommended conditions.",
-  },
-];
+  const stats = [
+    { value: "88%", label: t("stats.s1.label"), source: t("stats.s1.source") },
+    { value: "+56%", label: t("stats.s2.label"), source: t("stats.s2.source") },
+    { value: "$22B+", label: t("stats.s3.label"), source: t("stats.s3.source") },
+  ];
 
-export default function HomePage() {
+  const steps = [
+    { n: "01", title: t("steps.ask.title"), body: t("steps.ask.body") },
+    { n: "02", title: t("steps.test.title"), body: t("steps.test.body") },
+    { n: "03", title: t("steps.score.title"), body: t("steps.score.body") },
+  ];
+
   return (
     <>
       {/* HERO */}
@@ -46,10 +44,10 @@ export default function HomePage() {
           <div className="relative order-2 md:order-1">
             <Tilt className="relative mx-auto w-full max-w-md px-4 md:max-w-lg md:px-6">
               <FloatingCards />
-              <div className="relative flex aspect-square items-center justify-center rounded-[2.5rem] bg-brand p-8 shadow-[0_20px_60px_rgba(43,89,195,0.18)] md:rounded-r-[8rem]">
-                <span className="absolute -right-3 -top-3 h-12 w-12 animate-pulse-ring rounded-full bg-brand/50" />
+              <div className="relative flex aspect-square items-center justify-center rounded-[2.5rem] bg-brand p-8 shadow-[0_20px_60px_rgba(43,89,195,0.18)] md:rounded-e-[8rem]">
+                <span className="absolute -end-3 -top-3 h-12 w-12 animate-pulse-ring rounded-full bg-brand/50" />
                 <span
-                  className="absolute -bottom-2 left-8 h-8 w-8 animate-pulse-ring rounded-full bg-brand-light/60"
+                  className="absolute -bottom-2 start-8 h-8 w-8 animate-pulse-ring rounded-full bg-brand-light/60"
                   style={{ animationDelay: "1.2s" }}
                 />
                 <HeroIllustration className="relative z-10 h-full w-full animate-float-soft" />
@@ -63,25 +61,24 @@ export default function HomePage() {
               UnderwriteAI
             </h1>
             <p className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl">
-              We help insurers cover the risks of AI.
+              {t("headline")}
             </p>
             <p className="mt-5 max-w-md text-lg leading-relaxed text-muted">
-              Every company is racing to use AI. Almost no one is insuring what could go wrong. We
-              give insurers a clear risk score for their clients&apos; AI.
+              {t("subhead")}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <MagneticButton
                 href="/login"
                 className="rounded-full bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-sm shadow-brand/25 hover:bg-brand-dark hover:shadow-md hover:shadow-brand/30"
               >
-                Open the platform
+                {tb("openPlatform")}
               </MagneticButton>
               <MagneticButton
                 href="/about"
                 strength={10}
                 className="rounded-full px-5 py-3.5 text-base font-semibold text-brand hover:text-brand-dark"
               >
-                See how it works &rarr;
+                {tb("seeHowItWorks")}
               </MagneticButton>
             </div>
           </Reveal>
@@ -94,10 +91,10 @@ export default function HomePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <Reveal>
             <p className="text-center text-sm font-bold uppercase tracking-widest text-brand">
-              The gap we close
+              {t("gapEyebrow")}
             </p>
             <h2 className="mx-auto mt-3 max-w-2xl text-center text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-              AI is everywhere. So are its mistakes.
+              {t("gapTitle")}
             </h2>
           </Reveal>
           <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -123,10 +120,10 @@ export default function HomePage() {
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm font-bold uppercase tracking-widest text-brand-light">
-                How we measure the risk
+                {t("howTitle")}
               </p>
               <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Three steps. No source code required.
+                {t("howSubtitle")}
               </h2>
             </div>
           </Reveal>
@@ -143,8 +140,7 @@ export default function HomePage() {
           </div>
           <Reveal delay={280}>
             <p className="mt-8 max-w-2xl text-sm text-white/50">
-              More evidence, less guessing. We reduce uncertainty — the insurer still sets the final
-              price.
+              {t("howFooter")}
             </p>
           </Reveal>
         </div>
@@ -156,7 +152,7 @@ export default function HomePage() {
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 text-center">
           <Reveal>
             <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Insurers price fire, floods and cyber. We help them price AI.
+              {t("ctaTitle")}
             </h2>
           </Reveal>
           <Reveal delay={120}>
@@ -164,7 +160,7 @@ export default function HomePage() {
               href="/login"
               className="rounded-full bg-white px-7 py-3.5 text-base font-semibold text-brand shadow-sm hover:bg-cream hover:shadow-md"
             >
-              Try the demo platform
+              {tb("tryDemo")}
             </MagneticButton>
           </Reveal>
         </div>

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { QUESTIONS, type Answers } from "@/lib/mockRiskEngine";
 
 export const INDUSTRIES = [
@@ -30,6 +31,11 @@ type Props = {
 
 export function AssessmentForm({ initial }: Props) {
   const router = useRouter();
+  const t = useTranslations("assessment");
+  const tQuestionnaire = useTranslations("questionnaire");
+  const tButtons = useTranslations("buttons");
+  const tValidation = useTranslations("validation");
+  const tCommon = useTranslations("common");
   const assessmentId = initial?.id;
   const isEdit = Boolean(assessmentId);
 
@@ -71,11 +77,11 @@ export function AssessmentForm({ initial }: Props) {
 
   async function submit(mode: "draft" | "score") {
     if (mode === "score" && !allQuestionsAnswered) {
-      setError("Answer all questions before scoring.");
+      setError(tValidation("answerAll"));
       return;
     }
     if (!canSaveDraft) {
-      setError("Client name is required.");
+      setError(tValidation("clientNameRequired"));
       return;
     }
 
@@ -93,7 +99,7 @@ export function AssessmentForm({ initial }: Props) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Could not save assessment.");
+        setError(data.error ?? tValidation("couldNotSave"));
         setSubmitting(null);
         return;
       }
@@ -104,7 +110,7 @@ export function AssessmentForm({ initial }: Props) {
           router.refresh();
           return;
         }
-        setSavedMsg("Draft saved.");
+        setSavedMsg(tValidation("draftSaved"));
         setSubmitting(null);
         router.refresh();
         return;
@@ -113,22 +119,22 @@ export function AssessmentForm({ initial }: Props) {
       router.push(`/assessments/${data.id}`);
       router.refresh();
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(tValidation("somethingWrong"));
       setSubmitting(null);
     }
   }
 
   const title = isEdit
     ? initial?.status === "SCORED"
-      ? "Edit assessment"
-      : "Continue draft"
-    : "New AI risk assessment";
+      ? t("editTitle")
+      : t("continueDraft")
+    : t("newTitle");
 
   const subtitle = isEdit
     ? initial?.status === "SCORED"
-      ? "Update answers and re-score to refresh the report."
-      : "Pick up where you left off. Save anytime, score when ready."
-    : "Complete the underwriting disclosure. Save a draft or score when ready.";
+      ? t("editSubtitle")
+      : t("draftSubtitle")
+    : t("newSubtitle");
 
   const backHref =
     isEdit && initial?.status === "SCORED" && assessmentId
@@ -136,8 +142,8 @@ export function AssessmentForm({ initial }: Props) {
       : "/assessments";
   const backLabel =
     isEdit && initial?.status === "SCORED"
-      ? "Back to report"
-      : "Back to assessments";
+      ? t("backToReport")
+      : t("backToAssessments");
 
   return (
     <div className="mx-auto max-w-2xl px-8 py-10">
@@ -153,7 +159,7 @@ export function AssessmentForm({ initial }: Props) {
       <div className="mt-6">
         <div className="flex justify-between text-xs font-semibold text-muted">
           <span>
-            Step {step + 1} of {totalSteps}
+            {t("stepOf", { current: step + 1, total: totalSteps })}
           </span>
           <span>{progress}%</span>
         </div>
@@ -169,23 +175,23 @@ export function AssessmentForm({ initial }: Props) {
         {step === 0 ? (
           <div className="space-y-6">
             <div>
-              <p className="text-sm font-bold uppercase tracking-wider text-brand">Client</p>
-              <h2 className="mt-1 text-xl font-extrabold text-ink">Who are we assessing?</h2>
+              <p className="text-sm font-bold uppercase tracking-wider text-brand">{t("clientSection")}</p>
+              <h2 className="mt-1 text-xl font-extrabold text-ink">{t("clientWho")}</h2>
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-ink">Client company name</label>
+              <label className="mb-1.5 block text-sm font-semibold text-ink">{t("clientName")}</label>
               <input
                 value={clientName}
                 onChange={(e) => {
                   setClientName(e.target.value);
                   setSavedMsg("");
                 }}
-                placeholder="e.g. Helios Retail"
+                placeholder={t("clientNamePlaceholder")}
                 className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-ink">Industry</label>
+              <label className="mb-1.5 block text-sm font-semibold text-ink">{t("industryLabel")}</label>
               <select
                 value={industry}
                 onChange={(e) => {
@@ -195,13 +201,13 @@ export function AssessmentForm({ initial }: Props) {
                 className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
               >
                 {INDUSTRIES.map((i) => (
-                  <option key={i}>{i}</option>
+                  <option key={i}>{t(`industries.${i}`)}</option>
                 ))}
               </select>
             </div>
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-ink">
-                What does their AI do? <span className="font-normal text-muted">(optional)</span>
+                {t("useCaseLabel")} <span className="font-normal text-muted">{tCommon("optional")}</span>
               </label>
               <input
                 value={useCase}
@@ -209,7 +215,7 @@ export function AssessmentForm({ initial }: Props) {
                   setUseCase(e.target.value);
                   setSavedMsg("");
                 }}
-                placeholder="e.g. Customer-facing chatbot for financial advice"
+                placeholder={t("useCasePlaceholder")}
                 className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
               />
             </div>
@@ -218,13 +224,14 @@ export function AssessmentForm({ initial }: Props) {
           <div className="space-y-8">
             <div>
               <p className="text-sm font-bold uppercase tracking-wider text-brand">
-                {currentStepQuestions[0]?.section}
+                {currentStepQuestions[0] &&
+                  tQuestionnaire(`sections.${questionSectionKey(currentStepQuestions[0].id)}`)}
               </p>
             </div>
             {currentStepQuestions.map((q) => (
               <div key={q.id}>
-                <h2 className="text-lg font-extrabold text-ink">{q.title}</h2>
-                <p className="mt-1 text-sm text-muted">{q.help}</p>
+                <h2 className="text-lg font-extrabold text-ink">{tQuestionnaire(`questions.${q.id}.title`)}</h2>
+                <p className="mt-1 text-sm text-muted">{tQuestionnaire(`questions.${q.id}.help`)}</p>
                 <div className="mt-4 space-y-3">
                   {q.options.map((opt) => {
                     const selected = answers[q.id] === opt.value;
@@ -246,7 +253,7 @@ export function AssessmentForm({ initial }: Props) {
                         >
                           {selected && <span className="h-2 w-2 rounded-full bg-white" />}
                         </span>
-                        {opt.label}
+                        {tQuestionnaire(`questions.${q.id}.options.${opt.value}`)}
                       </button>
                     );
                   })}
@@ -266,7 +273,7 @@ export function AssessmentForm({ initial }: Props) {
             disabled={step === 0}
             className="rounded-full px-5 py-3 text-sm font-semibold text-muted transition hover:text-ink disabled:opacity-0"
           >
-            &larr; Back
+            {tButtons("back")}
           </button>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -277,7 +284,7 @@ export function AssessmentForm({ initial }: Props) {
                 disabled={!canSaveDraft || submitting !== null}
                 className="rounded-full px-5 py-3 text-sm font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5 disabled:opacity-40"
               >
-                {submitting === "draft" ? "Saving..." : "Save draft"}
+                {submitting === "draft" ? tButtons("saving") : tButtons("saveDraft")}
               </button>
             )}
 
@@ -288,7 +295,7 @@ export function AssessmentForm({ initial }: Props) {
                 disabled={!canProceed}
                 className="rounded-full bg-brand px-7 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-40"
               >
-                Continue &rarr;
+                {tButtons("continue")}
               </button>
             ) : (
               <button
@@ -298,10 +305,10 @@ export function AssessmentForm({ initial }: Props) {
                 className="rounded-full bg-brand px-7 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-40"
               >
                 {submitting === "score"
-                  ? "Scoring..."
+                  ? tButtons("scoring")
                   : isEdit && initial?.status === "SCORED"
-                    ? "Re-score"
-                    : "Calculate risk score"}
+                    ? tButtons("rescore")
+                    : tButtons("calculateScore")}
               </button>
             )}
           </div>
@@ -309,4 +316,35 @@ export function AssessmentForm({ initial }: Props) {
       </div>
     </div>
   );
+}
+
+function questionSectionKey(questionId: string) {
+  const sectionKeys: Record<string, string> = {
+    systemStatus: "systemExposure",
+    useCase: "systemExposure",
+    actionableAdvice: "systemExposure",
+    autonomousActions: "systemExposure",
+    financialImpact: "systemExposure",
+    nonFinancialImpact: "exposureData",
+    modelSource: "exposureData",
+    vendorContract: "exposureData",
+    dataSensitivity: "exposureData",
+    dataHandling: "exposureData",
+    piiFiltering: "controls",
+    humanOversight: "controls",
+    guardrails: "controls",
+    logging: "controls",
+    incidentResponse: "controls",
+    sandboxAccess: "testingCompliance",
+    frameworks: "testingCompliance",
+    aiPolicy: "testingCompliance",
+    qualityMeasurement: "testingCompliance",
+    retestOnChange: "testingCompliance",
+    priorIncidents: "historyAttestation",
+    existingCover: "historyAttestation",
+    redTeamed: "historyAttestation",
+    userDisclosure: "historyAttestation",
+    attestation: "historyAttestation",
+  };
+  return sectionKeys[questionId];
 }

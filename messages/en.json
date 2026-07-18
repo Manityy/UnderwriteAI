@@ -1,0 +1,908 @@
+{
+  "Metadata": {
+    "title": "UnderwriteAI — Underwriting intelligence for AI risk",
+    "description": "UnderwriteAI helps insurers measure and price the risk of their clients' AI systems — without needing the source code."
+  },
+  "common": {
+    "brand": "UnderwriteAI",
+    "loading": "Loading...",
+    "optional": "(optional)",
+    "scored": "scored",
+    "draft": "Draft",
+    "notScored": "Not scored",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "all": "All ({count})",
+    "clear": "Clear",
+    "clearFilters": "Clear filters",
+    "justNow": "just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "daysAgo": "{days}d ago",
+    "pass": "Pass",
+    "fail": "Fail",
+    "severity": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "insurerLogin": "Insurer login",
+    "toggleMenu": "Toggle menu",
+    "dashboard": "Dashboard",
+    "assessments": "Assessments",
+    "newAssessment": "New assessment",
+    "signOut": "Sign out",
+    "insurer": "Insurer",
+    "language": "Language"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "buttons": {
+    "openPlatform": "Open the platform",
+    "seeHowItWorks": "See how it works →",
+    "tryDemo": "Try the demo platform",
+    "explorePlatform": "Explore the platform",
+    "viewPortfolio": "View portfolio",
+    "newAssessment": "New assessment",
+    "viewFullPortfolio": "View full portfolio",
+    "viewAll": "View all →",
+    "sendMessage": "Send message",
+    "sending": "Sending...",
+    "sendAnother": "Send another",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "backToHome": "Back to home",
+    "back": "← Back",
+    "continue": "Continue →",
+    "saveDraft": "Save draft",
+    "saving": "Saving...",
+    "calculateScore": "Calculate risk score",
+    "rescore": "Re-score",
+    "scoring": "Scoring...",
+    "exportPrint": "Export / Print",
+    "backToAssessments": "← Back to assessments",
+    "generateAttackPrompts": "Generate attack prompts",
+    "regenerate": "Regenerate",
+    "generating": "Generating...",
+    "runTests": "Run tests",
+    "rerunTests": "Re-run tests",
+    "runningTests": "Running tests...",
+    "showAiResponse": "Show AI response →",
+    "hideAiResponse": "Hide AI response",
+    "createFirst": "Create your first one."
+  },
+  "validation": {
+    "answerAll": "Answer all questions before scoring.",
+    "clientNameRequired": "Client name is required.",
+    "couldNotSave": "Could not save assessment.",
+    "draftSaved": "Draft saved.",
+    "somethingWrong": "Something went wrong. Please try again.",
+    "loginFailed": "Login failed.",
+    "generationFailed": "Generation failed.",
+    "testRunFailed": "Test run failed."
+  },
+  "footer": {
+    "tagline": "Underwriting intelligence for AI risk. We help insurers measure and price the risk of their clients' AI systems.",
+    "product": "Product",
+    "home": "Home",
+    "howItWorks": "How it works",
+    "insurerLogin": "Insurer login",
+    "team": "Team Pivot",
+    "copyright": "© {year} UnderwriteAI — a Team Pivot project."
+  },
+  "landing": {
+    "headline": "We help insurers cover the risks of AI.",
+    "subhead": "Every company is racing to use AI. Almost no one is insuring what could go wrong. We give insurers a clear risk score for their clients' AI.",
+    "gapEyebrow": "The gap we close",
+    "gapTitle": "AI is everywhere. So are its mistakes.",
+    "howTitle": "How we measure the risk",
+    "howSubtitle": "Three steps. No source code required.",
+    "howFooter": "More evidence, less guessing. We reduce uncertainty — the insurer still sets the final price.",
+    "ctaTitle": "Insurers price fire, floods and cyber. We help them price AI.",
+    "stats": {
+      "s1": {
+        "label": "of companies now use AI in at least one function",
+        "source": "McKinsey, 2025"
+      },
+      "s2": {
+        "label": "jump in reported AI incidents in a single year",
+        "source": "Stanford AI Index, 2025"
+      },
+      "s3": {
+        "label": "projected AI insurance market by 2034",
+        "source": "Specialty insurance reports"
+      }
+    },
+    "steps": {
+      "ask": {
+        "title": "Ask",
+        "body": "The client declares how their AI is used: what it does, what data it touches, and who reviews it."
+      },
+      "test": {
+        "title": "Test",
+        "body": "Two AI agents probe the system — one tries to break it, one grades the answers for leaks, injection and unsafe advice."
+      },
+      "score": {
+        "title": "Score",
+        "body": "We combine disclosures and test results into one clear risk score — with findings and recommended conditions."
+      }
+    },
+    "floating": {
+      "riskTier": "Risk tier",
+      "high": "High",
+      "score": "Score",
+      "piiLeak": "PII leak detected"
+    }
+  },
+  "about": {
+    "meet": "Meet",
+    "storyIntro": "A story every insurer will soon recognise.",
+    "step1Label": "STEP 1 — LAUNCH",
+    "step1Body": "UnderwriteAI launches an AI chatbot to advise customers on financial products. Adoption is fast. Everyone is happy. The future looks bright.",
+    "step2Label": "STEP 2 — FAILURE",
+    "step2Body": "The chatbot confidently gives wrong financial advice. Worse, it leaks a customer's private data. What seemed like innovation becomes a liability.",
+    "step3Label": "STEP 3 — THE LAWSUIT",
+    "step3Body": "The customer sues. The regulator investigates. UnderwriteAI is on the hook. And the question nobody prepared for appears: \"Who pays?\"",
+    "problemEyebrow": "The problem",
+    "problemTitle": "Insurers want to cover this. But they can't measure it.",
+    "gap1Title": "AI is a black box",
+    "gap1Body": "Clients won't share their models or source code. Traditional audits don't apply.",
+    "gap2Title": "No standard to measure it",
+    "gap2Body": "Insurers have no repeatable way to judge how risky an AI system really is.",
+    "gap3Title": "So they say no — or guess",
+    "gap3Body": "Either AI risk is refused, or priced blindly. Both cost the insurer.",
+    "solutionEyebrow": "Our solution",
+    "solutionTitle": "UnderwriteAI is an X-ray for AI risk.",
+    "solutionBody": "We give insurers a clear risk score for their clients' AI — without ever needing the secret code.",
+    "solutionFooter": "We don't sell insurance. We help insurers sell it smarter.",
+    "sampleTitle": "Sample output",
+    "sampleTier": "High risk",
+    "sample1": "Prompt injection bypassed the chatbot guardrails.",
+    "sample2": "Leaked sample personal data in 2 of 50 test prompts.",
+    "sample3": "Confident wrong advice on regulated topics.",
+    "sampleNote": "Illustrative output from the mock risk engine."
+  },
+  "contact": {
+    "title": "Contact",
+    "headline": "Let's make AI insurable.",
+    "body": "Are you an insurer exploring AI liability cover? Tell us about your use cases and we'll set up a pilot.",
+    "emailLabel": "Email",
+    "form": {
+      "successTitle": "Thanks — message received.",
+      "successBody": "We'll get back to you about a pilot with your team.",
+      "name": "Name",
+      "namePlaceholder": "Jane Doe",
+      "workEmail": "Work email",
+      "emailPlaceholder": "jane@insurer.com",
+      "message": "Message",
+      "messagePlaceholder": "We'd like to pilot UnderwriteAI on a few AI use cases..."
+    }
+  },
+  "login": {
+    "tagline": "Underwriting intelligence for AI risk.",
+    "description": "Score, monitor, and price the AI systems your corporate clients rely on, all in one place.",
+    "title": "Insurer login",
+    "subtitle": "Welcome back. Sign in to your underwriting workspace.",
+    "email": "Email",
+    "password": "Password",
+    "demoTitle": "Demo account"
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {name}",
+    "title": "Underwriting dashboard",
+    "subtitle": "AI risk exposure across your underwriting book.",
+    "intelligence": "AI risk intelligence",
+    "portfolioRiskScore": "Portfolio risk score",
+    "outOf100": "/ 100",
+    "total": "Total",
+    "highRisk": "High risk",
+    "medium": "Medium",
+    "lowRisk": "Low risk",
+    "scoringCoverage": "{coveragePct}% scoring coverage",
+    "draftOpen": "{draftCount} draft",
+    "draftsOpen": "{draftCount} drafts open",
+    "newThisMonth": "New this month",
+    "last30Days": "Last 30 days",
+    "draftsInProgress": "Drafts in progress",
+    "awaitingCompletion": "Awaiting completion",
+    "coverage": "Coverage",
+    "scoredOf": "{scored} of {assessments} scored",
+    "portfolio": "Portfolio",
+    "recentAssessments": "Recent assessments",
+    "draftPrefix": "Draft · ",
+    "showingRecent": "Showing {count} most recent · scroll for more",
+    "analytics": "Analytics",
+    "riskDistribution": "Risk distribution",
+    "timeline": "Timeline",
+    "recentActivity": "Recent activity",
+    "wasScored": "was scored",
+    "savedAsDraft": "saved as draft",
+    "noActivity": "No activity yet.",
+    "riskIntelligence": "Risk intelligence",
+    "findingsByCategory": "Findings by category",
+    "totalFindings": "{total} total",
+    "tiers": {
+      "HIGH": "High risk",
+      "MEDIUM": "Medium risk",
+      "LOW": "Low risk",
+      "PENDING": "Not scored"
+    },
+    "distLow": "Low",
+    "distMedium": "Medium",
+    "distHigh": "High",
+    "emptyTitle": "No assessments yet.",
+    "emptyCta": "Create your first one.",
+    "scoreAria": "Portfolio risk score {score}",
+    "scoreLabel": "score"
+  },
+  "assessment": {
+    "listTitle": "Assessments",
+    "listSubtitle": "AI risk assessments across your client portfolio.",
+    "newButton": "+ New assessment",
+    "searchLabel": "Search client",
+    "searchPlaceholder": "Client name…",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "statusDraft": "Draft",
+    "statusScored": "Scored",
+    "riskTier": "Risk tier",
+    "allTiers": "All tiers",
+    "industry": "Industry",
+    "allIndustries": "All industries",
+    "colClient": "Client",
+    "colIndustry": "Industry",
+    "colStatus": "Status",
+    "colScore": "Score",
+    "colRisk": "Risk",
+    "colUpdated": "Updated",
+    "emptyTitle": "No assessments yet.",
+    "emptyFiltered": "No assessments match these filters.",
+    "showingOf": "Showing {filtered} of {total}",
+    "editTitle": "Edit assessment",
+    "continueDraft": "Continue draft",
+    "newTitle": "New AI risk assessment",
+    "editSubtitle": "Update answers and re-score to refresh the report.",
+    "draftSubtitle": "Pick up where you left off. Save anytime, score when ready.",
+    "newSubtitle": "Complete the underwriting disclosure. Save a draft or score when ready.",
+    "stepOf": "Step {current} of {total}",
+    "clientSection": "Client",
+    "clientWho": "Who are we assessing?",
+    "clientName": "Client company name",
+    "clientNamePlaceholder": "e.g. Helios Retail",
+    "industryLabel": "Industry",
+    "useCaseLabel": "What does their AI do?",
+    "useCasePlaceholder": "e.g. Customer-facing chatbot for financial advice",
+    "industries": {
+      "Banking": "Banking",
+      "Insurance": "Insurance",
+      "Retail": "Retail",
+      "Healthcare": "Healthcare",
+      "Fintech": "Fintech",
+      "Telecom": "Telecom",
+      "Other": "Other"
+    },
+    "riskScoreLabel": "risk score",
+    "backToAssessments": "← Back to assessments",
+    "reportTitle": "AI Risk Underwriting Report",
+    "preparedFor": "Prepared for underwriting review · {date}",
+    "reportDate": "Report date: {date}",
+    "confidential": "Generated by UnderwriteAI · Confidential — for underwriting use only",
+    "indicativePremium": "Indicative premium factor",
+    "indicativeNotActuarial": "Indicative — not actuarial",
+    "keyMetrics": "Key metrics",
+    "riskScore": "Risk score",
+    "premiumFactor": "Premium factor",
+    "findings": "Findings",
+    "premiumFactorNote": "Premium factor: indicative — not actuarial (1.00x + score/100 × 1.50).",
+    "underwritingRecommendation": "Underwriting recommendation",
+    "highSeverity": "High severity",
+    "premiumFactorExplain": "Premium factor uses a simple rule: 1.00x + (score ÷ 100) × 1.50 (range 1.00x–2.50x). For underwriting judgement only — not an actuarial rate.",
+    "whyThisScore": "Why this score",
+    "topDrivers": "Top drivers of the {tier} rating — from disclosures",
+    "andRedTeam": " and red-team tests",
+    "howWeAssessed": "How we assessed this",
+    "howAskTitle": "Ask",
+    "howAskBody": "Client disclosures on use, data and controls.",
+    "howTestTitle": "Test",
+    "howTestBody": "Attack agent probed the system; judge agent graded every response.",
+    "howScoreTitle": "Score",
+    "howScoreBody": "Disclosures and test results combined into one risk score.",
+    "recommendedConditions": "Recommended policy conditions",
+    "disclaimer": "Risk score and premium factor are indicative — not actuarial. They support underwriting judgement; they do not replace it.",
+    "tierMessageHigh": "Coverage should be declined or repriced until the high-severity findings are remediated.",
+    "tierMessageMedium": "Coverage is feasible with the conditions below attached to the policy.",
+    "tierMessageLow": "Standard coverage is appropriate. Maintain controls and re-assess at renewal.",
+    "tiers": {
+      "LOW": "Low risk",
+      "MEDIUM": "Medium risk",
+      "HIGH": "High risk"
+    },
+    "decision": "Decision",
+    "allDecisions": "All decisions",
+    "noDecision": "No decision",
+    "decisionAccept": "Accept",
+    "decisionAcceptWithConditions": "Accept with conditions",
+    "decisionRefer": "Refer",
+    "decisionDecline": "Decline",
+    "colDecision": "Decision",
+    "colActions": "Actions",
+    "actionContinue": "Continue",
+    "actionView": "View",
+    "actionEdit": "Edit",
+    "backToReport": "Back to report",
+    "editSubtitleScored": "Update answers and re-score to refresh the report."
+  },
+  "agents": {
+    "agent1": "Agent 1",
+    "attackTitle": "Attack agent — generated tests",
+    "attackDesc": "Adversarial prompts that probe the client's AI across eight risk categories.",
+    "generateAttackPrompts": "Generate attack prompts",
+    "regenerate": "Regenerate",
+    "generating": "Generating...",
+    "noPrompts": "No attack prompts yet. Click Generate attack prompts to run Agent 1.",
+    "runningAttack": "Running the attack agent across 8 categories...",
+    "aiGenerated": "AI-generated",
+    "seed": "Seed",
+    "generatedAt": "Generated {date}.",
+    "seedFallback": "Seed fallback used (no Groq key or model unavailable).",
+    "nextStep": "Next step: Agent 2 (Judge) will send these to the client's AI and score the replies.",
+    "agent2": "Agent 2",
+    "judgeTitle": "Judge agent — test results",
+    "failedOf": "{failed} failed / {total}",
+    "judgeDesc": "Sends attack prompts to a simulated client AI, then grades each reply pass or fail.",
+    "runTests": "Run tests",
+    "rerunTests": "Re-run tests",
+    "runningTests": "Running tests...",
+    "generateFirst": "Generate Agent 1 attack prompts first, then run the Judge agent.",
+    "noResults": "No test results yet. Click Run tests to score the client AI's replies.",
+    "simulating": "Simulating replies and grading each response...",
+    "tests": "Tests",
+    "passed": "Passed",
+    "failed": "Failed",
+    "categoryFailed": "{category}: {failed}/{total} failed",
+    "failures": "Failures ({count})",
+    "heuristic": "Heuristic",
+    "verdict": "Verdict:",
+    "showAiResponse": "Show AI response →",
+    "hideAiResponse": "Hide AI response",
+    "ranAt": "Ran {date}.",
+    "simulatedFallback": "Simulated fallback used (no Groq key or model unavailable).",
+    "questionnaireUnchanged": "Questionnaire score unchanged — these are technical test findings from the two-agent probe."
+  },
+  "questionnaire": {
+    "sections": {
+      "systemExposure": "System & exposure",
+      "exposureData": "Exposure & data",
+      "controls": "Controls",
+      "testingCompliance": "Testing & compliance",
+      "historyAttestation": "History & attestation"
+    },
+    "questions": {
+      "systemStatus": {
+        "title": "What is the status of this AI system?",
+        "help": "Live systems create immediate underwriting exposure.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "planned": "Planned — not built yet",
+          "pilot": "Pilot / limited rollout",
+          "staging": "Staging — ready for production",
+          "production": "In production"
+        }
+      },
+      "useCase": {
+        "title": "What is the primary use case?",
+        "help": "Higher-stakes decisions carry more potential liability.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "support": "Customer support / chatbot",
+          "content": "Content generation",
+          "copilot": "Employee copilot",
+          "decisions": "Decision support (credit, HR, claims, etc.)",
+          "agent": "Autonomous agent / workflow automation",
+          "other": "Other"
+        }
+      },
+      "actionableAdvice": {
+        "title": "Can the AI give advice that users may act on?",
+        "help": "Actionable guidance creates advice and errors & omissions exposure.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "no": "No",
+          "partial": "Partially — soft suggestions only",
+          "yes": "Yes — users may rely on it"
+        }
+      },
+      "autonomousActions": {
+        "title": "Can it trigger actions without a human?",
+        "help": "Payments, approvals, account changes, or access blocking raise severity.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "no": "No — humans always execute",
+          "yes": "Yes — it can act on its own"
+        }
+      },
+      "financialImpact": {
+        "title": "Worst-case financial impact if it fails?",
+        "help": "Sets the order of magnitude for potential claims.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "lt10k": "Under $10k",
+          "10k100k": "$10k – $100k",
+          "100k1m": "$100k – $1M",
+          "gt1m": "Over $1M",
+          "unknown": "Unknown"
+        }
+      },
+      "nonFinancialImpact": {
+        "title": "What is the main non-financial risk if it fails?",
+        "help": "Regulatory, privacy, and safety failures drive liability and reputation loss.",
+        "sectionKey": "exposureData",
+        "options": {
+          "none": "Limited / operational only",
+          "reputation": "Reputational harm",
+          "discrimination": "Discrimination or unfair outcomes",
+          "breach": "Data breach / privacy incident",
+          "regulatory": "Regulatory fine or enforcement",
+          "safety": "Safety incident"
+        }
+      },
+      "modelSource": {
+        "title": "Where does the model come from?",
+        "help": "Provider and hosting affect control surface and vendor risk.",
+        "sectionKey": "exposureData",
+        "options": {
+          "major": "Major provider API (OpenAI, Anthropic, Google, Azure)",
+          "oss": "Open-source, self-hosted",
+          "custom": "Custom / in-house model",
+          "hybrid": "Hybrid (multiple providers)"
+        }
+      },
+      "vendorContract": {
+        "title": "Is there a vendor contract covering AI liability and data use?",
+        "help": "Contractual allocation of risk matters at claim time.",
+        "sectionKey": "exposureData",
+        "options": {
+          "yes": "Yes — liability, data use, and incident notice covered",
+          "partial": "Partial — standard SaaS terms only",
+          "no": "No formal AI terms",
+          "na": "N/A — fully in-house"
+        }
+      },
+      "dataSensitivity": {
+        "title": "What is the most sensitive data it processes?",
+        "help": "Sensitive data raises the cost of a leak or misuse.",
+        "sectionKey": "exposureData",
+        "options": {
+          "public": "Public / non-personal only",
+          "internal": "Internal business data",
+          "pii": "Customer or employee personal data (PII)",
+          "financial": "Financial account or transaction data",
+          "sensitive": "Health, biometric, or children's data"
+        }
+      },
+      "dataHandling": {
+        "title": "How are prompts and outputs handled?",
+        "help": "Storage, training use, and third-party sharing affect privacy exposure.",
+        "sectionKey": "exposureData",
+        "options": {
+          "minimal": "Not stored; not used for training; not shared",
+          "stored": "Stored for operations; not used for training",
+          "shared": "Shared with third-party model providers",
+          "training": "Used for training or fine-tuning",
+          "unknown": "Unknown / not documented"
+        }
+      },
+      "piiFiltering": {
+        "title": "Is PII filtered on input and scanned on output?",
+        "help": "Reduces leakage of personal data through the model.",
+        "sectionKey": "controls",
+        "options": {
+          "yes": "Yes — both input filtering and output scanning",
+          "partial": "Partial — one side only",
+          "no": "No"
+        }
+      },
+      "humanOversight": {
+        "title": "Is a human reviewing high-impact AI output?",
+        "help": "Human review is the strongest control against AI mistakes.",
+        "sectionKey": "controls",
+        "options": {
+          "always": "Always — before high-impact actions or regulated advice",
+          "sometimes": "Sometimes — spot-checks only",
+          "never": "Never — the AI acts without human review"
+        }
+      },
+      "guardrails": {
+        "title": "Which technical protections are in place?",
+        "help": "Injection defenses, content filters, and access controls reduce technical risk.",
+        "sectionKey": "controls",
+        "options": {
+          "full": "Injection defenses, content filters, and auth/rate limits",
+          "partial": "Some of these controls",
+          "none": "None of these"
+        }
+      },
+      "logging": {
+        "title": "Are prompts, outputs, and tool calls logged?",
+        "help": "Logs make claims defensible and incidents traceable.",
+        "sectionKey": "controls",
+        "options": {
+          "full": "Yes — enough to reconstruct a claim, with retention",
+          "partial": "Partial logging",
+          "none": "No logging"
+        }
+      },
+      "incidentResponse": {
+        "title": "Is there a documented incident response for AI failures?",
+        "help": "Insurers need a clear path when something goes wrong.",
+        "sectionKey": "controls",
+        "options": {
+          "yes": "Yes — process and notification SLA defined",
+          "no": "No"
+        }
+      },
+      "sandboxAccess": {
+        "title": "Is a sandbox / staging API available for insurer testing?",
+        "help": "Required for automated red-teaming without source code access.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Yes — authorized testing allowed",
+          "no": "No"
+        }
+      },
+      "frameworks": {
+        "title": "Which governance frameworks do you map to?",
+        "help": "Shows alignment with emerging AI and data protection expectations.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "multiple": "EU AI Act / GDPR / sector rules (or equivalent) documented",
+          "internal": "Internal AI policy only",
+          "none": "None"
+        }
+      },
+      "aiPolicy": {
+        "title": "Is there a written AI governance policy approved by management?",
+        "help": "Board-level accountability strengthens underwriting confidence.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "qualityMeasurement": {
+        "title": "Do you measure output quality and track known failure modes?",
+        "help": "Accuracy monitoring reduces hallucination and advice liability.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Yes — metrics and known failure modes documented",
+          "partial": "Informal / ad hoc checks",
+          "no": "No structured measurement"
+        }
+      },
+      "retestOnChange": {
+        "title": "Do you re-test after model, prompt, or tool changes?",
+        "help": "Change control prevents silent risk increases between renewals.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Yes — always after material changes",
+          "sometimes": "Sometimes",
+          "no": "No"
+        }
+      },
+      "priorIncidents": {
+        "title": "Any prior AI-related loss, complaint, or regulatory action?",
+        "help": "Prior losses are a direct underwriting signal.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "no": "No",
+          "minor": "Yes — minor / remediated, no material loss",
+          "yes": "Yes — material loss, open dispute, or regulatory action"
+        }
+      },
+      "existingCover": {
+        "title": "Is there existing cyber / tech E&O / PI cover that may overlap?",
+        "help": "Helps underwriters avoid double-counting and spot AI exclusions.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "yes_ai": "Yes — and AI is not excluded",
+          "yes_excluded": "Yes — but AI risk is excluded or unclear",
+          "none": "No overlapping cover",
+          "unknown": "Unknown"
+        }
+      },
+      "redTeamed": {
+        "title": "Has the system been independently red-teamed for AI risks?",
+        "help": "External testing evidence strengthens the technical risk score.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "yes": "Yes — within the last 12 months",
+          "older": "Yes — but more than 12 months ago",
+          "no": "No"
+        }
+      },
+      "userDisclosure": {
+        "title": "Are users told they are interacting with AI?",
+        "help": "Transparency reduces surprise and complaint risk.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "always": "Always",
+          "sometimes": "Sometimes",
+          "never": "Never"
+        }
+      },
+      "attestation": {
+        "title": "Do you attest that these answers are complete and accurate?",
+        "help": "Material misrepresentation may affect coverage at claim or renewal. You authorize agreed sandbox testing.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "yes": "Yes — I confirm and authorize agreed testing",
+          "no": "No — I cannot attest at this time"
+        }
+      }
+    }
+  },
+  "risk": {
+    "findings": {
+      "disclosure_not_attested": {
+        "title": "Disclosure not attested",
+        "detail": "The applicant did not attest to accuracy. Coverage should not be bound without a signed attestation."
+      },
+      "no_human_in_loop": {
+        "title": "No human in the loop on consequential actions",
+        "detail": "The AI can take or influence consequential actions with weak or no human approval. A single bad output can reach a customer directly."
+      },
+      "partial_human_oversight": {
+        "title": "Partial human oversight",
+        "detail": "Only some outputs are checked. High-impact actions should require explicit human sign-off."
+      },
+      "sensitive_data_exposure": {
+        "title": "Sensitive data exposure risk",
+        "detail": "Sensitive data is in scope. Residual privacy exposure remains."
+      },
+      "sensitive_data_exposure_incomplete_pii": {
+        "title": "Sensitive data exposure risk",
+        "detail": "Sensitive data is processed and PII filtering appears incomplete. Output leakage risk is elevated."
+      },
+      "sensitive_data_exposure_controls_present": {
+        "title": "Sensitive data exposure risk",
+        "detail": "Sensitive data is in scope. Controls are present but residual privacy exposure remains."
+      },
+      "prompt_injection_gaps": {
+        "title": "Prompt injection and AI-specific testing gaps",
+        "detail": "Guardrails and/or independent red-teaming are insufficient. Injection, jailbreaks, and unsafe answers may reach users."
+      },
+      "high_advice_liability": {
+        "title": "High advice / decision liability",
+        "detail": "Users may rely on AI output for decisions or advice. Hallucinations and confident errors create material E&O exposure."
+      },
+      "no_audit_trail": {
+        "title": "No audit trail",
+        "detail": "Without input/output logs, incidents cannot be reconstructed and claims are hard to defend."
+      },
+      "weak_governance_docs": {
+        "title": "Weak AI governance documentation",
+        "detail": "No clear mapping to AI Act / GDPR / sector rules or approved AI policy. Regulatory exposure is under-documented."
+      },
+      "prior_ai_loss": {
+        "title": "Prior AI-related loss or regulatory action",
+        "detail": "Material prior incidents indicate elevated frequency risk until remediation is evidenced."
+      },
+      "strong_controls": {
+        "title": "Strong controls observed",
+        "detail": "Oversight, logging, testing and governance are in place. Residual risk is limited to normal model uncertainty."
+      }
+    },
+    "conditions": {
+      "remediate_high_severity": "Remediate high-severity findings before coverage is bound.",
+      "obtain_attestation": "Obtain signed attestation before quoting or binding cover.",
+      "require_human_approval": "Require human approval for all high-impact AI actions and regulated advice.",
+      "disable_autonomous": "Disable unsupervised autonomous actions until control improvements are verified.",
+      "quarterly_red_team": "Introduce quarterly red-team testing and re-assessment at renewal.",
+      "enable_logging": "Enable full input/output logging with 12-month retention.",
+      "add_pii_filtering": "Add PII input filtering and output scanning before binding.",
+      "complete_governance_docs": "Complete AI governance documentation (policy + framework mapping) before binding cover.",
+      "provide_staging": "Provide a staging endpoint for insurer-authorized testing within 30 days.",
+      "require_retest": "Require re-test after any material model, prompt, or tool change.",
+      "incident_remediation": "Provide incident remediation evidence before coverage is bound.",
+      "maintain_controls": "Maintain current controls and re-assess at annual renewal."
+    },
+    "drivers": {
+      "systemStatus": {
+        "title": "Live system exposure",
+        "detail": "The AI is {label}, so failures can create immediate claims exposure."
+      },
+      "useCase": {
+        "title": "Elevated use-case risk",
+        "detail": "Primary use case ({label}) carries above-average underwriting exposure."
+      },
+      "useCase_agent": {
+        "title": "Autonomous agent use case",
+        "detail": "Workflow automation without tight bounds raises liability if the agent acts wrongly."
+      },
+      "useCase_decisions": {
+        "title": "High-stakes decision support",
+        "detail": "Credit, HR, claims or similar decisions create material errors-and-omissions exposure."
+      },
+      "actionableAdvice": {
+        "title": "Users may rely on AI advice",
+        "detail": "Actionable guidance creates advice and errors-and-omissions exposure if outputs are wrong."
+      },
+      "autonomousActions": {
+        "title": "Unsupervised actions",
+        "detail": "The system can trigger actions without a human — payments, approvals, or access changes raise severity."
+      },
+      "financialImpact": {
+        "title": "Material financial impact",
+        "detail": "Worst-case loss if the AI fails is {label}, which sets claim severity."
+      },
+      "nonFinancialImpact": {
+        "title": "Non-financial liability",
+        "detail": "Main failure mode is {label} — a key driver of regulatory and reputation risk."
+      },
+      "modelSource": {
+        "title": "Model / vendor complexity",
+        "detail": "Model sourcing ({label}) widens the control surface and vendor risk."
+      },
+      "vendorContract": {
+        "title": "Weak contractual risk transfer",
+        "detail": "AI liability and data-use terms are incomplete — harder to allocate loss at claim time."
+      },
+      "dataSensitivity": {
+        "title": "Sensitive data in scope",
+        "detail": "The system processes {label}, raising the cost of a leak or misuse."
+      },
+      "dataHandling": {
+        "title": "Prompt and output handling",
+        "detail": "{label} — storage, sharing, or training use increases privacy exposure."
+      },
+      "piiFiltering": {
+        "title": "Incomplete PII controls",
+        "detail": "Personal data is not fully filtered on input and scanned on output — leakage risk remains open."
+      },
+      "humanOversight": {
+        "title": "Limited human oversight",
+        "detail": "Human review is only spot-checks — consequential mistakes can reach users unchecked."
+      },
+      "humanOversight_never": {
+        "title": "Limited human oversight",
+        "detail": "High-impact AI output is not reviewed by a human before action or regulated advice."
+      },
+      "guardrails": {
+        "title": "Thin technical guardrails",
+        "detail": "Injection defenses, content filters, or access controls are incomplete — technical risk is elevated."
+      },
+      "logging": {
+        "title": "Incomplete audit logging",
+        "detail": "Prompts, outputs, and tool calls are not fully logged — claims and incidents are harder to defend."
+      },
+      "incidentResponse": {
+        "title": "No AI incident playbook",
+        "detail": "There is no documented response path for AI failures — slows containment and notification."
+      },
+      "sandboxAccess": {
+        "title": "No insurer test access",
+        "detail": "No staging endpoint for authorized testing — harder to verify controls without source code."
+      },
+      "frameworks": {
+        "title": "Weak governance mapping",
+        "detail": "Limited mapping to AI Act / GDPR / sector rules — compliance posture is harder to evidence."
+      },
+      "aiPolicy": {
+        "title": "No approved AI policy",
+        "detail": "Management has not approved a written AI governance policy — accountability is unclear."
+      },
+      "qualityMeasurement": {
+        "title": "Weak quality monitoring",
+        "detail": "Output quality and known failure modes are not measured systematically — accuracy risk stays open."
+      },
+      "retestOnChange": {
+        "title": "Change control gaps",
+        "detail": "The system is not always re-tested after model, prompt, or tool changes — silent risk drift between renewals."
+      },
+      "priorIncidents": {
+        "title": "Prior AI-related issues",
+        "detail": "Prior minor or remediated AI issues — history still informs appetite and terms."
+      },
+      "priorIncidents_yes": {
+        "title": "Prior AI-related issues",
+        "detail": "Material prior loss, dispute, or regulatory action — a direct underwriting signal."
+      },
+      "existingCover": {
+        "title": "Coverage overlap unclear",
+        "detail": "Existing cyber / E&O / PI may exclude AI or leave gaps — check stacking and exclusions."
+      },
+      "redTeamed": {
+        "title": "Limited red-team evidence",
+        "detail": "Red-team evidence is outdated — controls may have drifted since the last test."
+      },
+      "redTeamed_no": {
+        "title": "Limited red-team evidence",
+        "detail": "No recent adversarial testing — control effectiveness is largely unproven."
+      },
+      "userDisclosure": {
+        "title": "Users may not know it is AI",
+        "detail": "Incomplete disclosure that content is AI-generated weakens transparency and consumer-duty posture."
+      },
+      "attestation": {
+        "title": "Disclosure not attested",
+        "detail": "The applicant has not attested to accuracy — underwriting should not rely on unchecked answers."
+      }
+    },
+    "testDrivers": {
+      "prompt_injection": {
+        "title": "Failed prompt-injection tests",
+        "detail": "Red-team probes bypassed guardrails — uncontrolled behaviour and liability exposure.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "jailbreak": {
+        "title": "Failed jailbreak tests",
+        "detail": "The system accepted policy overrides in testing — safety controls did not hold.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "pii_leakage": {
+        "title": "PII leakage in testing",
+        "detail": "Test responses exposed personal data — privacy and breach cost exposure.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "unsafe_advice": {
+        "title": "Unsafe advice in testing",
+        "detail": "The model gave harmful or unauthorised recommendations under probe — E&O exposure.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "unauthorized_action": {
+        "title": "Unauthorized actions in testing",
+        "detail": "Probes showed high-impact actions without adequate human control.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "hallucination": {
+        "title": "Hallucinations under test",
+        "detail": "Confident false answers in testing create errors-and-omissions exposure.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "bias_discrimination": {
+        "title": "Bias findings in testing",
+        "detail": "Unfair or discriminatory outputs under probe — fairness and compliance risk.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      },
+      "system_data_exfiltration": {
+        "title": "System data exposed in testing",
+        "detail": "Hidden context, tools, or internal docs leaked under probe — aids attackers.",
+        "failedTests": "({count} failed tests)",
+        "failedTest": "({count} failed test)"
+      }
+    },
+    "categories": {
+      "Security": "Security",
+      "Privacy": "Privacy",
+      "Accuracy": "Accuracy",
+      "Governance": "Governance",
+      "Compliance": "Compliance"
+    },
+    "attackCategories": {
+      "prompt_injection": "Prompt injection",
+      "jailbreak": "Jailbreak",
+      "hallucination": "Hallucination",
+      "pii_leakage": "PII leakage",
+      "unsafe_advice": "Unsafe advice",
+      "unauthorized_action": "Unauthorized action",
+      "bias_discrimination": "Bias & discrimination",
+      "system_data_exfiltration": "System data exfiltration"
+    }
+  }
+}

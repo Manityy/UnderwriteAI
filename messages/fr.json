@@ -1,0 +1,908 @@
+{
+  "Metadata": {
+    "title": "UnderwriteAI — Intelligence de souscription pour le risque IA",
+    "description": "UnderwriteAI aide les assureurs à mesurer et tarifer le risque des systèmes d'IA de leurs clients — sans avoir besoin du code source."
+  },
+  "common": {
+    "brand": "UnderwriteAI",
+    "loading": "Chargement...",
+    "optional": "(facultatif)",
+    "scored": "notés",
+    "draft": "Brouillon",
+    "notScored": "Non noté",
+    "high": "Élevé",
+    "medium": "Moyen",
+    "low": "Faible",
+    "all": "Tous ({count})",
+    "clear": "Effacer",
+    "clearFilters": "Effacer les filtres",
+    "justNow": "à l'instant",
+    "minutesAgo": "il y a {minutes} min",
+    "hoursAgo": "il y a {hours} h",
+    "daysAgo": "il y a {days} j",
+    "pass": "Réussi",
+    "fail": "Échoué",
+    "severity": {
+      "LOW": "Faible",
+      "MEDIUM": "Moyen",
+      "HIGH": "Élevé"
+    }
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "insurerLogin": "Connexion assureur",
+    "toggleMenu": "Ouvrir le menu",
+    "dashboard": "Tableau de bord",
+    "assessments": "Évaluations",
+    "newAssessment": "Nouvelle évaluation",
+    "signOut": "Se déconnecter",
+    "insurer": "Assureur",
+    "language": "Langue"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "buttons": {
+    "openPlatform": "Ouvrir la plateforme",
+    "seeHowItWorks": "Voir comment ça marche →",
+    "tryDemo": "Essayer la démo",
+    "explorePlatform": "Explorer la plateforme",
+    "viewPortfolio": "Voir le portefeuille",
+    "newAssessment": "Nouvelle évaluation",
+    "viewFullPortfolio": "Voir tout le portefeuille",
+    "viewAll": "Tout voir →",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi...",
+    "sendAnother": "Envoyer un autre",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion...",
+    "backToHome": "Retour à l'accueil",
+    "back": "← Retour",
+    "continue": "Continuer →",
+    "saveDraft": "Enregistrer le brouillon",
+    "saving": "Enregistrement...",
+    "calculateScore": "Calculer le score de risque",
+    "rescore": "Recalculer",
+    "scoring": "Calcul...",
+    "exportPrint": "Exporter / Imprimer",
+    "backToAssessments": "← Retour aux évaluations",
+    "generateAttackPrompts": "Générer les prompts d'attaque",
+    "regenerate": "Régénérer",
+    "generating": "Génération...",
+    "runTests": "Lancer les tests",
+    "rerunTests": "Relancer les tests",
+    "runningTests": "Tests en cours...",
+    "showAiResponse": "Afficher la réponse IA →",
+    "hideAiResponse": "Masquer la réponse IA",
+    "createFirst": "Créez votre première évaluation."
+  },
+  "validation": {
+    "answerAll": "Répondez à toutes les questions avant de noter.",
+    "clientNameRequired": "Le nom du client est obligatoire.",
+    "couldNotSave": "Impossible d'enregistrer l'évaluation.",
+    "draftSaved": "Brouillon enregistré.",
+    "somethingWrong": "Une erreur s'est produite. Veuillez réessayer.",
+    "loginFailed": "Échec de la connexion.",
+    "generationFailed": "Échec de la génération.",
+    "testRunFailed": "Échec de l'exécution des tests."
+  },
+  "footer": {
+    "tagline": "Intelligence de souscription pour le risque IA. Nous aidons les assureurs à mesurer et tarifer le risque des systèmes d'IA de leurs clients.",
+    "product": "Produit",
+    "home": "Accueil",
+    "howItWorks": "Comment ça marche",
+    "insurerLogin": "Connexion assureur",
+    "team": "Team Pivot",
+    "copyright": "© {year} UnderwriteAI — un projet Team Pivot."
+  },
+  "landing": {
+    "headline": "Nous aidons les assureurs à couvrir les risques de l'IA.",
+    "subhead": "Chaque entreprise se précipite vers l'IA. Presque personne n'assure ce qui peut mal tourner. Nous donnons aux assureurs un score de risque clair pour l'IA de leurs clients.",
+    "gapEyebrow": "Le fossé que nous comblons",
+    "gapTitle": "L'IA est partout. Ses erreurs aussi.",
+    "howTitle": "Comment nous mesurons le risque",
+    "howSubtitle": "Trois étapes. Aucun code source requis.",
+    "howFooter": "Plus de preuves, moins de conjectures. Nous réduisons l'incertitude — l'assureur fixe toujours le prix final.",
+    "ctaTitle": "Les assureurs tarifient l'incendie, les inondations et le cyber. Nous les aidons à tarifier l'IA.",
+    "stats": {
+      "s1": {
+        "label": "des entreprises utilisent déjà l'IA dans au moins une fonction",
+        "source": "McKinsey, 2025"
+      },
+      "s2": {
+        "label": "d'augmentation des incidents IA signalés en une seule année",
+        "source": "Stanford AI Index, 2025"
+      },
+      "s3": {
+        "label": "marché projeté de l'assurance IA d'ici 2034",
+        "source": "Rapports d'assurance spécialisée"
+      }
+    },
+    "steps": {
+      "ask": {
+        "title": "Interroger",
+        "body": "Le client déclare comment son IA est utilisée : ce qu'elle fait, quelles données elle touche, et qui la contrôle."
+      },
+      "test": {
+        "title": "Tester",
+        "body": "Deux agents IA sondent le système — l'un tente de le contourner, l'autre note les réponses pour fuites, injections et conseils dangereux."
+      },
+      "score": {
+        "title": "Noter",
+        "body": "Nous combinons déclarations et résultats de tests en un score de risque clair — avec constats et conditions recommandées."
+      }
+    },
+    "floating": {
+      "riskTier": "Niveau de risque",
+      "high": "Élevé",
+      "score": "Score",
+      "piiLeak": "Fuite de données personnelles détectée"
+    }
+  },
+  "about": {
+    "meet": "Découvrez",
+    "storyIntro": "Une histoire que tout assureur reconnaîtra bientôt.",
+    "step1Label": "ÉTAPE 1 — LANCEMENT",
+    "step1Body": "UnderwriteAI lance un chatbot IA pour conseiller les clients sur des produits financiers. L'adoption est rapide. Tout le monde est content. L'avenir paraît radieux.",
+    "step2Label": "ÉTAPE 2 — DÉFAILLANCE",
+    "step2Body": "Le chatbot donne en toute confiance de mauvais conseils financiers. Pire : il divulgue les données privées d'un client. L'innovation devient une responsabilité.",
+    "step3Label": "ÉTAPE 3 — LE PROCÈS",
+    "step3Body": "Le client poursuit. Le régulateur enquête. UnderwriteAI est responsable. Et la question à laquelle personne n'était préparé apparaît : « Qui paie ? »",
+    "problemEyebrow": "Le problème",
+    "problemTitle": "Les assureurs veulent couvrir cela. Mais ils ne peuvent pas le mesurer.",
+    "gap1Title": "L'IA est une boîte noire",
+    "gap1Body": "Les clients ne partagent ni leurs modèles ni leur code source. Les audits traditionnels ne s'appliquent pas.",
+    "gap2Title": "Aucun standard de mesure",
+    "gap2Body": "Les assureurs n'ont pas de méthode répétable pour juger le risque réel d'un système d'IA.",
+    "gap3Title": "Alors ils refusent — ou devinent",
+    "gap3Body": "Soit le risque IA est refusé, soit il est tarifé à l'aveugle. Les deux coûtent à l'assureur.",
+    "solutionEyebrow": "Notre solution",
+    "solutionTitle": "UnderwriteAI est une radiographie du risque IA.",
+    "solutionBody": "Nous donnons aux assureurs un score de risque clair pour l'IA de leurs clients — sans jamais avoir besoin du code secret.",
+    "solutionFooter": "Nous ne vendons pas d'assurance. Nous aidons les assureurs à la vendre plus intelligemment.",
+    "sampleTitle": "Exemple de résultat",
+    "sampleTier": "Risque élevé",
+    "sample1": "Une injection de prompt a contourné les garde-fous du chatbot.",
+    "sample2": "Fuite de données personnelles dans 2 prompts de test sur 50.",
+    "sample3": "Conseils erronés confidents sur des sujets réglementés.",
+    "sampleNote": "Résultat illustratif du moteur de risque simulé."
+  },
+  "contact": {
+    "title": "Contact",
+    "headline": "Rendons l'IA assurable.",
+    "body": "Vous êtes un assureur qui explore la couverture de responsabilité IA ? Parlez-nous de vos cas d'usage et nous organiserons un pilote.",
+    "emailLabel": "E-mail",
+    "form": {
+      "successTitle": "Merci — message reçu.",
+      "successBody": "Nous vous recontacterons pour un pilote avec votre équipe.",
+      "name": "Nom",
+      "namePlaceholder": "Jeanne Dupont",
+      "workEmail": "E-mail professionnel",
+      "emailPlaceholder": "jeanne@assureur.com",
+      "message": "Message",
+      "messagePlaceholder": "Nous aimerions piloter UnderwriteAI sur quelques cas d'usage IA..."
+    }
+  },
+  "login": {
+    "tagline": "Intelligence de souscription pour le risque IA.",
+    "description": "Notez, surveillez et tarifez les systèmes d'IA sur lesquels s'appuient vos clients entreprises, en un seul endroit.",
+    "title": "Connexion assureur",
+    "subtitle": "Bon retour. Connectez-vous à votre espace de souscription.",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "demoTitle": "Compte démo"
+  },
+  "dashboard": {
+    "welcome": "Bon retour, {name}",
+    "title": "Tableau de bord de souscription",
+    "subtitle": "Exposition au risque IA sur votre portefeuille de souscription.",
+    "intelligence": "Intelligence du risque IA",
+    "portfolioRiskScore": "Score de risque du portefeuille",
+    "outOf100": "/ 100",
+    "total": "Total",
+    "highRisk": "Risque élevé",
+    "medium": "Moyen",
+    "lowRisk": "Risque faible",
+    "scoringCoverage": "{coveragePct} % de couverture notée",
+    "draftOpen": "{draftCount} brouillon",
+    "draftsOpen": "{draftCount} brouillons ouverts",
+    "newThisMonth": "Nouveaux ce mois",
+    "last30Days": "30 derniers jours",
+    "draftsInProgress": "Brouillons en cours",
+    "awaitingCompletion": "En attente de finalisation",
+    "coverage": "Couverture",
+    "scoredOf": "{scored} sur {assessments} notés",
+    "portfolio": "Portefeuille",
+    "recentAssessments": "Évaluations récentes",
+    "draftPrefix": "Brouillon · ",
+    "showingRecent": "Affichage des {count} plus récentes · faites défiler",
+    "analytics": "Analytique",
+    "riskDistribution": "Répartition des risques",
+    "timeline": "Chronologie",
+    "recentActivity": "Activité récente",
+    "wasScored": "a été noté",
+    "savedAsDraft": "enregistré en brouillon",
+    "noActivity": "Aucune activité pour le moment.",
+    "riskIntelligence": "Intelligence risque",
+    "findingsByCategory": "Constats par catégorie",
+    "totalFindings": "{total} au total",
+    "tiers": {
+      "HIGH": "Risque élevé",
+      "MEDIUM": "Risque moyen",
+      "LOW": "Risque faible",
+      "PENDING": "Non noté"
+    },
+    "distLow": "Faible",
+    "distMedium": "Moyen",
+    "distHigh": "Élevé",
+    "emptyTitle": "Aucune évaluation pour le moment.",
+    "emptyCta": "Créez votre première évaluation.",
+    "scoreAria": "Score de risque du portefeuille {score}",
+    "scoreLabel": "score"
+  },
+  "assessment": {
+    "listTitle": "Évaluations",
+    "listSubtitle": "Évaluations du risque IA sur votre portefeuille clients.",
+    "newButton": "+ Nouvelle évaluation",
+    "searchLabel": "Rechercher un client",
+    "searchPlaceholder": "Nom du client…",
+    "status": "Statut",
+    "allStatuses": "Tous les statuts",
+    "statusDraft": "Brouillon",
+    "statusScored": "Noté",
+    "riskTier": "Niveau de risque",
+    "allTiers": "Tous les niveaux",
+    "industry": "Secteur",
+    "allIndustries": "Tous les secteurs",
+    "colClient": "Client",
+    "colIndustry": "Secteur",
+    "colStatus": "Statut",
+    "colScore": "Score",
+    "colRisk": "Risque",
+    "colUpdated": "Mis à jour",
+    "emptyTitle": "Aucune évaluation pour le moment.",
+    "emptyFiltered": "Aucune évaluation ne correspond à ces filtres.",
+    "showingOf": "Affichage de {filtered} sur {total}",
+    "editTitle": "Modifier l'évaluation",
+    "continueDraft": "Continuer le brouillon",
+    "newTitle": "Nouvelle évaluation du risque IA",
+    "editSubtitle": "Mettez à jour les réponses et recalculez pour actualiser le rapport.",
+    "draftSubtitle": "Reprenez où vous vous êtes arrêté. Enregistrez à tout moment, notez quand vous êtes prêt.",
+    "newSubtitle": "Complétez la déclaration de souscription. Enregistrez un brouillon ou notez quand vous êtes prêt.",
+    "stepOf": "Étape {current} sur {total}",
+    "clientSection": "Client",
+    "clientWho": "Qui évaluons-nous ?",
+    "clientName": "Nom de l'entreprise cliente",
+    "clientNamePlaceholder": "ex. Helios Retail",
+    "industryLabel": "Secteur",
+    "useCaseLabel": "Que fait leur IA ?",
+    "useCasePlaceholder": "ex. Chatbot client pour conseils financiers",
+    "industries": {
+      "Banking": "Banque",
+      "Insurance": "Assurance",
+      "Retail": "Commerce",
+      "Healthcare": "Santé",
+      "Fintech": "Fintech",
+      "Telecom": "Télécoms",
+      "Other": "Autre"
+    },
+    "riskScoreLabel": "score de risque",
+    "backToAssessments": "← Retour aux évaluations",
+    "reportTitle": "Rapport de souscription du risque IA",
+    "preparedFor": "Préparé pour revue de souscription · {date}",
+    "reportDate": "Date du rapport : {date}",
+    "confidential": "Généré par UnderwriteAI · Confidentiel — usage souscription uniquement",
+    "indicativePremium": "Facteur de prime indicatif",
+    "indicativeNotActuarial": "Indicatif — non actuariel",
+    "keyMetrics": "Indicateurs clés",
+    "riskScore": "Score de risque",
+    "premiumFactor": "Facteur de prime",
+    "findings": "Constats",
+    "premiumFactorNote": "Facteur de prime : indicatif — non actuariel (1,00x + score/100 × 1,50).",
+    "underwritingRecommendation": "Recommandation de souscription",
+    "highSeverity": "Gravité élevée",
+    "premiumFactorExplain": "Le facteur de prime utilise une règle simple : 1,00x + (score ÷ 100) × 1,50 (plage 1,00x–2,50x). Pour jugement de souscription uniquement — pas un taux actuariel.",
+    "whyThisScore": "Pourquoi ce score",
+    "topDrivers": "Principaux facteurs du niveau {tier} — issus des déclarations",
+    "andRedTeam": " et des tests red team",
+    "howWeAssessed": "Comment nous avons évalué",
+    "howAskTitle": "Interroger",
+    "howAskBody": "Déclarations du client sur l'usage, les données et les contrôles.",
+    "howTestTitle": "Tester",
+    "howTestBody": "L'agent d'attaque a sondé le système ; l'agent juge a noté chaque réponse.",
+    "howScoreTitle": "Noter",
+    "howScoreBody": "Déclarations et résultats de tests combinés en un score de risque.",
+    "recommendedConditions": "Conditions de police recommandées",
+    "disclaimer": "Le score de risque et le facteur de prime sont indicatifs — non actuariels. Ils éclairent le jugement de souscription ; ils ne le remplacent pas.",
+    "tierMessageHigh": "La couverture devrait être refusée ou retarifée jusqu'à remédiation des constats de haute gravité.",
+    "tierMessageMedium": "La couverture est envisageable avec les conditions ci-dessous attachées à la police.",
+    "tierMessageLow": "Une couverture standard est appropriée. Maintenir les contrôles et réévaluer au renouvellement.",
+    "tiers": {
+      "LOW": "Risque faible",
+      "MEDIUM": "Risque moyen",
+      "HIGH": "Risque élevé"
+    },
+    "decision": "Décision",
+    "allDecisions": "Toutes les décisions",
+    "noDecision": "Aucune décision",
+    "decisionAccept": "Accepter",
+    "decisionAcceptWithConditions": "Accepter avec conditions",
+    "decisionRefer": "Référer",
+    "decisionDecline": "Refuser",
+    "colDecision": "Décision",
+    "colActions": "Actions",
+    "actionContinue": "Continuer",
+    "actionView": "Voir",
+    "actionEdit": "Modifier",
+    "backToReport": "Retour au rapport",
+    "editSubtitleScored": "Mettez à jour les réponses et recalculez pour actualiser le rapport."
+  },
+  "agents": {
+    "agent1": "Agent 1",
+    "attackTitle": "Agent d'attaque — tests générés",
+    "attackDesc": "Prompts adverses qui sondent l'IA du client sur huit catégories de risque.",
+    "generateAttackPrompts": "Générer les prompts d'attaque",
+    "regenerate": "Régénérer",
+    "generating": "Génération...",
+    "noPrompts": "Aucun prompt d'attaque pour le moment. Cliquez sur Générer les prompts d'attaque pour lancer l'Agent 1.",
+    "runningAttack": "Exécution de l'agent d'attaque sur 8 catégories...",
+    "aiGenerated": "Généré par IA",
+    "seed": "Amorce",
+    "generatedAt": "Généré le {date}.",
+    "seedFallback": "Amorce utilisée (pas de clé Groq ou modèle indisponible).",
+    "nextStep": "Étape suivante : l'Agent 2 (Juge) enverra ces prompts à l'IA du client et notera les réponses.",
+    "agent2": "Agent 2",
+    "judgeTitle": "Agent juge — résultats des tests",
+    "failedOf": "{failed} échoués / {total}",
+    "judgeDesc": "Envoie les prompts d'attaque à une IA client simulée, puis note chaque réponse réussie ou échouée.",
+    "runTests": "Lancer les tests",
+    "rerunTests": "Relancer les tests",
+    "runningTests": "Tests en cours...",
+    "generateFirst": "Générez d'abord les prompts d'attaque de l'Agent 1, puis lancez l'agent Juge.",
+    "noResults": "Aucun résultat de test pour le moment. Cliquez sur Lancer les tests pour noter les réponses de l'IA client.",
+    "simulating": "Simulation des réponses et notation de chaque réponse...",
+    "tests": "Tests",
+    "passed": "Réussis",
+    "failed": "Échoués",
+    "categoryFailed": "{category} : {failed}/{total} échoués",
+    "failures": "Échecs ({count})",
+    "heuristic": "Heuristique",
+    "verdict": "Verdict :",
+    "showAiResponse": "Afficher la réponse IA →",
+    "hideAiResponse": "Masquer la réponse IA",
+    "ranAt": "Exécuté le {date}.",
+    "simulatedFallback": "Simulation de secours utilisée (pas de clé Groq ou modèle indisponible).",
+    "questionnaireUnchanged": "Le score du questionnaire est inchangé — ce sont des constats techniques du sondage à deux agents."
+  },
+  "questionnaire": {
+    "sections": {
+      "systemExposure": "Système et exposition",
+      "exposureData": "Exposition et données",
+      "controls": "Contrôles",
+      "testingCompliance": "Tests et conformité",
+      "historyAttestation": "Antécédents et attestation"
+    },
+    "questions": {
+      "systemStatus": {
+        "title": "Quel est le statut de ce système d’IA ?",
+        "help": "Les systèmes en production créent une exposition immédiate pour la souscription.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "planned": "Prévu — pas encore développé",
+          "pilot": "Pilote / déploiement limité",
+          "staging": "Préproduction — prêt pour la production",
+          "production": "En production"
+        }
+      },
+      "useCase": {
+        "title": "Quel est le principal cas d’utilisation ?",
+        "help": "Les décisions à forts enjeux impliquent une responsabilité potentielle plus élevée.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "support": "Assistance clientèle / agent conversationnel",
+          "content": "Génération de contenu",
+          "copilot": "Assistant pour employés",
+          "decisions": "Aide à la décision (crédit, RH, sinistres, etc.)",
+          "agent": "Agent autonome / automatisation des flux de travail",
+          "other": "Autre"
+        }
+      },
+      "actionableAdvice": {
+        "title": "L’IA peut-elle fournir des conseils sur lesquels les utilisateurs pourraient agir ?",
+        "help": "Les recommandations exploitables créent une exposition en matière de conseil et de responsabilité civile professionnelle.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "no": "Non",
+          "partial": "Partiellement — suggestions non contraignantes uniquement",
+          "yes": "Oui — les utilisateurs peuvent s’y fier"
+        }
+      },
+      "autonomousActions": {
+        "title": "Peut-elle déclencher des actions sans intervention humaine ?",
+        "help": "Les paiements, approbations, modifications de compte ou blocages d’accès augmentent la gravité du risque.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "no": "Non — les humains exécutent toujours les actions",
+          "yes": "Oui — elle peut agir de manière autonome"
+        }
+      },
+      "financialImpact": {
+        "title": "Quel serait le pire impact financier en cas de défaillance ?",
+        "help": "Détermine l’ordre de grandeur des sinistres potentiels.",
+        "sectionKey": "systemExposure",
+        "options": {
+          "lt10k": "Moins de 10 k $",
+          "10k100k": "10 k $ – 100 k $",
+          "100k1m": "100 k $ – 1 M $",
+          "gt1m": "Plus de 1 M $",
+          "unknown": "Inconnu"
+        }
+      },
+      "nonFinancialImpact": {
+        "title": "Quel est le principal risque non financier en cas de défaillance ?",
+        "help": "Les défaillances réglementaires, de confidentialité et de sécurité entraînent responsabilité et atteinte à la réputation.",
+        "sectionKey": "exposureData",
+        "options": {
+          "none": "Limité / opérationnel uniquement",
+          "reputation": "Atteinte à la réputation",
+          "discrimination": "Discrimination ou résultats injustes",
+          "breach": "Violation de données / incident de confidentialité",
+          "regulatory": "Amende ou mesure réglementaire",
+          "safety": "Incident de sécurité"
+        }
+      },
+      "modelSource": {
+        "title": "Quelle est la provenance du modèle ?",
+        "help": "Le fournisseur et l’hébergement influencent le périmètre de contrôle et le risque fournisseur.",
+        "sectionKey": "exposureData",
+        "options": {
+          "major": "API d’un fournisseur majeur (OpenAI, Anthropic, Google, Azure)",
+          "oss": "Open source, auto-hébergé",
+          "custom": "Modèle personnalisé / interne",
+          "hybrid": "Hybride (plusieurs fournisseurs)"
+        }
+      },
+      "vendorContract": {
+        "title": "Un contrat fournisseur couvre-t-il la responsabilité liée à l’IA et l’utilisation des données ?",
+        "help": "La répartition contractuelle des risques est déterminante lors d’un sinistre.",
+        "sectionKey": "exposureData",
+        "options": {
+          "yes": "Oui — responsabilité, utilisation des données et notification d’incident couvertes",
+          "partial": "Partiel — conditions SaaS standard uniquement",
+          "no": "Aucune condition formelle relative à l’IA",
+          "na": "Sans objet — entièrement interne"
+        }
+      },
+      "dataSensitivity": {
+        "title": "Quelles sont les données les plus sensibles qu’il traite ?",
+        "help": "Les données sensibles augmentent le coût d’une fuite ou d’une utilisation abusive.",
+        "sectionKey": "exposureData",
+        "options": {
+          "public": "Données publiques / non personnelles uniquement",
+          "internal": "Données internes de l’entreprise",
+          "pii": "Données personnelles de clients ou d’employés (PII)",
+          "financial": "Données de compte ou de transaction financière",
+          "sensitive": "Données de santé, biométriques ou concernant des enfants"
+        }
+      },
+      "dataHandling": {
+        "title": "Comment les requêtes et les réponses sont-elles traitées ?",
+        "help": "Le stockage, l’utilisation pour l’entraînement et le partage avec des tiers influencent l’exposition en matière de confidentialité.",
+        "sectionKey": "exposureData",
+        "options": {
+          "minimal": "Non stockées ; non utilisées pour l’entraînement ; non partagées",
+          "stored": "Stockées à des fins opérationnelles ; non utilisées pour l’entraînement",
+          "shared": "Partagées avec des fournisseurs tiers de modèles",
+          "training": "Utilisées pour l’entraînement ou l’ajustement fin",
+          "unknown": "Inconnu / non documenté"
+        }
+      },
+      "piiFiltering": {
+        "title": "Les PII sont-elles filtrées en entrée et analysées en sortie ?",
+        "help": "Réduit la fuite de données personnelles via le modèle.",
+        "sectionKey": "controls",
+        "options": {
+          "yes": "Oui — filtrage des entrées et analyse des sorties",
+          "partial": "Partiel — un seul côté couvert",
+          "no": "Non"
+        }
+      },
+      "humanOversight": {
+        "title": "Un humain examine-t-il les sorties de l’IA à fort impact ?",
+        "help": "L’examen humain constitue le contrôle le plus solide contre les erreurs de l’IA.",
+        "sectionKey": "controls",
+        "options": {
+          "always": "Toujours — avant les actions à fort impact ou les conseils réglementés",
+          "sometimes": "Parfois — contrôles ponctuels uniquement",
+          "never": "Jamais — l’IA agit sans examen humain"
+        }
+      },
+      "guardrails": {
+        "title": "Quelles protections techniques sont en place ?",
+        "help": "Les défenses contre les injections, les filtres de contenu et les contrôles d’accès réduisent le risque technique.",
+        "sectionKey": "controls",
+        "options": {
+          "full": "Défenses contre les injections, filtres de contenu et authentification / limites de débit",
+          "partial": "Certains de ces contrôles",
+          "none": "Aucun de ces contrôles"
+        }
+      },
+      "logging": {
+        "title": "Les requêtes, sorties et appels d’outils sont-ils journalisés ?",
+        "help": "Les journaux permettent d’étayer les sinistres et de retracer les incidents.",
+        "sectionKey": "controls",
+        "options": {
+          "full": "Oui — suffisamment pour reconstituer un sinistre, avec conservation",
+          "partial": "Journalisation partielle",
+          "none": "Aucune journalisation"
+        }
+      },
+      "incidentResponse": {
+        "title": "Existe-t-il une réponse aux incidents documentée pour les défaillances de l’IA ?",
+        "help": "Les assureurs ont besoin d’un processus clair lorsqu’un incident survient.",
+        "sectionKey": "controls",
+        "options": {
+          "yes": "Oui — processus et délai de notification définis",
+          "no": "Non"
+        }
+      },
+      "sandboxAccess": {
+        "title": "Une API de bac à sable / préproduction est-elle disponible pour les tests de l’assureur ?",
+        "help": "Nécessaire pour les tests automatisés de type red teaming sans accès au code source.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Oui — tests autorisés",
+          "no": "Non"
+        }
+      },
+      "frameworks": {
+        "title": "À quels cadres de gouvernance vous alignez-vous ?",
+        "help": "Démontre l’alignement avec les attentes émergentes en matière d’IA et de protection des données.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "multiple": "EU AI Act / GDPR / réglementations sectorielles (ou équivalent) documentés",
+          "internal": "Politique interne relative à l’IA uniquement",
+          "none": "Aucun"
+        }
+      },
+      "aiPolicy": {
+        "title": "Existe-t-il une politique écrite de gouvernance de l’IA approuvée par la direction ?",
+        "help": "La responsabilité au niveau du conseil d’administration renforce la confiance de la souscription.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Oui",
+          "no": "Non"
+        }
+      },
+      "qualityMeasurement": {
+        "title": "Mesurez-vous la qualité des sorties et suivez-vous les modes de défaillance connus ?",
+        "help": "Le suivi de l’exactitude réduit les hallucinations et la responsabilité liée aux conseils.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Oui — indicateurs et modes de défaillance connus documentés",
+          "partial": "Vérifications informelles / ponctuelles",
+          "no": "Aucune mesure structurée"
+        }
+      },
+      "retestOnChange": {
+        "title": "Effectuez-vous de nouveaux tests après des modifications du modèle, des requêtes ou des outils ?",
+        "help": "La gestion des changements évite les augmentations silencieuses de risque entre les renouvellements.",
+        "sectionKey": "testingCompliance",
+        "options": {
+          "yes": "Oui — toujours après des changements importants",
+          "sometimes": "Parfois",
+          "no": "Non"
+        }
+      },
+      "priorIncidents": {
+        "title": "Y a-t-il eu des pertes, réclamations ou mesures réglementaires antérieures liées à l’IA ?",
+        "help": "Les sinistres antérieurs constituent un indicateur direct pour la souscription.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "no": "Non",
+          "minor": "Oui — mineurs / corrigés, sans perte importante",
+          "yes": "Oui — perte importante, litige en cours ou mesure réglementaire"
+        }
+      },
+      "existingCover": {
+        "title": "Existe-t-il une couverture cyber / RC technologique / RC professionnelle susceptible de se chevaucher ?",
+        "help": "Aide les souscripteurs à éviter le double comptage et à repérer les exclusions liées à l’IA.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "yes_ai": "Oui — et l’IA n’est pas exclue",
+          "yes_excluded": "Oui — mais le risque lié à l’IA est exclu ou incertain",
+          "none": "Aucune couverture se chevauchant",
+          "unknown": "Inconnu"
+        }
+      },
+      "redTeamed": {
+        "title": "Le système a-t-il fait l’objet d’un red teaming indépendant pour les risques liés à l’IA ?",
+        "help": "Les éléments probants de tests externes renforcent l’évaluation du risque technique.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "yes": "Oui — au cours des 12 derniers mois",
+          "older": "Oui — mais il y a plus de 12 mois",
+          "no": "Non"
+        }
+      },
+      "userDisclosure": {
+        "title": "Les utilisateurs sont-ils informés qu’ils interagissent avec une IA ?",
+        "help": "La transparence réduit le risque de surprise et de réclamation.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "always": "Toujours",
+          "sometimes": "Parfois",
+          "never": "Jamais"
+        }
+      },
+      "attestation": {
+        "title": "Attestez-vous que ces réponses sont complètes et exactes ?",
+        "help": "Toute fausse déclaration importante peut affecter la couverture lors d’un sinistre ou d’un renouvellement. Vous autorisez les tests convenus en bac à sable.",
+        "sectionKey": "historyAttestation",
+        "options": {
+          "yes": "Oui — je confirme et autorise les tests convenus",
+          "no": "Non — je ne peux pas attester pour le moment"
+        }
+      }
+    }
+  },
+  "risk": {
+    "findings": {
+      "disclosure_not_attested": {
+        "title": "Déclaration non attestée",
+        "detail": "Le demandeur n’a pas attesté l’exactitude des informations. La couverture ne doit pas être souscrite sans attestation signée."
+      },
+      "no_human_in_loop": {
+        "title": "Absence de supervision humaine des actions conséquentes",
+        "detail": "L’IA peut prendre ou influencer des actions conséquentes avec une approbation humaine faible ou inexistante. Une seule mauvaise réponse peut atteindre directement un client."
+      },
+      "partial_human_oversight": {
+        "title": "Supervision humaine partielle",
+        "detail": "Seules certaines sorties sont vérifiées. Les actions à fort impact doivent exiger une validation humaine explicite."
+      },
+      "sensitive_data_exposure": {
+        "title": "Risque d’exposition de données sensibles",
+        "detail": "Des données sensibles sont concernées. Une exposition résiduelle à la vie privée subsiste."
+      },
+      "sensitive_data_exposure_incomplete_pii": {
+        "title": "Risque d’exposition de données sensibles",
+        "detail": "Des données sensibles sont traitées et le filtrage des données personnelles semble incomplet. Le risque de fuite en sortie est élevé."
+      },
+      "sensitive_data_exposure_controls_present": {
+        "title": "Risque d’exposition de données sensibles",
+        "detail": "Des données sensibles sont concernées. Des contrôles sont en place, mais une exposition résiduelle à la vie privée subsiste."
+      },
+      "prompt_injection_gaps": {
+        "title": "Lacunes de protection contre l’injection de prompts et de tests IA",
+        "detail": "Les garde-fous et/ou les tests indépendants de red team sont insuffisants. Des injections, jailbreaks et réponses dangereuses peuvent atteindre les utilisateurs."
+      },
+      "high_advice_liability": {
+        "title": "Responsabilité élevée liée aux conseils ou décisions",
+        "detail": "Les utilisateurs peuvent s’appuyer sur les sorties de l’IA pour des décisions ou conseils. Les hallucinations et erreurs affirmées créent une exposition importante en responsabilité professionnelle."
+      },
+      "no_audit_trail": {
+        "title": "Absence de piste d’audit",
+        "detail": "Sans journaux des entrées et sorties, les incidents ne peuvent pas être reconstitués et les sinistres sont difficiles à défendre."
+      },
+      "weak_governance_docs": {
+        "title": "Documentation de gouvernance IA insuffisante",
+        "detail": "Il n’existe pas de cartographie claire vers l’AI Act, le RGPD ou les règles sectorielles, ni de politique IA approuvée. L’exposition réglementaire est insuffisamment documentée."
+      },
+      "prior_ai_loss": {
+        "title": "Sinistre ou action réglementaire antérieur lié à l’IA",
+        "detail": "Des incidents matériels antérieurs indiquent un risque de fréquence accru jusqu’à ce que la remédiation soit démontrée."
+      },
+      "strong_controls": {
+        "title": "Contrôles robustes observés",
+        "detail": "La supervision, la journalisation, les tests et la gouvernance sont en place. Le risque résiduel se limite à l’incertitude normale des modèles."
+      }
+    },
+    "conditions": {
+      "remediate_high_severity": "Corriger les constats de gravité élevée avant la prise d’effet de la couverture.",
+      "obtain_attestation": "Obtenir une attestation signée avant tout devis ou toute prise d’effet de la couverture.",
+      "require_human_approval": "Exiger une approbation humaine pour toutes les actions IA à fort impact et les conseils réglementés.",
+      "disable_autonomous": "Désactiver les actions autonomes non supervisées jusqu’à vérification des améliorations de contrôle.",
+      "quarterly_red_team": "Mettre en place des tests trimestriels de red team et une réévaluation au renouvellement.",
+      "enable_logging": "Activer la journalisation complète des entrées et sorties avec une conservation de 12 mois.",
+      "add_pii_filtering": "Ajouter un filtrage des données personnelles en entrée et une analyse des sorties avant la prise d’effet.",
+      "complete_governance_docs": "Compléter la documentation de gouvernance IA (politique et cartographie des référentiels) avant la prise d’effet.",
+      "provide_staging": "Fournir un environnement de préproduction pour les tests autorisés par l’assureur dans les 30 jours.",
+      "require_retest": "Exiger un nouveau test après toute modification matérielle du modèle, des prompts ou des outils.",
+      "incident_remediation": "Fournir la preuve de remédiation de l’incident avant la prise d’effet de la couverture.",
+      "maintain_controls": "Maintenir les contrôles actuels et procéder à une réévaluation au renouvellement annuel."
+    },
+    "drivers": {
+      "systemStatus": {
+        "title": "Exposition d’un système actif",
+        "detail": "L’IA est {label}, de sorte que les défaillances peuvent créer une exposition immédiate aux sinistres."
+      },
+      "useCase": {
+        "title": "Risque élevé lié au cas d’usage",
+        "detail": "Le cas d’usage principal ({label}) comporte une exposition de souscription supérieure à la moyenne."
+      },
+      "useCase_agent": {
+        "title": "Cas d’usage d’agent autonome",
+        "detail": "L’automatisation des flux sans limites strictes accroît la responsabilité si l’agent agit à tort."
+      },
+      "useCase_decisions": {
+        "title": "Aide à la décision à fort enjeu",
+        "detail": "Les décisions de crédit, RH, sinistres ou similaires créent une exposition importante aux erreurs et omissions."
+      },
+      "actionableAdvice": {
+        "title": "Les utilisateurs peuvent se fier aux conseils de l’IA",
+        "detail": "Des recommandations exploitables créent une exposition aux erreurs et omissions lorsque les sorties sont incorrectes."
+      },
+      "autonomousActions": {
+        "title": "Actions non supervisées",
+        "detail": "Le système peut déclencher des actions sans intervention humaine : paiements, approbations ou modifications d’accès accroissent la gravité."
+      },
+      "financialImpact": {
+        "title": "Impact financier significatif",
+        "detail": "La perte maximale si l’IA échoue est de {label}, ce qui détermine la gravité du sinistre."
+      },
+      "nonFinancialImpact": {
+        "title": "Responsabilité non financière",
+        "detail": "Le principal mode de défaillance est {label} — un facteur clé de risque réglementaire et de réputation."
+      },
+      "modelSource": {
+        "title": "Complexité du modèle ou du fournisseur",
+        "detail": "L’approvisionnement du modèle ({label}) élargit la surface de contrôle et le risque fournisseur."
+      },
+      "vendorContract": {
+        "title": "Transfert contractuel du risque insuffisant",
+        "detail": "Les clauses de responsabilité IA et d’utilisation des données sont incomplètes, ce qui complique l’attribution des pertes lors d’un sinistre."
+      },
+      "dataSensitivity": {
+        "title": "Données sensibles concernées",
+        "detail": "Le système traite {label}, ce qui augmente le coût d’une fuite ou d’un usage abusif."
+      },
+      "dataHandling": {
+        "title": "Traitement des prompts et sorties",
+        "detail": "{label} — le stockage, le partage ou l’utilisation pour l’entraînement augmente l’exposition à la vie privée."
+      },
+      "piiFiltering": {
+        "title": "Contrôles des données personnelles incomplets",
+        "detail": "Les données personnelles ne sont pas entièrement filtrées en entrée ni analysées en sortie : le risque de fuite demeure."
+      },
+      "humanOversight": {
+        "title": "Supervision humaine limitée",
+        "detail": "La revue humaine se limite à des contrôles ponctuels : des erreurs conséquentes peuvent atteindre les utilisateurs sans contrôle."
+      },
+      "humanOversight_never": {
+        "title": "Supervision humaine limitée",
+        "detail": "Les sorties IA à fort impact ne sont pas vérifiées par un humain avant une action ou un conseil réglementé."
+      },
+      "guardrails": {
+        "title": "Garde-fous techniques limités",
+        "detail": "Les défenses contre l’injection, filtres de contenu ou contrôles d’accès sont incomplets : le risque technique est accru."
+      },
+      "logging": {
+        "title": "Journalisation d’audit incomplète",
+        "detail": "Les prompts, sorties et appels d’outils ne sont pas entièrement journalisés : les sinistres et incidents sont plus difficiles à défendre."
+      },
+      "incidentResponse": {
+        "title": "Absence de procédure de réponse aux incidents IA",
+        "detail": "Aucune procédure documentée ne prévoit la réponse aux défaillances de l’IA, ce qui retarde le confinement et la notification."
+      },
+      "sandboxAccess": {
+        "title": "Absence d’accès de test pour l’assureur",
+        "detail": "Aucun environnement de préproduction n’est disponible pour des tests autorisés : il est plus difficile de vérifier les contrôles sans accès au code source."
+      },
+      "frameworks": {
+        "title": "Cartographie de gouvernance insuffisante",
+        "detail": "La cartographie vers l’AI Act, le RGPD ou les règles sectorielles est limitée : la conformité est plus difficile à démontrer."
+      },
+      "aiPolicy": {
+        "title": "Absence de politique IA approuvée",
+        "detail": "La direction n’a pas approuvé de politique écrite de gouvernance de l’IA : la responsabilité est incertaine."
+      },
+      "qualityMeasurement": {
+        "title": "Suivi de qualité insuffisant",
+        "detail": "La qualité des sorties et les modes de défaillance connus ne sont pas mesurés systématiquement : le risque d’exactitude demeure."
+      },
+      "retestOnChange": {
+        "title": "Lacunes de gestion des changements",
+        "detail": "Le système n’est pas toujours retesté après des modifications du modèle, des prompts ou des outils : le risque peut dériver silencieusement entre les renouvellements."
+      },
+      "priorIncidents": {
+        "title": "Antécédents liés à l’IA",
+        "detail": "Des incidents IA antérieurs mineurs ou corrigés continuent d’éclairer l’appétence et les conditions."
+      },
+      "priorIncidents_yes": {
+        "title": "Antécédents liés à l’IA",
+        "detail": "Perte matérielle, litige ou action réglementaire antérieure : un signal direct pour la souscription."
+      },
+      "existingCover": {
+        "title": "Chevauchement de couverture incertain",
+        "detail": "Les couvertures cyber, E&O ou responsabilité professionnelle existantes peuvent exclure l’IA ou laisser des lacunes : vérifier les cumuls et exclusions."
+      },
+      "redTeamed": {
+        "title": "Preuves de red team limitées",
+        "detail": "Les preuves de red team sont obsolètes : les contrôles ont pu dériver depuis le dernier test."
+      },
+      "redTeamed_no": {
+        "title": "Preuves de red team limitées",
+        "detail": "Aucun test contradictoire récent : l’efficacité des contrôles reste largement non démontrée."
+      },
+      "userDisclosure": {
+        "title": "Les utilisateurs peuvent ignorer qu’il s’agit d’une IA",
+        "detail": "Une information incomplète sur le caractère généré par IA affaiblit la transparence et le respect du devoir envers le consommateur."
+      },
+      "attestation": {
+        "title": "Déclaration non attestée",
+        "detail": "Le demandeur n’a pas attesté l’exactitude des informations : la souscription ne doit pas reposer sur des réponses non vérifiées."
+      }
+    },
+    "testDrivers": {
+      "prompt_injection": {
+        "title": "Tests d’injection de prompts échoués",
+        "detail": "Des sondes de red team ont contourné les garde-fous : comportement non contrôlé et exposition à la responsabilité.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "jailbreak": {
+        "title": "Tests de jailbreak échoués",
+        "detail": "Le système a accepté des contournements de politique lors des tests : les contrôles de sécurité n’ont pas résisté.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "pii_leakage": {
+        "title": "Fuite de données personnelles lors des tests",
+        "detail": "Des réponses de test ont exposé des données personnelles : exposition aux coûts de confidentialité et de violation.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "unsafe_advice": {
+        "title": "Conseils dangereux lors des tests",
+        "detail": "Le modèle a formulé des recommandations nuisibles ou non autorisées sous sonde : exposition E&O.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "unauthorized_action": {
+        "title": "Actions non autorisées lors des tests",
+        "detail": "Les sondes ont révélé des actions à fort impact sans contrôle humain adéquat.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "hallucination": {
+        "title": "Hallucinations lors des tests",
+        "detail": "Des réponses fausses mais affirmées lors des tests créent une exposition aux erreurs et omissions.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "bias_discrimination": {
+        "title": "Constats de biais lors des tests",
+        "detail": "Des sorties injustes ou discriminatoires sous sonde créent un risque d’équité et de conformité.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      },
+      "system_data_exfiltration": {
+        "title": "Données système exposées lors des tests",
+        "detail": "Le contexte caché, les outils ou des documents internes ont fuité sous sonde, ce qui aide les attaquants.",
+        "failedTests": "({count} tests échoués)",
+        "failedTest": "({count} test échoué)"
+      }
+    },
+    "categories": {
+      "Security": "Sécurité",
+      "Privacy": "Vie privée",
+      "Accuracy": "Exactitude",
+      "Governance": "Gouvernance",
+      "Compliance": "Conformité"
+    },
+    "attackCategories": {
+      "prompt_injection": "Injection de prompt",
+      "jailbreak": "Jailbreak",
+      "hallucination": "Hallucination",
+      "pii_leakage": "Fuite de données personnelles",
+      "unsafe_advice": "Conseil dangereux",
+      "unauthorized_action": "Action non autorisée",
+      "bias_discrimination": "Biais et discrimination",
+      "system_data_exfiltration": "Exfiltration de données système"
+    }
+  }
+}

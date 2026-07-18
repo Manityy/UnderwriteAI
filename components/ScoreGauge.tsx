@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Tier = "LOW" | "MEDIUM" | "HIGH";
 
@@ -19,8 +20,9 @@ export function ScoreGauge({
   tier: string;
   size?: number;
 }) {
-  const t = (["LOW", "MEDIUM", "HIGH"].includes(tier) ? tier : "MEDIUM") as Tier;
-  const color = tierColor[t];
+  const t = useTranslations("assessment");
+  const key = (["LOW", "MEDIUM", "HIGH"].includes(tier) ? tier : "MEDIUM") as Tier;
+  const color = tierColor[key];
   const stroke = 16;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -52,7 +54,9 @@ export function ScoreGauge({
       </svg>
       <div className="absolute flex flex-col items-center">
         <span className="text-4xl font-extrabold text-ink">{score}</span>
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted">risk score</span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted">
+          {t("riskScoreLabel")}
+        </span>
       </div>
     </div>
   );

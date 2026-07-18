@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 
 /** Mark height in px — width follows the asset aspect ratio (200×218). */
 const MARK_PX = {

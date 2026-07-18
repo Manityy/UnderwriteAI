@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { RiskBadge } from "@/components/RiskBadge";
 import { DecisionBadge } from "@/components/DecisionPanel";
 import { INDUSTRIES } from "@/components/AssessmentForm";
+import { Link } from "@/i18n/navigation";
 
 export type AssessmentListItem = {
   id: string;
@@ -24,6 +25,9 @@ type Props = {
 };
 
 export function AssessmentsList({ assessments }: Props) {
+  const t = useTranslations("assessment");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
   const [query, setQuery] = useState("");
   const [tier, setTier] = useState("ALL");
   const [industry, setIndustry] = useState("ALL");
@@ -73,73 +77,73 @@ export function AssessmentsList({ assessments }: Props) {
     <div className="mx-auto max-w-6xl px-8 py-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-ink">Assessments</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-ink">{t("listTitle")}</h1>
           <p className="mt-1 text-sm text-muted">
-            AI risk assessments across your client portfolio.
+            {t("listSubtitle")}
           </p>
         </div>
         <Link
           href="/assessments/new"
           className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark"
         >
-          + New assessment
+          {t("newButton")}
         </Link>
       </header>
 
       <div className="mt-6 flex flex-wrap items-end gap-3 rounded-3xl bg-white p-4 ring-1 ring-black/5">
         <div className="min-w-[180px] flex-1">
           <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-muted">
-            Search client
+            {t("searchLabel")}
           </label>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Client name…"
+            placeholder={t("searchPlaceholder")}
             className="w-full rounded-2xl border border-black/10 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
           />
         </div>
         <FilterSelect
-          label="Status"
+          label={t("status")}
           value={status}
           onChange={setStatus}
           options={[
-            { value: "ALL", label: "All statuses" },
-            { value: "DRAFT", label: "Draft" },
-            { value: "SCORED", label: "Scored" },
+            { value: "ALL", label: t("allStatuses") },
+            { value: "DRAFT", label: t("statusDraft") },
+            { value: "SCORED", label: t("statusScored") },
           ]}
         />
         <FilterSelect
-          label="Decision"
+          label={t("decision")}
           value={decision}
           onChange={setDecision}
           options={[
-            { value: "ALL", label: "All decisions" },
-            { value: "NONE", label: "No decision" },
-            { value: "ACCEPT", label: "Accept" },
-            { value: "ACCEPT_WITH_CONDITIONS", label: "Accept with conditions" },
-            { value: "REFER", label: "Refer" },
-            { value: "DECLINE", label: "Decline" },
+            { value: "ALL", label: t("allDecisions") },
+            { value: "NONE", label: t("noDecision") },
+            { value: "ACCEPT", label: t("decisionAccept") },
+            { value: "ACCEPT_WITH_CONDITIONS", label: t("decisionAcceptWithConditions") },
+            { value: "REFER", label: t("decisionRefer") },
+            { value: "DECLINE", label: t("decisionDecline") },
           ]}
         />
         <FilterSelect
-          label="Risk tier"
+          label={t("riskTier")}
           value={tier}
           onChange={setTier}
           options={[
-            { value: "ALL", label: "All tiers" },
-            { value: "HIGH", label: "High" },
-            { value: "MEDIUM", label: "Medium" },
-            { value: "LOW", label: "Low" },
-            { value: "PENDING", label: "Not scored" },
+            { value: "ALL", label: t("allTiers") },
+            { value: "HIGH", label: tCommon("high") },
+            { value: "MEDIUM", label: tCommon("medium") },
+            { value: "LOW", label: tCommon("low") },
+            { value: "PENDING", label: tCommon("notScored") },
           ]}
         />
         <FilterSelect
-          label="Industry"
+          label={t("industry")}
           value={industry}
           onChange={setIndustry}
           options={[
-            { value: "ALL", label: "All industries" },
-            ...industries.map((i) => ({ value: i, label: i })),
+            { value: "ALL", label: t("allIndustries") },
+            ...industries.map((i) => ({ value: i, label: t.has(`industries.${i}`) ? t(`industries.${i}`) : i })),
           ]}
         />
         {hasFilters && (
@@ -148,7 +152,7 @@ export function AssessmentsList({ assessments }: Props) {
             onClick={clearFilters}
             className="rounded-full px-4 py-2.5 text-sm font-semibold text-muted transition hover:text-ink"
           >
-            Clear
+            {tCommon("clear")}
           </button>
         )}
       </div>
@@ -157,14 +161,14 @@ export function AssessmentsList({ assessments }: Props) {
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-black/5 text-xs font-bold uppercase tracking-wider text-muted">
-              <th className="px-6 py-4">Client</th>
-              <th className="px-6 py-4">Industry</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4">Score</th>
-              <th className="px-6 py-4">Risk</th>
-              <th className="px-6 py-4">Decision</th>
-              <th className="px-6 py-4 text-right">Updated</th>
-              <th className="px-6 py-4 text-right">Actions</th>
+              <th className="px-6 py-4">{t("colClient")}</th>
+              <th className="px-6 py-4">{t("colIndustry")}</th>
+              <th className="px-6 py-4">{t("colStatus")}</th>
+              <th className="px-6 py-4">{t("colScore")}</th>
+              <th className="px-6 py-4">{t("colRisk")}</th>
+              <th className="px-6 py-4">{t("colDecision")}</th>
+              <th className="px-6 py-4 text-right">{t("colUpdated")}</th>
+              <th className="px-6 py-4 text-right">{t("colActions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black/5">
@@ -179,7 +183,9 @@ export function AssessmentsList({ assessments }: Props) {
                   </Link>
                   <p className="max-w-xs truncate text-xs text-muted">{a.useCase}</p>
                 </td>
-                <td className="px-6 py-4 text-sm text-muted">{a.industry}</td>
+                <td className="px-6 py-4 text-sm text-muted">
+                  {t.has(`industries.${a.industry}`) ? t(`industries.${a.industry}`) : a.industry}
+                </td>
                 <td className="px-6 py-4">
                   <StatusPill status={a.status} />
                 </td>
@@ -197,7 +203,7 @@ export function AssessmentsList({ assessments }: Props) {
                   )}
                 </td>
                 <td className="px-6 py-4 text-right text-sm text-muted">
-                  {new Date(a.updatedAt).toLocaleDateString()}
+                  {new Date(a.updatedAt).toLocaleDateString(locale)}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex flex-wrap items-center justify-end gap-2">
@@ -206,7 +212,7 @@ export function AssessmentsList({ assessments }: Props) {
                         href={`/assessments/${a.id}/edit`}
                         className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
                       >
-                        Continue
+                        {t("actionContinue")}
                       </Link>
                     ) : (
                       <>
@@ -214,13 +220,13 @@ export function AssessmentsList({ assessments }: Props) {
                           href={`/assessments/${a.id}`}
                           className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted ring-1 ring-black/10 transition hover:text-ink"
                         >
-                          View
+                          {t("actionView")}
                         </Link>
                         <Link
                           href={`/assessments/${a.id}/edit`}
                           className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
                         >
-                          Edit
+                          {t("actionEdit")}
                         </Link>
                       </>
                     )}
@@ -231,9 +237,9 @@ export function AssessmentsList({ assessments }: Props) {
             {assessments.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted">
-                  No assessments yet.{" "}
+                  {t("emptyTitle")}{" "}
                   <Link href="/assessments/new" className="font-semibold text-brand">
-                    Create your first one.
+                    {tCommon("createFirst")}
                   </Link>
                 </td>
               </tr>
@@ -241,13 +247,13 @@ export function AssessmentsList({ assessments }: Props) {
             {assessments.length > 0 && filtered.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted">
-                  No assessments match these filters.{" "}
+                  {t("emptyFiltered")}{" "}
                   <button
                     type="button"
                     onClick={clearFilters}
                     className="font-semibold text-brand"
                   >
-                    Clear filters
+                    {tCommon("clearFilters")}
                   </button>
                 </td>
               </tr>
@@ -258,7 +264,7 @@ export function AssessmentsList({ assessments }: Props) {
 
       {assessments.length > 0 && (
         <p className="mt-3 text-xs text-muted">
-          Showing {filtered.length} of {assessments.length}
+          {t("showingOf", { filtered: filtered.length, total: assessments.length })}
         </p>
       )}
     </div>
@@ -297,6 +303,7 @@ function FilterSelect({
 }
 
 function StatusPill({ status }: { status: string }) {
+  const t = useTranslations("assessment");
   const isDraft = status === "DRAFT";
   return (
     <span
@@ -306,7 +313,7 @@ function StatusPill({ status }: { status: string }) {
           : "bg-brand/10 text-brand ring-brand/20"
       }`}
     >
-      {isDraft ? "Draft" : "Scored"}
+      {isDraft ? t("statusDraft") : t("statusScored")}
     </span>
   );
 }
