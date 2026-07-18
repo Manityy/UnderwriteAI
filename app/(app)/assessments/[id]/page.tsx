@@ -7,10 +7,15 @@ import { RiskBadge } from "@/components/RiskBadge";
 import { PrintReportButton } from "@/components/PrintReportButton";
 import { AttackAgentPanel } from "@/components/AttackAgentPanel";
 import { JudgeAgentPanel } from "@/components/JudgeAgentPanel";
+import { ConditionsPicker } from "@/components/ConditionsPicker";
+import { normalizeStoredConditions } from "@/lib/conditionsLibrary";
 import {
   formatPremiumFactor,
   premiumFactorFromScore,
+  recommendConditionIds,
+  type Answers,
   type Finding,
+  type Tier,
 } from "@/lib/mockRiskEngine";
 import type { AttackPrompt, TestResult, TestRunSummary } from "@/lib/agents/types";
 
@@ -45,7 +50,16 @@ export default async function ReportPage({
   }
 
   const findings: Finding[] = safeParse(assessment.findings, []);
-  const conditions: string[] = safeParse(assessment.conditions, []);
+  const storedConditions: string[] = safeParse(assessment.conditions, []);
+  const selectedConditionIds = normalizeStoredConditions(storedConditions);
+  const answers: Answers = safeParse(assessment.answers, {});
+  const recommendedConditionIds = recommendConditionIds(
+    answers,
+    assessment.tier as Tier
+  );
+  // Legacy freeform-only rows: fall back to engine recommendations so the picker isn't empty
+  const initialConditionIds =
+    selectedConditionIds.length > 0 ? selectedConditionIds : recommendedConditionIds;
   const premiumFactor =
     assessment.premiumFactor > 0
       ? assessment.premiumFactor
@@ -229,28 +243,15 @@ export default async function ReportPage({
         </div>
       </div>
 
-      {/* Recommended conditions */}
+      {/* Policy conditions library / picker */}
       <div className="report-card mt-6 overflow-hidden rounded-[2rem] bg-white p-0 shadow-[0_12px_40px_rgba(26,31,54,0.08)] ring-1 ring-black/5 print:mt-5 print:border print:border-black/10 print:p-6 print:shadow-none print:ring-0">
         <div className="h-1.5 bg-brand print:hidden" />
         <div className="p-8 print:p-0">
-          <h2 className="text-xl font-extrabold tracking-tight text-ink">Recommended policy conditions</h2>
-          <ul className="mt-5 space-y-3">
-            {conditions.map((c, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-3 text-sm text-ink/80 print:break-inside-avoid"
-              >
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-white shadow-sm">
-                  {i + 1}
-                </span>
-                {c}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 border-t border-black/5 pt-4 text-xs leading-relaxed text-muted">
-            Risk score and premium factor are indicative — not actuarial. They support underwriting
-            judgement; they do not replace it.
-          </p>
+          <ConditionsPicker
+            assessmentId={assessment.id}
+            initialSelectedIds={initialConditionIds}
+            recommendedIds={recommendedConditionIds}
+          />
         </div>
       </div>
 
