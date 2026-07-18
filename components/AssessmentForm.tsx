@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QUESTIONS, type Answers } from "@/lib/mockRiskEngine";
@@ -125,13 +126,28 @@ export function AssessmentForm({ initial }: Props) {
 
   const subtitle = isEdit
     ? initial?.status === "SCORED"
-      ? "Update answers and re-score, or save as draft."
+      ? "Update answers and re-score to refresh the report."
       : "Pick up where you left off. Save anytime, score when ready."
     : "Complete the underwriting disclosure. Save a draft or score when ready.";
 
+  const backHref =
+    isEdit && initial?.status === "SCORED" && assessmentId
+      ? `/assessments/${assessmentId}`
+      : "/assessments";
+  const backLabel =
+    isEdit && initial?.status === "SCORED"
+      ? "Back to report"
+      : "Back to assessments";
+
   return (
     <div className="mx-auto max-w-2xl px-8 py-10">
-      <h1 className="text-3xl font-extrabold tracking-tight text-ink">{title}</h1>
+      <Link
+        href={backHref}
+        className="inline-flex text-sm font-semibold text-brand hover:text-brand-dark"
+      >
+        &larr; {backLabel}
+      </Link>
+      <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-ink">{title}</h1>
       <p className="mt-1 text-sm text-muted">{subtitle}</p>
 
       <div className="mt-6">

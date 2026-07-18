@@ -164,6 +164,7 @@ export function AssessmentsList({ assessments }: Props) {
               <th className="px-6 py-4">Risk</th>
               <th className="px-6 py-4">Decision</th>
               <th className="px-6 py-4 text-right">Updated</th>
+              <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black/5">
@@ -198,11 +199,38 @@ export function AssessmentsList({ assessments }: Props) {
                 <td className="px-6 py-4 text-right text-sm text-muted">
                   {new Date(a.updatedAt).toLocaleDateString()}
                 </td>
+                <td className="px-6 py-4 text-right">
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {a.status === "DRAFT" ? (
+                      <Link
+                        href={`/assessments/${a.id}/edit`}
+                        className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
+                      >
+                        Continue
+                      </Link>
+                    ) : (
+                      <>
+                        <Link
+                          href={`/assessments/${a.id}`}
+                          className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted ring-1 ring-black/10 transition hover:text-ink"
+                        >
+                          View
+                        </Link>
+                        <Link
+                          href={`/assessments/${a.id}/edit`}
+                          className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
+                        >
+                          Edit
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </td>
               </tr>
             ))}
             {assessments.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-sm text-muted">
+                <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted">
                   No assessments yet.{" "}
                   <Link href="/assessments/new" className="font-semibold text-brand">
                     Create your first one.
@@ -212,7 +240,7 @@ export function AssessmentsList({ assessments }: Props) {
             )}
             {assessments.length > 0 && filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-sm text-muted">
+                <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted">
                   No assessments match these filters.{" "}
                   <button
                     type="button"

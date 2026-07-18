@@ -104,7 +104,15 @@ export default async function ReportPage({
         <Link href="/assessments" className="text-sm font-semibold text-brand hover:text-brand-dark">
           &larr; Back to assessments
         </Link>
-        <PrintReportButton documentTitle={pdfTitle} />
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/assessments/${id}/edit`}
+            className="rounded-full px-5 py-2.5 text-sm font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
+          >
+            Edit &amp; re-score
+          </Link>
+          <PrintReportButton documentTitle={pdfTitle} />
+        </div>
       </div>
 
       {/* Print letterhead */}
