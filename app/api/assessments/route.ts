@@ -42,6 +42,7 @@ export async function POST(req: Request) {
           tier: "PENDING",
           findings: "[]",
           conditions: "[]",
+          scoreDrivers: "[]",
           userId: session.userId,
         },
       });
@@ -69,6 +70,7 @@ export async function POST(req: Request) {
         premiumFactor: result.premiumFactor,
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
+        scoreDrivers: JSON.stringify(result.scoreDrivers),
         userId: session.userId,
       },
     });

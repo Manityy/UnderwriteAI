@@ -25,6 +25,15 @@ export type Finding = {
   detail: string;
 };
 
+/** Plain-language reason the risk score landed where it did. */
+export type ScoreDriver = {
+  theme: "exposure" | "controls" | "data" | "oversight" | "governance";
+  title: string;
+  detail: string;
+  /** Relative contribution used for ranking (not shown to users). */
+  weight: number;
+};
+
 export type RiskResult = {
   score: number; // 0..100 (higher = riskier)
   tier: Tier;
@@ -33,6 +42,8 @@ export type RiskResult = {
   findings: Finding[];
   /** Selected / recommended policy condition IDs from the conditions library. */
   conditions: string[];
+  /** Top drivers explaining the score (questionnaire-based). */
+  scoreDrivers: ScoreDriver[];
 };
 
 /**
@@ -426,8 +437,298 @@ export function scoreAssessment(answers: Answers): RiskResult {
   const premiumFactor = premiumFactorFromScore(score);
   const findings = buildFindings(answers, tier);
   const conditions = buildConditions(answers, tier);
+  const scoreDrivers = buildScoreDrivers(answers);
 
-  return { score, tier, premiumFactor, findings, conditions };
+  return { score, tier, premiumFactor, findings, conditions, scoreDrivers };
+}
+
+const THEME_FROM_SECTION: Record<string, ScoreDriver["theme"]> = {
+  "System & exposure": "exposure",
+  "Exposure & data": "data",
+  Controls: "controls",
+  "Testing & compliance": "governance",
+  "History & attestation": "governance",
+};
+
+/** Minimum option risk to count as a score driver (avoids low-risk noise). */
+const DRIVER_RISK_FLOOR = 40;
+
+/**
+ * Top score drivers from questionnaire answers: highest risk × weight.
+ * Rule-based — no ML. Export for report fallback / recompute.
+ */
+export function buildScoreDrivers(answers: Answers, limit = 3): ScoreDriver[] {
+  const ranked: ScoreDriver[] = [];
+
+  for (const q of QUESTIONS) {
+    const opt = optionFor(q.id, answers[q.id]);
+    if (!opt || opt.risk < DRIVER_RISK_FLOOR) continue;
+
+    const copy = driverCopy(q.id, opt.value, opt.label);
+    if (!copy) continue;
+
+    const theme =
+      q.id === "humanOversight" || q.id === "autonomousActions"
+        ? "oversight"
+        : q.id === "dataSensitivity" || q.id === "dataHandling" || q.id === "piiFiltering"
+          ? "data"
+          : THEME_FROM_SECTION[q.section] ?? "exposure";
+
+    ranked.push({
+      theme,
+      title: copy.title,
+      detail: copy.detail,
+      weight: Math.round(opt.risk * q.weight),
+    });
+  }
+
+  ranked.sort((a, b) => b.weight - a.weight);
+  return ranked.slice(0, limit);
+}
+
+function driverCopy(
+  questionId: string,
+  value: string,
+  optionLabel: string
+): { title: string; detail: string } | null {
+  const byId: Record<string, (v: string, label: string) => { title: string; detail: string } | null> = {
+    systemStatus: (_v, label) => ({
+      title: "Live system exposure",
+      detail: `The AI is ${label.toLowerCase()}, so failures can create immediate claims exposure.`,
+    }),
+    useCase: (v) => {
+      if (v === "agent")
+        return {
+          title: "Autonomous agent use case",
+          detail: "Workflow automation without tight bounds raises liability if the agent acts wrongly.",
+        };
+      if (v === "decisions")
+        return {
+          title: "High-stakes decision support",
+          detail: "Credit, HR, claims or similar decisions create material errors-and-omissions exposure.",
+        };
+      return {
+        title: "Elevated use-case risk",
+        detail: `Primary use case (${optionLabel}) carries above-average underwriting exposure.`,
+      };
+    },
+    actionableAdvice: () => ({
+      title: "Users may rely on AI advice",
+      detail: "Actionable guidance creates advice and errors-and-omissions exposure if outputs are wrong.",
+    }),
+    autonomousActions: () => ({
+      title: "Unsupervised actions",
+      detail: "The system can trigger actions without a human — payments, approvals, or access changes raise severity.",
+    }),
+    financialImpact: (_v, label) => ({
+      title: "Material financial impact",
+      detail: `Worst-case loss if the AI fails is ${label.toLowerCase()}, which sets claim severity.`,
+    }),
+    nonFinancialImpact: (v, label) => {
+      if (v === "none") return null;
+      return {
+        title: "Non-financial liability",
+        detail: `Main failure mode is ${label.toLowerCase()} — a key driver of regulatory and reputation risk.`,
+      };
+    },
+    modelSource: (v) => {
+      if (v === "major") return null;
+      return {
+        title: "Model / vendor complexity",
+        detail: `Model sourcing (${optionLabel}) widens the control surface and vendor risk.`,
+      };
+    },
+    vendorContract: (v) => {
+      if (v === "yes") return null;
+      return {
+        title: "Weak contractual risk transfer",
+        detail: "AI liability and data-use terms are incomplete — harder to allocate loss at claim time.",
+      };
+    },
+    dataSensitivity: (v) => {
+      if (v === "public") return null;
+      return {
+        title: "Sensitive data in scope",
+        detail: `The system processes ${optionLabel.toLowerCase()}, raising the cost of a leak or misuse.`,
+      };
+    },
+    dataHandling: (v) => {
+      if (v === "minimal") return null;
+      return {
+        title: "Prompt and output handling",
+        detail: `${optionLabel} — storage, sharing, or training use increases privacy exposure.`,
+      };
+    },
+    piiFiltering: () => ({
+      title: "Incomplete PII controls",
+      detail: "Personal data is not fully filtered on input and scanned on output — leakage risk remains open.",
+    }),
+    humanOversight: (v) => {
+      if (v === "always") return null;
+      return {
+        title: "Limited human oversight",
+        detail:
+          v === "never"
+            ? "High-impact AI output is not reviewed by a human before action or regulated advice."
+            : "Human review is only spot-checks — consequential mistakes can reach users unchecked.",
+      };
+    },
+    guardrails: () => ({
+      title: "Thin technical guardrails",
+      detail: "Injection defenses, content filters, or access controls are incomplete — technical risk is elevated.",
+    }),
+    logging: () => ({
+      title: "Incomplete audit logging",
+      detail: "Prompts, outputs, and tool calls are not fully logged — claims and incidents are harder to defend.",
+    }),
+    incidentResponse: () => ({
+      title: "No AI incident playbook",
+      detail: "There is no documented response path for AI failures — slows containment and notification.",
+    }),
+    sandboxAccess: () => ({
+      title: "No insurer test access",
+      detail: "No staging endpoint for authorized testing — harder to verify controls without source code.",
+    }),
+    frameworks: () => ({
+      title: "Weak governance mapping",
+      detail: "Limited mapping to AI Act / GDPR / sector rules — compliance posture is harder to evidence.",
+    }),
+    aiPolicy: () => ({
+      title: "No approved AI policy",
+      detail: "Management has not approved a written AI governance policy — accountability is unclear.",
+    }),
+    qualityMeasurement: () => ({
+      title: "Weak quality monitoring",
+      detail: "Output quality and known failure modes are not measured systematically — accuracy risk stays open.",
+    }),
+    retestOnChange: () => ({
+      title: "Change control gaps",
+      detail: "The system is not always re-tested after model, prompt, or tool changes — silent risk drift between renewals.",
+    }),
+    priorIncidents: (v) => {
+      if (v === "no") return null;
+      return {
+        title: "Prior AI-related issues",
+        detail:
+          v === "yes"
+            ? "Material prior loss, dispute, or regulatory action — a direct underwriting signal."
+            : "Prior minor or remediated AI issues — history still informs appetite and terms.",
+      };
+    },
+    existingCover: (v) => {
+      if (v === "yes_ai") return null;
+      return {
+        title: "Coverage overlap unclear",
+        detail: "Existing cyber / E&O / PI may exclude AI or leave gaps — check stacking and exclusions.",
+      };
+    },
+    redTeamed: (v) => {
+      if (v === "yes") return null;
+      return {
+        title: "Limited red-team evidence",
+        detail:
+          v === "no"
+            ? "No recent adversarial testing — control effectiveness is largely unproven."
+            : "Red-team evidence is outdated — controls may have drifted since the last test.",
+      };
+    },
+    userDisclosure: (v) => {
+      if (v === "always") return null;
+      return {
+        title: "Users may not know it is AI",
+        detail: "Incomplete disclosure that content is AI-generated weakens transparency and consumer-duty posture.",
+      };
+    },
+    attestation: (v) => {
+      if (v === "yes") return null;
+      return {
+        title: "Disclosure not attested",
+        detail: "The applicant has not attested to accuracy — underwriting should not rely on unchecked answers.",
+      };
+    },
+  };
+
+  const fn = byId[questionId];
+  return fn ? fn(value, optionLabel) : null;
+}
+
+/**
+ * Optionally fold live red-team failures into drivers (e.g. after Judge Agent runs).
+ * Keeps at most `limit` items; questionnaire drivers win ties on equal weight.
+ */
+export function mergeTestSignalDrivers(
+  drivers: ScoreDriver[],
+  failuresByCategory: Partial<Record<string, number>> | null | undefined,
+  limit = 3
+): ScoreDriver[] {
+  if (!failuresByCategory) return drivers.slice(0, limit);
+
+  const testDrivers: ScoreDriver[] = [];
+  const categoryCopy: Record<string, ScoreDriver> = {
+    prompt_injection: {
+      theme: "controls",
+      title: "Failed prompt-injection tests",
+      detail: "Red-team probes bypassed guardrails — uncontrolled behaviour and liability exposure.",
+      weight: 140,
+    },
+    jailbreak: {
+      theme: "controls",
+      title: "Failed jailbreak tests",
+      detail: "The system accepted policy overrides in testing — safety controls did not hold.",
+      weight: 135,
+    },
+    pii_leakage: {
+      theme: "data",
+      title: "PII leakage in testing",
+      detail: "Test responses exposed personal data — privacy and breach cost exposure.",
+      weight: 145,
+    },
+    unsafe_advice: {
+      theme: "exposure",
+      title: "Unsafe advice in testing",
+      detail: "The model gave harmful or unauthorised recommendations under probe — E&O exposure.",
+      weight: 130,
+    },
+    unauthorized_action: {
+      theme: "oversight",
+      title: "Unauthorized actions in testing",
+      detail: "Probes showed high-impact actions without adequate human control.",
+      weight: 150,
+    },
+    hallucination: {
+      theme: "exposure",
+      title: "Hallucinations under test",
+      detail: "Confident false answers in testing create errors-and-omissions exposure.",
+      weight: 120,
+    },
+    bias_discrimination: {
+      theme: "governance",
+      title: "Bias findings in testing",
+      detail: "Unfair or discriminatory outputs under probe — fairness and compliance risk.",
+      weight: 125,
+    },
+    system_data_exfiltration: {
+      theme: "controls",
+      title: "System data exposed in testing",
+      detail: "Hidden context, tools, or internal docs leaked under probe — aids attackers.",
+      weight: 130,
+    },
+  };
+
+  for (const [cat, count] of Object.entries(failuresByCategory)) {
+    if (!count || count < 1) continue;
+    const base = categoryCopy[cat];
+    if (!base) continue;
+    testDrivers.push({
+      ...base,
+      weight: base.weight + count * 10,
+      detail: `${base.detail} (${count} failed test${count === 1 ? "" : "s"}).`,
+    });
+  }
+
+  return [...testDrivers, ...drivers]
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, limit);
 }
 
 function buildFindings(answers: Answers, tier: Tier): Finding[] {

@@ -140,6 +140,7 @@ async function main() {
         premiumFactor: result.premiumFactor,
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
+        scoreDrivers: JSON.stringify(result.scoreDrivers),
         userId: user.id,
       },
     });

@@ -79,6 +79,7 @@ export async function PATCH(
           tier: "PENDING",
           findings: "[]",
           conditions: "[]",
+          scoreDrivers: "[]",
         },
       });
       return NextResponse.json({ id: assessment.id, status: "DRAFT" });
@@ -106,6 +107,7 @@ export async function PATCH(
         premiumFactor: result.premiumFactor,
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
+        scoreDrivers: JSON.stringify(result.scoreDrivers),
       },
     });
 
