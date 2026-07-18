@@ -83,6 +83,7 @@ async function main() {
         answers: JSON.stringify(s.answers),
         score: result.score,
         tier: result.tier,
+        premiumFactor: result.premiumFactor,
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
         userId: user.id,

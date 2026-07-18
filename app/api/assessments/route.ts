@@ -40,6 +40,7 @@ export async function POST(req: Request) {
         answers: JSON.stringify(answers),
         score: result.score,
         tier: result.tier,
+        premiumFactor: result.premiumFactor,
         findings: JSON.stringify(result.findings),
         conditions: JSON.stringify(result.conditions),
         userId: session.userId,

@@ -24,10 +24,11 @@ model Assessment {
   useCase    String   @default("")
   status     String   @default("DRAFT") // DRAFT | SCORED
   answers    String   @default("{}") // JSON string
-  score      Int      @default(0)
-  tier       String   @default("PENDING") // LOW | MEDIUM | HIGH | PENDING
-  findings   String   @default("[]") // JSON string
-  conditions String   @default("[]") // JSON string
+  score          Int      @default(0)
+  tier           String   @default("PENDING") // LOW | MEDIUM | HIGH | PENDING
+  premiumFactor  Float    @default(0) // indicative multiplier, e.g. 1.45
+  findings       String   @default("[]") // JSON string
+  conditions     String   @default("[]") // JSON string
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

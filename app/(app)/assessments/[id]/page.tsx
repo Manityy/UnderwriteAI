@@ -4,7 +4,11 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { RiskBadge } from "@/components/RiskBadge";
-import type { Finding } from "@/lib/mockRiskEngine";
+import {
+  formatPremiumFactor,
+  premiumFactorFromScore,
+  type Finding,
+} from "@/lib/mockRiskEngine";
 
 const sevColor: Record<string, string> = {
   HIGH: "text-risk-high",
@@ -28,6 +32,10 @@ export default async function ReportPage({
 
   const findings: Finding[] = safeParse(assessment.findings, []);
   const conditions: string[] = safeParse(assessment.conditions, []);
+  const premiumFactor =
+    assessment.premiumFactor > 0
+      ? assessment.premiumFactor
+      : premiumFactorFromScore(assessment.score);
 
   const tierMessage =
     assessment.tier === "HIGH"
@@ -55,22 +63,39 @@ export default async function ReportPage({
 
       {/* Score + summary */}
       <div className="mt-8 grid gap-6 md:grid-cols-[auto_1fr]">
-        <div className="flex items-center justify-center rounded-3xl bg-white p-8 ring-1 ring-black/5">
+        <div className="flex flex-col items-center justify-center gap-6 rounded-3xl bg-white p-8 ring-1 ring-black/5">
           <ScoreGauge score={assessment.score} tier={assessment.tier} />
+          <div className="w-full border-t border-black/5 pt-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted">
+              Indicative premium factor
+            </p>
+            <p className="mt-1 text-4xl font-extrabold tracking-tight text-brand">
+              {formatPremiumFactor(premiumFactor)}
+            </p>
+            <p className="mt-2 text-[11px] font-medium text-muted">
+              Indicative — not actuarial
+            </p>
+          </div>
         </div>
         <div className="rounded-3xl bg-white p-8 ring-1 ring-black/5">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted">
             Underwriting recommendation
           </h2>
           <p className="mt-3 text-xl font-extrabold leading-snug text-ink">{tierMessage}</p>
-          <div className="mt-6 grid grid-cols-3 gap-4 border-t border-black/5 pt-6 text-center">
-            <MiniStat label="Findings" value={findings.length} />
+          <div className="mt-6 grid grid-cols-2 gap-4 border-t border-black/5 pt-6 text-center sm:grid-cols-4">
+            <MiniStat label="Risk score" value={String(assessment.score)} />
+            <MiniStat label="Premium factor" value={formatPremiumFactor(premiumFactor)} accent />
+            <MiniStat label="Findings" value={String(findings.length)} />
             <MiniStat
               label="High severity"
-              value={findings.filter((f) => f.severity === "HIGH").length}
+              value={String(findings.filter((f) => f.severity === "HIGH").length)}
             />
-            <MiniStat label="Conditions" value={conditions.length} />
           </div>
+          <p className="mt-4 text-xs leading-relaxed text-muted">
+            Premium factor uses a simple rule:{" "}
+            <span className="font-semibold text-ink/70">1.00x + (score ÷ 100) × 1.50</span>
+            {" "}(range 1.00x–2.50x). For underwriting judgement only — not an actuarial rate.
+          </p>
         </div>
       </div>
 
@@ -124,18 +149,26 @@ export default async function ReportPage({
           ))}
         </ul>
         <p className="mt-6 border-t border-black/5 pt-4 text-xs text-muted">
-          Risk score is indicative, not actuarial. It is designed to support underwriting judgement,
-          not replace it.
+          Risk score and premium factor are indicative — not actuarial. They support underwriting
+          judgement; they do not replace it.
         </p>
       </div>
     </div>
   );
 }
 
-function MiniStat({ label, value }: { label: string; value: number }) {
+function MiniStat({
+  label,
+  value,
+  accent = false,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
   return (
     <div>
-      <p className="text-2xl font-extrabold text-ink">{value}</p>
+      <p className={`text-2xl font-extrabold ${accent ? "text-brand" : "text-ink"}`}>{value}</p>
       <p className="text-xs font-medium text-muted">{label}</p>
     </div>
   );
