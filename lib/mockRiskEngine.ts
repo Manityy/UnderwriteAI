@@ -40,6 +40,7 @@ export type RiskResult = {
   /** Indicative premium multiplier, e.g. 1.45 — not actuarial */
   premiumFactor: number;
   findings: Finding[];
+  /** Selected / recommended policy condition IDs from the conditions library. */
   conditions: string[];
   /** Top drivers explaining the score (questionnaire-based). */
   scoreDrivers: ScoreDriver[];
@@ -839,23 +840,31 @@ function buildFindings(answers: Answers, tier: Tier): Finding[] {
   return findings;
 }
 
+/**
+ * Engine-recommended condition IDs for an assessment's answers.
+ * Used to pre-check library items on the report picker.
+ */
+export function recommendConditionIds(answers: Answers, tier: Tier): string[] {
+  return buildConditions(answers, tier);
+}
+
 function buildConditions(answers: Answers, tier: Tier): string[] {
   const conditions: string[] = [];
 
   if (answers.attestation !== "yes") {
-    conditions.push("Obtain signed attestation before quoting or binding cover.");
+    conditions.push("attestation");
   }
   if (answers.humanOversight !== "always") {
-    conditions.push("Require human approval for all high-impact AI actions and regulated advice.");
+    conditions.push("hitl");
   }
   if (answers.autonomousActions === "yes") {
-    conditions.push("Disable unsupervised autonomous actions until control improvements are verified.");
+    conditions.push("no_autonomous");
   }
   if (answers.guardrails !== "full" || answers.redTeamed === "no") {
-    conditions.push("Introduce quarterly red-team testing and re-assessment at renewal.");
+    conditions.push("red_team");
   }
   if (answers.logging !== "full") {
-    conditions.push("Enable full input/output logging with 12-month retention.");
+    conditions.push("logging");
   }
   if (
     answers.dataSensitivity === "pii" ||
@@ -863,29 +872,33 @@ function buildConditions(answers: Answers, tier: Tier): string[] {
     answers.dataSensitivity === "sensitive"
   ) {
     if (answers.piiFiltering !== "yes") {
-      conditions.push("Add PII input filtering and output scanning before binding.");
+      conditions.push("pii_filters");
     }
   }
   if (answers.frameworks === "none" || answers.aiPolicy === "no") {
-    conditions.push("Complete AI governance documentation (policy + framework mapping) before binding cover.");
+    conditions.push("governance_docs");
   }
   if (answers.sandboxAccess !== "yes") {
-    conditions.push("Provide a staging endpoint for insurer-authorized testing within 30 days.");
+    conditions.push("sandbox_access");
   }
   if (answers.retestOnChange !== "yes") {
-    conditions.push("Require re-test after any material model, prompt, or tool change.");
+    conditions.push("retest_on_change");
   }
   if (answers.priorIncidents === "yes") {
-    conditions.push("Provide incident remediation evidence before coverage is bound.");
+    conditions.push("incident_evidence");
+  }
+  if (tier === "HIGH" || tier === "MEDIUM") {
+    conditions.push("retest_90_days");
   }
 
   if (conditions.length === 0) {
-    conditions.push("Maintain current controls and re-assess at annual renewal.");
+    conditions.push("maintain_controls");
   }
 
   if (tier === "HIGH") {
-    conditions.unshift("Remediate high-severity findings before coverage is bound.");
+    conditions.unshift("remediate_high");
   }
 
-  return conditions;
+  // Dedupe while preserving order
+  return [...new Set(conditions)];
 }

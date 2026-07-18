@@ -270,7 +270,7 @@
     "editTitle": "Edit assessment",
     "continueDraft": "Continue draft",
     "newTitle": "New AI risk assessment",
-    "editSubtitle": "Update answers and re-score, or save as draft.",
+    "editSubtitle": "Update answers and re-score to refresh the report.",
     "draftSubtitle": "Pick up where you left off. Save anytime, score when ready.",
     "newSubtitle": "Complete the underwriting disclosure. Save a draft or score when ready.",
     "stepOf": "Step {current} of {total}",
@@ -325,7 +325,21 @@
       "LOW": "Low risk",
       "MEDIUM": "Medium risk",
       "HIGH": "High risk"
-    }
+    },
+    "decision": "Decision",
+    "allDecisions": "All decisions",
+    "noDecision": "No decision",
+    "decisionAccept": "Accept",
+    "decisionAcceptWithConditions": "Accept with conditions",
+    "decisionRefer": "Refer",
+    "decisionDecline": "Decline",
+    "colDecision": "Decision",
+    "colActions": "Actions",
+    "actionContinue": "Continue",
+    "actionView": "View",
+    "actionEdit": "Edit",
+    "backToReport": "Back to report",
+    "editSubtitleScored": "Update answers and re-score to refresh the report."
   },
   "agents": {
     "agent1": "Agent 1",

@@ -270,7 +270,7 @@
     "editTitle": "تعديل التقييم",
     "continueDraft": "متابعة المسودة",
     "newTitle": "تقييم جديد لمخاطر الذكاء الاصطناعي",
-    "editSubtitle": "حدّث الإجابات وأعد التقييم، أو احفظ كمسودة.",
+    "editSubtitle": "حدّث الإجابات وأعد التقييم لتحديث التقرير.",
     "draftSubtitle": "تابع من حيث توقفت. احفظ في أي وقت وقيّم عندما تكون جاهزاً.",
     "newSubtitle": "أكمل إفصاح الاكتتاب. احفظ مسودة أو قيّم عندما تكون جاهزاً.",
     "stepOf": "الخطوة {current} من {total}",
@@ -325,7 +325,21 @@
       "LOW": "مخاطر منخفضة",
       "MEDIUM": "مخاطر متوسطة",
       "HIGH": "مخاطر مرتفعة"
-    }
+    },
+    "decision": "القرار",
+    "allDecisions": "كل القرارات",
+    "noDecision": "لا قرار",
+    "decisionAccept": "قبول",
+    "decisionAcceptWithConditions": "قبول بشروط",
+    "decisionRefer": "إحالة",
+    "decisionDecline": "رفض",
+    "colDecision": "القرار",
+    "colActions": "إجراءات",
+    "actionContinue": "متابعة",
+    "actionView": "عرض",
+    "actionEdit": "تعديل",
+    "backToReport": "العودة إلى التقرير",
+    "editSubtitleScored": "حدّث الإجابات وأعد التقييم لتحديث التقرير."
   },
   "agents": {
     "agent1": "الوكيل 1",

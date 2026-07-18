@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { RiskBadge } from "@/components/RiskBadge";
+import { DecisionBadge } from "@/components/DecisionPanel";
 import { INDUSTRIES } from "@/components/AssessmentForm";
 import { Link } from "@/i18n/navigation";
 
@@ -14,6 +15,7 @@ export type AssessmentListItem = {
   status: string;
   score: number;
   tier: string;
+  decision: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -30,6 +32,7 @@ export function AssessmentsList({ assessments }: Props) {
   const [tier, setTier] = useState("ALL");
   const [industry, setIndustry] = useState("ALL");
   const [status, setStatus] = useState("ALL");
+  const [decision, setDecision] = useState("ALL");
 
   const industries = useMemo(() => {
     const fromData = assessments.map((a) => a.industry).filter(Boolean);
@@ -43,17 +46,27 @@ export function AssessmentsList({ assessments }: Props) {
       if (tier !== "ALL" && a.tier !== tier) return false;
       if (industry !== "ALL" && a.industry !== industry) return false;
       if (status !== "ALL" && a.status !== status) return false;
+      if (decision === "NONE" && a.decision) return false;
+      if (decision !== "ALL" && decision !== "NONE" && a.decision !== decision) {
+        return false;
+      }
       return true;
     });
-  }, [assessments, query, tier, industry, status]);
+  }, [assessments, query, tier, industry, status, decision]);
 
-  const hasFilters = query.trim() !== "" || tier !== "ALL" || industry !== "ALL" || status !== "ALL";
+  const hasFilters =
+    query.trim() !== "" ||
+    tier !== "ALL" ||
+    industry !== "ALL" ||
+    status !== "ALL" ||
+    decision !== "ALL";
 
   function clearFilters() {
     setQuery("");
     setTier("ALL");
     setIndustry("ALL");
     setStatus("ALL");
+    setDecision("ALL");
   }
 
   function hrefFor(a: AssessmentListItem) {
@@ -100,6 +113,19 @@ export function AssessmentsList({ assessments }: Props) {
           ]}
         />
         <FilterSelect
+          label={t("decision")}
+          value={decision}
+          onChange={setDecision}
+          options={[
+            { value: "ALL", label: t("allDecisions") },
+            { value: "NONE", label: t("noDecision") },
+            { value: "ACCEPT", label: t("decisionAccept") },
+            { value: "ACCEPT_WITH_CONDITIONS", label: t("decisionAcceptWithConditions") },
+            { value: "REFER", label: t("decisionRefer") },
+            { value: "DECLINE", label: t("decisionDecline") },
+          ]}
+        />
+        <FilterSelect
           label={t("riskTier")}
           value={tier}
           onChange={setTier}
@@ -140,7 +166,9 @@ export function AssessmentsList({ assessments }: Props) {
               <th className="px-6 py-4">{t("colStatus")}</th>
               <th className="px-6 py-4">{t("colScore")}</th>
               <th className="px-6 py-4">{t("colRisk")}</th>
+              <th className="px-6 py-4">{t("colDecision")}</th>
               <th className="px-6 py-4 text-right">{t("colUpdated")}</th>
+              <th className="px-6 py-4 text-right">{t("colActions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black/5">
@@ -167,14 +195,48 @@ export function AssessmentsList({ assessments }: Props) {
                 <td className="px-6 py-4">
                   <RiskBadge tier={a.tier} />
                 </td>
+                <td className="px-6 py-4">
+                  {a.status === "DRAFT" ? (
+                    <span className="text-sm text-muted">—</span>
+                  ) : (
+                    <DecisionBadge decision={a.decision || null} />
+                  )}
+                </td>
                 <td className="px-6 py-4 text-right text-sm text-muted">
                   {new Date(a.updatedAt).toLocaleDateString(locale)}
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {a.status === "DRAFT" ? (
+                      <Link
+                        href={`/assessments/${a.id}/edit`}
+                        className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
+                      >
+                        {t("actionContinue")}
+                      </Link>
+                    ) : (
+                      <>
+                        <Link
+                          href={`/assessments/${a.id}`}
+                          className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted ring-1 ring-black/10 transition hover:text-ink"
+                        >
+                          {t("actionView")}
+                        </Link>
+                        <Link
+                          href={`/assessments/${a.id}/edit`}
+                          className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-brand/30 transition hover:bg-brand/5"
+                        >
+                          {t("actionEdit")}
+                        </Link>
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
             {assessments.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-sm text-muted">
+                <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted">
                   {t("emptyTitle")}{" "}
                   <Link href="/assessments/new" className="font-semibold text-brand">
                     {tCommon("createFirst")}
@@ -184,7 +246,7 @@ export function AssessmentsList({ assessments }: Props) {
             )}
             {assessments.length > 0 && filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-sm text-muted">
+                <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted">
                   {t("emptyFiltered")}{" "}
                   <button
                     type="button"

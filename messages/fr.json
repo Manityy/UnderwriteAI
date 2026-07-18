@@ -270,7 +270,7 @@
     "editTitle": "Modifier l'évaluation",
     "continueDraft": "Continuer le brouillon",
     "newTitle": "Nouvelle évaluation du risque IA",
-    "editSubtitle": "Mettez à jour les réponses et recalculez, ou enregistrez en brouillon.",
+    "editSubtitle": "Mettez à jour les réponses et recalculez pour actualiser le rapport.",
     "draftSubtitle": "Reprenez où vous vous êtes arrêté. Enregistrez à tout moment, notez quand vous êtes prêt.",
     "newSubtitle": "Complétez la déclaration de souscription. Enregistrez un brouillon ou notez quand vous êtes prêt.",
     "stepOf": "Étape {current} sur {total}",
@@ -325,7 +325,21 @@
       "LOW": "Risque faible",
       "MEDIUM": "Risque moyen",
       "HIGH": "Risque élevé"
-    }
+    },
+    "decision": "Décision",
+    "allDecisions": "Toutes les décisions",
+    "noDecision": "Aucune décision",
+    "decisionAccept": "Accepter",
+    "decisionAcceptWithConditions": "Accepter avec conditions",
+    "decisionRefer": "Référer",
+    "decisionDecline": "Refuser",
+    "colDecision": "Décision",
+    "colActions": "Actions",
+    "actionContinue": "Continuer",
+    "actionView": "Voir",
+    "actionEdit": "Modifier",
+    "backToReport": "Retour au rapport",
+    "editSubtitleScored": "Mettez à jour les réponses et recalculez pour actualiser le rapport."
   },
   "agents": {
     "agent1": "Agent 1",
