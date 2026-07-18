@@ -4,11 +4,15 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { RiskBadge } from "@/components/RiskBadge";
+import { PrintReportButton } from "@/components/PrintReportButton";
+import { AttackAgentPanel } from "@/components/AttackAgentPanel";
+import { JudgeAgentPanel } from "@/components/JudgeAgentPanel";
 import {
   formatPremiumFactor,
   premiumFactorFromScore,
   type Finding,
 } from "@/lib/mockRiskEngine";
+import type { AttackPrompt, TestResult, TestRunSummary } from "@/lib/agents/types";
 
 const sevColor: Record<string, string> = {
   HIGH: "text-risk-high",
@@ -46,6 +50,19 @@ export default async function ReportPage({
     assessment.premiumFactor > 0
       ? assessment.premiumFactor
       : premiumFactorFromScore(assessment.score);
+  const attackPrompts: AttackPrompt[] = safeParse(assessment.attackPrompts, []);
+  const testResults: TestResult[] = safeParse(assessment.testResults, []);
+  const testSummary: TestRunSummary | Record<string, never> = safeParse(
+    assessment.testSummary,
+    {}
+  );
+
+  const reportDate = new Date(assessment.updatedAt).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const pdfTitle = `${slugify(assessment.clientName)}-AI-risk-report`;
 
   const tierMessage =
     assessment.tier === "HIGH"
@@ -152,6 +169,27 @@ export default async function ReportPage({
           <TestStep n="02" title="Test" body="Attack agent probed the system; judge agent graded every response." />
           <TestStep n="03" title="Score" body="Disclosures and test results combined into one risk score." />
         </div>
+      </div>
+
+      {/* Attack agent (Agent 1) */}
+      <div className="print:hidden">
+        <AttackAgentPanel
+          assessmentId={assessment.id}
+          initialPrompts={attackPrompts}
+          initialGeneratedAt={
+            assessment.attackGeneratedAt ? assessment.attackGeneratedAt.toISOString() : null
+          }
+        />
+      </div>
+
+      {/* Judge agent (Agent 2) */}
+      <div className="print:hidden">
+        <JudgeAgentPanel
+          assessmentId={assessment.id}
+          hasAttackPrompts={attackPrompts.length > 0}
+          initialResults={testResults}
+          initialSummary={testSummary}
+        />
       </div>
 
       {/* Findings */}
