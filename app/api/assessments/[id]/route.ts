@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { sanitizeConditionIds } from "@/lib/conditionsLibrary";
 import { QUESTIONS, scoreAssessment, type Answers } from "@/lib/mockRiskEngine";
 import { isUnderwritingDecision } from "@/lib/underwritingDecision";
 
